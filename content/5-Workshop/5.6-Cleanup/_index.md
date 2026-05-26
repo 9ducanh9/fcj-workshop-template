@@ -1,32 +1,41 @@
 ---
-title : "Clean up"
-date : 2024-01-01
+title : "Cleanup"
+date : 2026-05-12
 weight : 6
 chapter : false
 pre : " <b> 5.6. </b> "
 ---
-Congratulations on completing this workshop! 
-In this workshop, you learned architecture patterns for accessing Amazon S3 without using the Public Internet. 
-+ By creating a gateway endpoint, you enabled direct communication between EC2 resources and Amazon S3, without traversing an Internet Gateway. 
-+ By creating an interface endpoint you extended S3 connectivity to resources running in your on-premises data center via AWS Site-to-Site VPN or Direct Connect. 
 
-#### clean up
-1. Navigate to Hosted Zones on the left side of Route 53 console. Click the name of *s3.us-east-1.amazonaws.com* zone. Click Delete and confirm deletion by typing delete. 
+# Cleanup
 
-![hosted zone](/images/5-Workshop/5.6-Cleanup/delete-zone.png)
+Cleanup is required to avoid unnecessary AWS charges after the demo.
 
-2. Disassociate the Route 53 Resolver Rule - myS3Rule from "VPC Onprem" and Delete it. 
+## Cleanup Order
 
-![hosted zone](/images/5-Workshop/5.6-Cleanup/vpc.png)
+1. Stop or delete Step Functions executions if any are still running.
+2. Delete API Gateway deployment and API.
+3. Delete Lambda functions used by the project.
+4. Delete Amazon Transcribe test jobs if they are no longer needed.
+5. Delete objects in the S3 bucket:
+   - `uploads/`
+   - `transcripts/`
+   - `reports/`
+6. Delete the S3 bucket.
+7. Delete the DynamoDB table `CognitiveCoachJobs`.
+8. Delete CloudWatch log groups created for Lambda and Step Functions.
+9. Delete IAM roles and policies created only for this project.
+10. Review AWS Billing and Cost Management to confirm no unexpected active resources remain.
 
-4. Open the CloudFormation console  and delete the two CloudFormation Stacks that you created for this lab:
-+ PLOnpremSetup
-+ PLCloudSetup
+## Validation After Cleanup
 
-![delete stack](/images/5-Workshop/5.6-Cleanup/delete-stack.png)
+Confirm:
 
-5. Delete S3 buckets
-+ Open S3 console
-+ Choose the bucket we created for the lab, click and confirm empty. Click delete and confirm delete.
+- S3 bucket no longer exists.
+- DynamoDB table no longer exists.
+- API Gateway endpoint no longer responds.
+- Lambda functions are deleted.
+- Step Functions state machine is deleted.
+- CloudWatch logs are deleted if not needed for evidence.
+- No active resources related to the project remain in the selected region.
 
-![delete s3](/images/5-Workshop/5.6-Cleanup/delete-s3.png)
+If screenshots are needed for final submission, capture them before deleting the resources.

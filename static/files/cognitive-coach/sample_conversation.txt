@@ -1,0 +1,10 @@
+Mentor: Why did you choose this project?
+Student: I want to build an AI assistant for communication.
+Mentor: Why is that useful?
+Student: Because many students and junior engineers cannot explain ideas clearly under pressure.
+Mentor: Why should this use AWS?
+Student: AWS provides storage, transcription, AI analysis, workflow orchestration, and monitoring as managed services.
+Mentor: What happens if AI is wrong?
+Student: The system should be used as coaching feedback, not final truth. The user must review the output.
+Mentor: Why is the project not real time?
+Student: Real-time audio adds latency, privacy, and demo risk. Post-conversation reflection is safer and more realistic for a bootcamp final project.

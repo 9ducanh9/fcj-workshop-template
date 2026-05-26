@@ -1,43 +1,56 @@
 ---
-title : "Tạo một S3 Interface endpoint"
-date : 2024-01-01
+title : "Thêm Amazon Transcribe cho audio input"
+date : 2026-05-12
 weight : 2
 chapter : false
-pre : " <b> 5.4.2 </b> "
+pre : " <b> 5.4.2. </b> "
 ---
 
-Trong phần này, bạn sẽ tạo và kiểm tra Interface Endpoint  S3 bằng cách sử dụng môi trường truyền thống mô phỏng.
+# Thêm Amazon Transcribe cho audio input
 
-1. Quay lại Amazon VPC menu. Trong thanh điều hướng bên trái, chọn Endpoints, sau đó click Create Endpoint.
+## Khi nào dùng bước này
 
-2. Trong Create endpoint console:
-+ Đặt tên interface endpoint
-+ Trong Service category, chọn **aws services** 
+Dùng bước này sau khi transcript input đã chạy ổn. Audio có nhiều biến số hơn nên không nên là luồng test đầu tiên.
 
-![name](/images/5-Workshop/5.4-S3-onprem/s3-interface-endpoint1.png)
+## Tạo transcription job
 
-3.  Trong Search box, gõ S3 và nhấn Enter. Chọn endpoint có tên com.amazonaws.us-east-1.s3. Đảm bảo rằng cột Type có giá trị Interface.
+Với audio input, workflow nên:
 
-![service](/images/5-Workshop/5.4-S3-onprem/s3-interface-endpoint2.png)
+1. Đọc audio object đã upload từ S3.
+2. Start Amazon Transcribe job.
+3. Ghi transcript output vào `transcripts/<jobId>/`.
+4. Tiếp tục phân tích bằng Bedrock sau khi transcript sẵn sàng.
 
-4. Đối với VPC, chọn VPC Cloud từ drop-down.
-{{% notice warning %}}
-Đảm bảo rằng bạn chọn "VPC Cloud" và không phải "VPC On-prem"
-{{% /notice %}}
-+ Mở rộng **Additional settings** và đảm bảo rằng Enable DNS name *không* được chọn (sẽ sử dụng điều này trong phần tiếp theo của workshop)
+Ví dụ AWS CLI:
 
-![vpc](/images/5-Workshop/5.4-S3-onprem/s3-interface-endpoint3.png)
+```powershell
+aws transcribe start-transcription-job `
+  --transcription-job-name cognitive-coach-job-test `
+  --language-code en-US `
+  --media MediaFileUri=s3://<bucket-name>/uploads/job-test/sample.mp3 `
+  --output-bucket-name <bucket-name> `
+  --output-key transcripts/job-test/
+```
 
-5. Chọn 2 subnets trong AZs sau: us-east-1a and us-east-1b
+Kiểm tra trạng thái job:
 
-![subnets](/images/5-Workshop/5.4-S3-onprem/s3-interface-endpoint4.png)
+```powershell
+aws transcribe get-transcription-job --transcription-job-name cognitive-coach-job-test
+```
 
-6. Đối với Security group, chọn SGforS3Endpoint:
+## Lựa chọn ngôn ngữ
 
-![sg](/images/5-Workshop/5.4-S3-onprem/s3-interface-endpoint5.png)
+Test ban đầu có thể dùng:
 
-7. Giữ default policy - full access và click Create endpoint
+- `en-US` cho audio tiếng Anh.
+- `vi-VN` cho audio tiếng Việt nếu region đã chọn hỗ trợ.
 
-![success](/images/5-Workshop/5.4-S3-onprem/s3-interface-endpoint-success.png)
+## Kiểm tra
 
-Chúc mừng bạn đã tạo thành công S3 interface endpoint. Ở bước tiếp theo, chúng ta sẽ kiểm tra interface endpoint.
+Xác nhận:
+
+- Transcribe job chuyển sang trạng thái `COMPLETED`.
+- File transcript JSON xuất hiện trong S3.
+- Transcript đủ rõ để Bedrock phân tích.
+
+Nếu audio kém chất lượng, hãy dùng luồng upload transcript cho demo cuối.

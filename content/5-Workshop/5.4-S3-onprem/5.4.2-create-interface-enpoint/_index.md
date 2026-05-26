@@ -1,43 +1,56 @@
 ---
-title : "Create an S3 Interface endpoint"
-date : 2024-01-01
+title : "Add Amazon Transcribe for Audio Input"
+date : 2026-05-12
 weight : 2
 chapter : false
-pre : " <b> 5.4.2 </b> "
+pre : " <b> 5.4.2. </b> "
 ---
 
-In this section you will create and test an S3 interface endpoint using the simulated on-premises environment deployed as part of this workshop.
+# Add Amazon Transcribe for Audio Input
 
-1. Return to the Amazon VPC menu. In the navigation pane, choose Endpoints, then click Create Endpoint.
+## When to Use This Step
 
-2. In Create endpoint console:
-+ Name the interface endpoint
-+ In Service category, choose **aws services** 
+Use this step after transcript input works. Audio adds more variables, so it should not be the first path tested.
 
-![name](/images/5-Workshop/5.4-S3-onprem/s3-interface-endpoint1.png)
+## Create a Transcription Job
 
-3.  In the Search box, type S3 and press Enter. Select the endpoint named com.amazonaws.us-east-1.s3. Ensure that the Type column indicates Interface.
+For audio input, the workflow should:
 
-![service](/images/5-Workshop/5.4-S3-onprem/s3-interface-endpoint2.png)
+1. Read the uploaded audio object from S3.
+2. Start an Amazon Transcribe job.
+3. Write the transcript output to `transcripts/<jobId>/`.
+4. Continue to Bedrock analysis after the transcript is available.
 
-4. For VPC, select VPC Cloud from the drop-down.
-{{% notice warning %}}
-Make sure to choose "VPC Cloud" and not "VPC On-prem"
-{{% /notice %}}
-+ Expand **Additional settings** and ensure that Enable DNS name is *not* selected (we will use this in the next part of the workshop)
+Example AWS CLI command:
 
-![vpc](/images/5-Workshop/5.4-S3-onprem/s3-interface-endpoint3.png)
+```powershell
+aws transcribe start-transcription-job `
+  --transcription-job-name cognitive-coach-job-test `
+  --language-code en-US `
+  --media MediaFileUri=s3://<bucket-name>/uploads/job-test/sample.mp3 `
+  --output-bucket-name <bucket-name> `
+  --output-key transcripts/job-test/
+```
 
-5. Select 2 subnets in the following AZs: us-east-1a and us-east-1b
+Check job status:
 
-![subnets](/images/5-Workshop/5.4-S3-onprem/s3-interface-endpoint4.png)
+```powershell
+aws transcribe get-transcription-job --transcription-job-name cognitive-coach-job-test
+```
 
-6. For Security group, choose SGforS3Endpoint:
+## Language Choices
 
-![sg](/images/5-Workshop/5.4-S3-onprem/s3-interface-endpoint5.png)
+Initial testing can use:
 
-7. Keep the default policy - full access and click Create endpoint
+- `en-US` for English audio.
+- `vi-VN` for Vietnamese audio if supported in your selected region.
 
-![success](/images/5-Workshop/5.4-S3-onprem/s3-interface-endpoint-success.png)
+## Validation
 
-Congratulation on successfully creating S3 interface endpoint. In the next step, we will test the interface endpoint.
+Confirm:
+
+- The Transcribe job status becomes `COMPLETED`.
+- A transcript JSON file appears in S3.
+- The transcript text is readable enough for Bedrock analysis.
+
+If audio quality is poor, use the transcript upload path for the final demo.

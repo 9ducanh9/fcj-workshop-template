@@ -1,44 +1,35 @@
 ---
-title: "Chia sẻ, đóng góp ý kiến"
-date: 2024-01-01
+title: "Chia sẻ và phản hồi"
+date: 2026-05-12
 weight: 7
 chapter: false
 pre: " <b> 7. </b> "
 ---
-{{% notice warning %}}
-⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
-{{% /notice %}}
 
->Tại đây bạn có thể tự do đóng góp ý kiến cá nhân về những trải nghiệm khi tham gia chương trình First Cloud Journey, giúp team FCJ cải thiện những vấn đề còn thiếu sót dựa trên các hạng mục sau:
+# Chia sẻ và phản hồi
 
-### Đánh giá chung
+## Trải nghiệm chương trình
 
-**1. Môi trường làm việc**  
-Môi trường làm việc rất thân thiện và cởi mở. Các thành viên trong FCJ luôn sẵn sàng hỗ trợ khi mình gặp khó khăn, kể cả ngoài giờ làm việc. Không gian làm việc gọn gàng, thoải mái, giúp mình tập trung tốt hơn. Tuy nhiên, mình nghĩ có thể bổ sung thêm một số buổi giao lưu hoặc team bonding để mọi người hiểu nhau hơn.
+FCAJ AWS Bootcamp giúp tôi chuyển từ mức biết cơ bản về AWS sang tư duy thiết kế giải pháp cloud thực tế. Phần giá trị nhất là học cách giải thích và bảo vệ quyết định kiến trúc, không chỉ thao tác tạo resource trên AWS Console.
 
-**2. Sự hỗ trợ của mentor / team admin**  
-Mentor hướng dẫn rất chi tiết, giải thích rõ ràng khi mình chưa hiểu và luôn khuyến khích mình đặt câu hỏi. Team admin hỗ trợ các thủ tục, tài liệu và tạo điều kiện để mình làm việc thuận lợi. Mình đánh giá cao việc mentor cho phép mình thử và tự xử lý vấn đề thay vì chỉ đưa đáp án.
+## Mức độ hài lòng
 
-**3. Sự phù hợp giữa công việc và chuyên ngành học**  
-Công việc mình được giao phù hợp với kiến thức mình đã học ở trường, đồng thời mở rộng thêm những mảng mới mà mình chưa từng được tiếp cận. Nhờ vậy, mình vừa củng cố kiến thức nền tảng, vừa học thêm kỹ năng thực tế.
+Tôi hài lòng với lộ trình học vì chương trình kết hợp thực hành và tài liệu hóa. Yêu cầu đồ án cuối khóa buộc tôi nhìn dự án theo vòng đời đầy đủ: triển khai, kiểm thử, giám sát, bảo mật, chi phí và cleanup.
 
-**4. Cơ hội học hỏi & phát triển kỹ năng**  
-Trong quá trình thực tập, mình học được nhiều kỹ năng mới như sử dụng công cụ quản lý dự án, kỹ năng làm việc nhóm, và cả cách giao tiếp chuyên nghiệp trong môi trường công ty. Mentor cũng chia sẻ nhiều kinh nghiệm thực tế giúp mình định hướng tốt hơn cho sự nghiệp.
+## Bài học hữu ích nhất
 
-**5. Văn hóa & tinh thần đồng đội**  
-Văn hóa công ty rất tích cực: mọi người tôn trọng lẫn nhau, làm việc nghiêm túc nhưng vẫn vui vẻ. Khi có dự án gấp, mọi người cùng nhau cố gắng, hỗ trợ không phân biệt vị trí. Điều này giúp mình cảm thấy mình là một phần của tập thể, dù chỉ là thực tập sinh.
+- Kiến trúc cloud phải bắt đầu từ vấn đề rõ ràng, không phải chọn dịch vụ ngẫu nhiên.
+- Serverless phù hợp với dự án sinh viên vì giảm công sức vận hành hạ tầng.
+- Dự án AI cần có ranh giới về quyền riêng tư, chi phí và độ tin cậy.
+- Chất lượng tài liệu quan trọng vì người khác cần triển khai lại được.
 
-**6. Chính sách / phúc lợi cho thực tập sinh**  
-Công ty có hỗ trợ phụ cấp thực tập và tạo điều kiện về thời gian linh hoạt khi cần thiết. Ngoài ra, việc được tham gia các buổi đào tạo nội bộ là một điểm cộng lớn.
+## Gợi ý cải thiện
 
+- Cung cấp thêm rubric mẫu để đánh giá chất lượng kiến trúc đồ án cuối.
+- Bổ sung thêm buổi học về IAM least privilege và ước tính chi phí.
+- Có thêm workshop về thiết kế AI workload có trách nhiệm trên AWS.
+- Cho học viên luyện trình bày trade-off và bảo vệ lựa chọn kiến trúc nhiều hơn.
 
-### Một số câu hỏi khác
-- Điều bạn **hài lòng nhất** trong thời gian thực tập?  
-- Điều bạn nghĩ công ty **cần cải thiện** cho các thực tập sinh sau?  
-- Nếu giới thiệu cho bạn bè, bạn có **khuyên họ thực tập ở đây không**? Vì sao?  
+## Có giới thiệu chương trình không?
 
-
-### Đề xuất & mong muốn
-- Bạn có đề xuất gì để cải thiện trải nghiệm trong kỳ thực tập?  
-- Bạn có muốn tiếp tục chương trình này trong tương lai?
-- Góp ý khác (tự do chia sẻ):
+Tôi sẽ giới thiệu chương trình cho sinh viên muốn học AWS thông qua thực hành. Chương trình đặc biệt hữu ích với người muốn xây dựng portfolio dự án và luyện khả năng giải thích kiến trúc cloud rõ ràng.

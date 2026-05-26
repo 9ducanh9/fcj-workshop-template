@@ -1,40 +1,83 @@
 ---
-title : "Tạo một Gateway Endpoint"
-date : 2024-01-01 
+title : "Tạo S3 bucket và DynamoDB table"
+date : 2026-05-12
 weight : 1
 chapter : false
-pre : " <b> 5.3.1 </b> "
+pre : " <b> 5.3.1. </b> "
 ---
 
-1. Mở [Amazon VPC console](https://us-east-1.console.aws.amazon.com/vpc/home?region=us-east-1#Home:)
-2. Trong thanh điều hướng, chọn **Endpoints**, click **Create Endpoint**:
+# Tạo S3 bucket và DynamoDB table
 
-{{% notice note %}}
-Bạn sẽ thấy 6 điểm cuối VPC hiện có hỗ trợ AWS Systems Manager (SSM). Các điểm cuối này được Mẫu CloudFormation triển khai tự động cho workshop này.
-{{% /notice %}}
+## Bước 1: Tạo S3 bucket
 
-![endpoint](/images/5-Workshop/5.3-S3-vpc/endpoints.png)
+Tạo một bucket private cho dự án.
 
-3. Trong Create endpoint console:
-+ Đặt tên cho endpoint: s3-gwe
-+ Trong service category, chọn **aws services**
+Tên bucket gợi ý:
 
-![endpoint](/images/5-Workshop/5.3-S3-vpc/create-s3-gwe1.png)
+```text
+cognitive-coach-<your-name>-<account-id>
+```
 
-+ Trong **Services**, gõ "s3" trong hộp tìm kiếm và chọn dịch vụ với loại **gateway**
+Prefix gợi ý:
 
-![endpoint](/images/5-Workshop/5.3-S3-vpc/services.png)
+```text
+uploads/
+transcripts/
+reports/
+```
 
-+ Đối với VPC, chọn **VPC Cloud** từ drop-down menu.
-+ Đối với Route tables, chọn bảng định tuyến mà đã liên kết với 2 subnets (lưu ý: đây không phải là bảng định tuyến chính cho VPC mà là bảng định tuyến thứ hai do CloudFormation tạo).
+Cấu hình:
 
-![endpoint](/images/5-Workshop/5.3-S3-vpc/vpc.png)
+- Block all public access: bật.
+- Bucket versioning: tùy chọn cho demo bootcamp.
+- Server-side encryption: bật SSE-S3.
+- Lifecycle rule: xóa object trong `uploads/`, `transcripts/`, `reports/` sau 7 ngày với môi trường demo.
 
-+ Đối với Policy, để tùy chọn mặc định là Full access để cho phép toàn quyền truy cập vào dịch vụ. Bạn sẽ triển khai VPC endpoint policy trong phần sau để chứng minh việc hạn chế quyền truy cập vào S3 bucket dựa trên các policies.
+## Bước 2: Tạo DynamoDB table
 
-![endpoint](/images/5-Workshop/5.3-S3-vpc/policy.png)
+Tạo table tên:
 
-+ Không thêm tag vào VPC endpoint.
-+ Click Create endpoint, click x sau khi nhận được thông báo tạo thành công.
+```text
+CognitiveCoachJobs
+```
 
-![endpoint](/images/5-Workshop/5.3-S3-vpc/complete.png)
+Thiết kế table:
+
+| Thuộc tính | Kiểu | Mục đích |
+| --- | --- | --- |
+| `jobId` | String partition key | Mã job duy nhất |
+| `status` | String | `UPLOADED`, `TRANSCRIBING`, `ANALYZING`, `COMPLETED`, hoặc `FAILED` |
+| `inputType` | String | `audio` hoặc `text` |
+| `inputS3Key` | String | Đường dẫn file upload |
+| `reportS3Key` | String | Đường dẫn report cuối |
+| `createdAt` | String | ISO timestamp |
+| `updatedAt` | String | ISO timestamp |
+| `errorMessage` | String | Lý do lỗi nếu có |
+
+Dùng on-demand capacity mode cho dự án bootcamp nhỏ.
+
+## Bước 3: Tạo IAM role
+
+Tạo Lambda execution role có quyền:
+
+- Ghi log vào CloudWatch.
+- Đọc và ghi object trong S3 bucket của dự án.
+- Đọc và ghi item trong table `CognitiveCoachJobs`.
+- Gọi Bedrock model inference.
+
+Tạo Step Functions role có quyền:
+
+- Invoke các Lambda cần thiết.
+- Start và kiểm tra Amazon Transcribe job nếu dùng audio input.
+- Ghi execution log vào CloudWatch.
+
+Không dùng `AdministratorAccess` cho role của đồ án cuối. Báo cáo cuối nên thể hiện rõ tư duy phân quyền theo nguyên tắc least privilege.
+
+## Kiểm tra
+
+Xác nhận:
+
+- S3 bucket không public.
+- Upload được object test vào `uploads/`.
+- DynamoDB table tồn tại và có `jobId` là partition key.
+- IAM role tồn tại với quyền được giới hạn.

@@ -1,44 +1,41 @@
 ---
-title: "Internship Report"
-date: 2024-01-01
+title: "FCAJ AWS Bootcamp Final Project Report"
+date: 2026-05-12
 weight: 1
 chapter: false
 ---
 
-    
-# Internship Report
+# FCAJ AWS Bootcamp Final Project Report
 
-{{% notice warning %}}
-⚠️ **Note:** The information below is for reference purposes only. Please **do not copy verbatim** for your report, including this warning.
-{{% /notice %}}
+## Cognitive Communication Coach on AWS
 
-### Student Information:
-&emsp; **Full Name:** Nguyen Van A
+This report documents my FCAJ AWS Bootcamp final project: a serverless AI system that helps users review conversations, identify weak reasoning points, and practice clearer responses after a discussion, interview, meeting, or presentation.
 
-&emsp; **Phone Number:** 0989888999 
+The project intentionally focuses on **post-conversation reflection** instead of risky real-time conversation assistance. This keeps the solution realistic for one student, easier to reproduce, safer from a privacy perspective, and still aligned with the original goal: using AI to augment human thinking rather than replace it.
 
-&emsp; **Email:** Anguyenvan@gmail.com
+Replace the remaining `TODO` fields with your actual information before final submission. Add your own implementation screenshots where appropriate.
 
-&emsp; **University:** Ho Chi Minh City University of Technology and Education
+## Student Information
 
-&emsp; **Major:** Information Technology
+| Field | Information |
+| --- | --- |
+| Full name | Lâm Chí Tài |
+| Phone number | 0798353782 |
+| Email | lamchitai2300@gmail.com |
+| University | HUTECH - Đại học Công nghệ TP.HCM |
+| Major | Hệ thống thông tin (Information Systems) |
+| Internship company | Amazon Web Services Vietnam |
+| Internship position | Workforce Bootcamp Intern |
+| Internship duration | 17/04/2026 - 10/07/2026 |
 
-&emsp; **Class:** AWS082025
+![Profile picture](/images/avatar.png)
 
-&emsp; **Internship Company:** Amazon Web Services Vietnam Co., Ltd.
+## Report Content
 
-&emsp; **Internship Position:** FCJ Cloud Intern
-
-&emsp; **Internship Duration:** From 12/08/2025 to 12/11/2025
-
-![Your profile picture](/images/avatar.png)
-
-### Report Content
-
-1.  [Worklog](1-Worklog/)
-2.  [Proposal](2-Proposal/)
-3.  [Translated Blogs](3-BlogsTranslated/)
-4.  [Events Participated](4-EventParticipated/)
-5.  [Workshop](5-Workshop/)
-6.  [Self-evaluation](6-Self-evaluation/)
-7.  [Sharing and Feedback](7-Feedback/)
+1. [Week 1-12 Worklog](1-Worklog/)
+2. [Project Proposal](2-Proposal/)
+3. [Technical Blog Posts](3-BlogsTranslated/)
+4. [Events Participated](4-EventParticipated/)
+5. [Technical Workshop / Main Project](5-Workshop/)
+6. [Self Evaluation](6-Self-evaluation/)
+7. [Feedback and Sharing](7-Feedback/)

@@ -1,18 +1,17 @@
 ---
-title : "Truy cập S3 từ VPC"
-date : 2024-01-01 
+title : "Tạo nền tảng lưu trữ và job"
+date : 2026-05-12
 weight : 3
 chapter : false
 pre : " <b> 5.3. </b> "
 ---
 
-#### Sử dụng Gateway endpoint
+# Tạo nền tảng lưu trữ và job
 
-Trong phần này, bạn sẽ tạo một Gateway endpoint để truy cập Amazon S3 từ một EC2 instance. Gateway endpoint sẽ cho phép tải một object lên S3 bucket mà không cần sử dụng Internet Công cộng. Để tạo endpoint, bạn phải chỉ định VPC mà bạn muốn tạo endpoint và dịch vụ (trong trường hợp này là S3) mà bạn muốn thiết lập kết nối.
+Phần này tạo nền tảng cho workflow AI:
 
-![overview](/images/5-Workshop/5.3-S3-vpc/diagram2.png)
+- S3 bucket private để lưu file upload và report.
+- DynamoDB table để lưu trạng thái job.
+- IAM role và policy cho Lambda và Step Functions.
 
-#### Nội dung
-
-- [Tạo gateway endpoint](3.1-create-gwe/)
-- [Test gateway endpoint](3.2-test-gwe/)
+Mục tiêu là giữ data model đơn giản và dễ kiểm tra trong demo cuối.

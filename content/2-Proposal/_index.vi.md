@@ -1,108 +1,114 @@
 ---
-title: "Bản đề xuất"
-date: 2024-01-01
+title: "Đề xuất dự án"
+date: 2026-05-12
 weight: 2
 chapter: false
 pre: " <b> 2. </b> "
 ---
-{{% notice warning %}}
-⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
-{{% /notice %}}
 
-Tại phần này, bạn cần tóm tắt các nội dung trong workshop mà bạn **dự tính** sẽ làm.
+# Đề xuất dự án
 
-# IoT Weather Platform for Lab Research  
-## Giải pháp AWS Serverless hợp nhất cho giám sát thời tiết thời gian thực  
+## Tên dự án
 
-### 1. Tóm tắt điều hành  
-IoT Weather Platform được thiết kế dành cho nhóm *ITea Lab* tại TP. Hồ Chí Minh nhằm nâng cao khả năng thu thập và phân tích dữ liệu thời tiết. Nền tảng hỗ trợ tối đa 5 trạm thời tiết, có khả năng mở rộng lên 10–15 trạm, sử dụng thiết bị biên Raspberry Pi kết hợp cảm biến ESP32 để truyền dữ liệu qua MQTT. Nền tảng tận dụng các dịch vụ AWS Serverless để cung cấp giám sát thời gian thực, phân tích dự đoán và tiết kiệm chi phí, với quyền truy cập giới hạn cho 5 thành viên phòng lab thông qua Amazon Cognito.  
+**Cognitive Communication Coach: Hệ thống AI phản tư hội thoại trên AWS**
 
-### 2. Tuyên bố vấn đề  
-*Vấn đề hiện tại*  
-Các trạm thời tiết hiện tại yêu cầu thu thập dữ liệu thủ công, khó quản lý khi có nhiều trạm. Không có hệ thống tập trung cho dữ liệu hoặc phân tích thời gian thực, và các nền tảng bên thứ ba thường tốn kém và quá phức tạp.  
+## 1. Tổng quan dự án
 
-*Giải pháp*  
-Nền tảng sử dụng AWS IoT Core để tiếp nhận dữ liệu MQTT, AWS Lambda và API Gateway để xử lý, Amazon S3 để lưu trữ (bao gồm data lake), và AWS Glue Crawlers cùng các tác vụ ETL để trích xuất, chuyển đổi, tải dữ liệu từ S3 data lake sang một S3 bucket khác để phân tích. AWS Amplify với Next.js cung cấp giao diện web, và Amazon Cognito đảm bảo quyền truy cập an toàn. Tương tự như Thingsboard và CoreIoT, người dùng có thể đăng ký thiết bị mới và quản lý kết nối, nhưng nền tảng này hoạt động ở quy mô nhỏ hơn và phục vụ mục đích sử dụng nội bộ. Các tính năng chính bao gồm bảng điều khiển thời gian thực, phân tích xu hướng và chi phí vận hành thấp.  
+Dự án là một hệ thống huấn luyện giao tiếp song ngữ, dùng AI để phân tích một đoạn ghi âm hoặc bản ghi hội thoại sau khi cuộc trò chuyện kết thúc. Hệ thống tạo báo cáo gồm tóm tắt nội dung, mục tiêu trao đổi, điểm yếu trong lập luận, gợi ý phản hồi tốt hơn và câu hỏi luyện tập.
 
-*Lợi ích và hoàn vốn đầu tư (ROI)*  
-Giải pháp tạo nền tảng cơ bản để các thành viên phòng lab phát triển một nền tảng IoT lớn hơn, đồng thời cung cấp nguồn dữ liệu cho những người nghiên cứu AI phục vụ huấn luyện mô hình hoặc phân tích. Nền tảng giảm bớt báo cáo thủ công cho từng trạm thông qua hệ thống tập trung, đơn giản hóa quản lý và bảo trì, đồng thời cải thiện độ tin cậy dữ liệu. Chi phí hàng tháng ước tính 0,66 USD (theo AWS Pricing Calculator), tổng cộng 7,92 USD cho 12 tháng. Tất cả thiết bị IoT đã được trang bị từ hệ thống trạm thời tiết hiện tại, không phát sinh chi phí phát triển thêm. Thời gian hoàn vốn 6–12 tháng nhờ tiết kiệm đáng kể thời gian thao tác thủ công.  
+Hệ thống không nhằm mục đích trả lời thay người dùng trong hội thoại trực tiếp. Thay vào đó, hệ thống giúp người dùng nhìn lại cách giao tiếp của mình, hiểu chỗ lập luận chưa rõ, và luyện tập phản hồi tốt hơn cho lần sau.
 
-### 3. Kiến trúc giải pháp  
-Nền tảng áp dụng kiến trúc AWS Serverless để quản lý dữ liệu từ 5 trạm dựa trên Raspberry Pi, có thể mở rộng lên 15 trạm. Dữ liệu được tiếp nhận qua AWS IoT Core, lưu trữ trong S3 data lake và xử lý bởi AWS Glue Crawlers và ETL jobs để chuyển đổi và tải vào một S3 bucket khác cho mục đích phân tích. Lambda và API Gateway xử lý bổ sung, trong khi Amplify với Next.js cung cấp bảng điều khiển được bảo mật bởi Cognito.  
+## 2. Vấn đề cần giải quyết
 
-![IoT Weather Station Architecture](/images/2-Proposal/edge_architecture.jpeg)
+Sinh viên, thực tập sinh và nhân sự mới thường gặp khó khăn khi trao đổi dù đã có hiểu biết nhất định về chủ đề. Một số vấn đề thường gặp:
 
-![IoT Weather Platform Architecture](/images/2-Proposal/platform_architecture.jpeg)
+- Khó sắp xếp ý nhanh khi bị áp lực.
+- Bị khựng lại khi liên tục bị hỏi "tại sao".
+- Trả lời thiếu bằng chứng hoặc ví dụ.
+- Chỉ nghĩ ra câu trả lời tốt hơn sau khi buổi trao đổi đã kết thúc.
+- Thiếu một quy trình có cấu trúc để tự đánh giá và cải thiện giao tiếp.
 
-*Dịch vụ AWS sử dụng*  
-- *AWS IoT Core*: Tiếp nhận dữ liệu MQTT từ 5 trạm, mở rộng lên 15.  
-- *AWS Lambda*: Xử lý dữ liệu và kích hoạt Glue jobs (2 hàm).  
-- *Amazon API Gateway*: Giao tiếp với ứng dụng web.  
-- *Amazon S3*: Lưu trữ dữ liệu thô (data lake) và dữ liệu đã xử lý (2 bucket).  
-- *AWS Glue*: Crawlers lập chỉ mục dữ liệu, ETL jobs chuyển đổi và tải dữ liệu.  
-- *AWS Amplify*: Lưu trữ giao diện web Next.js.  
-- *Amazon Cognito*: Quản lý quyền truy cập cho người dùng phòng lab.  
+Vấn đề không chỉ nằm ở ngoại ngữ, mà còn ở cấu trúc tư duy, sự tự tin và khả năng phản tư.
 
-*Thiết kế thành phần*  
-- *Thiết bị biên*: Raspberry Pi thu thập và lọc dữ liệu cảm biến, gửi tới IoT Core.  
-- *Tiếp nhận dữ liệu*: AWS IoT Core nhận tin nhắn MQTT từ thiết bị biên.  
-- *Lưu trữ dữ liệu*: Dữ liệu thô lưu trong S3 data lake; dữ liệu đã xử lý lưu ở một S3 bucket khác.  
-- *Xử lý dữ liệu*: AWS Glue Crawlers lập chỉ mục dữ liệu; ETL jobs chuyển đổi để phân tích.  
-- *Giao diện web*: AWS Amplify lưu trữ ứng dụng Next.js cho bảng điều khiển và phân tích thời gian thực.  
-- *Quản lý người dùng*: Amazon Cognito giới hạn 5 tài khoản hoạt động.  
+## 3. Mục tiêu
 
-### 4. Triển khai kỹ thuật  
-*Các giai đoạn triển khai*  
-Dự án gồm 2 phần — thiết lập trạm thời tiết biên và xây dựng nền tảng thời tiết — mỗi phần trải qua 4 giai đoạn:  
-1. *Nghiên cứu và vẽ kiến trúc*: Nghiên cứu Raspberry Pi với cảm biến ESP32 và thiết kế kiến trúc AWS Serverless (1 tháng trước kỳ thực tập).  
-2. *Tính toán chi phí và kiểm tra tính khả thi*: Sử dụng AWS Pricing Calculator để ước tính và điều chỉnh (Tháng 1).  
-3. *Điều chỉnh kiến trúc để tối ưu chi phí/giải pháp*: Tinh chỉnh (ví dụ tối ưu Lambda với Next.js) để đảm bảo hiệu quả (Tháng 2).  
-4. *Phát triển, kiểm thử, triển khai*: Lập trình Raspberry Pi, AWS services với CDK/SDK và ứng dụng Next.js, sau đó kiểm thử và đưa vào vận hành (Tháng 2–3).  
+- Xây dựng một hệ thống thực tế trên AWS, dùng tối thiểu ba dịch vụ AWS.
+- Cho phép người dùng tải lên audio ngắn hoặc transcript để phân tích.
+- Dùng Amazon Transcribe để chuyển giọng nói thành văn bản khi đầu vào là audio.
+- Dùng Amazon Bedrock để tạo báo cáo huấn luyện giao tiếp.
+- Lưu trạng thái xử lý và kết quả theo cấu trúc rõ ràng.
+- Viết tài liệu triển khai lại được từ đầu đến cuối, bao gồm kiểm thử, giám sát, bảo mật, chi phí và dọn dẹp.
+- Giữ phạm vi phù hợp với một học viên bootcamp.
 
-*Yêu cầu kỹ thuật*  
-- *Trạm thời tiết biên*: Cảm biến (nhiệt độ, độ ẩm, lượng mưa, tốc độ gió), vi điều khiển ESP32, Raspberry Pi làm thiết bị biên. Raspberry Pi chạy Raspbian, sử dụng Docker để lọc dữ liệu và gửi 1 MB/ngày/trạm qua MQTT qua Wi-Fi.  
-- *Nền tảng thời tiết*: Kiến thức thực tế về AWS Amplify (lưu trữ Next.js), Lambda (giảm thiểu do Next.js xử lý), AWS Glue (ETL), S3 (2 bucket), IoT Core (gateway và rules), và Cognito (5 người dùng). Sử dụng AWS CDK/SDK để lập trình (ví dụ IoT Core rules tới S3). Next.js giúp giảm tải Lambda cho ứng dụng web fullstack.  
+## 4. Kiến trúc giải pháp
 
-### 5. Lộ trình & Mốc triển khai  
-- *Trước thực tập (Tháng 0)*: 1 tháng lên kế hoạch và đánh giá trạm cũ.  
-- *Thực tập (Tháng 1–3)*:  
-    - Tháng 1: Học AWS và nâng cấp phần cứng.  
-    - Tháng 2: Thiết kế và điều chỉnh kiến trúc.  
-    - Tháng 3: Triển khai, kiểm thử, đưa vào sử dụng.  
-- *Sau triển khai*: Nghiên cứu thêm trong vòng 1 năm.  
+{{< mermaid align="left" >}}
+flowchart LR
+  User["Trình duyệt người dùng"] --> APIGW["Amazon API Gateway"]
+  APIGW --> UploadLambda["Lambda: tạo upload URL"]
+  UploadLambda --> S3["Amazon S3 private bucket"]
+  S3 --> SFN["AWS Step Functions workflow"]
+  SFN --> Transcribe["Amazon Transcribe"]
+  SFN --> Bedrock["Amazon Bedrock"]
+  SFN --> DDB["Amazon DynamoDB"]
+  APIGW --> ResultLambda["Lambda: lấy kết quả"]
+  ResultLambda --> DDB
+  SFN --> CW["Amazon CloudWatch"]
+{{< /mermaid >}}
 
-### 6. Ước tính ngân sách  
-Có thể xem chi phí trên [AWS Pricing Calculator](https://calculator.aws/#/estimate?id=621f38b12a1ef026842ba2ddfe46ff936ed4ab01)  
-Hoặc tải [tệp ước tính ngân sách](../attachments/budget_estimation.pdf).  
+## 5. Dịch vụ AWS sử dụng
 
-*Chi phí hạ tầng*  
-- AWS Lambda: 0,00 USD/tháng (1.000 request, 512 MB lưu trữ).  
-- S3 Standard: 0,15 USD/tháng (6 GB, 2.100 request, 1 GB quét).  
-- Truyền dữ liệu: 0,02 USD/tháng (1 GB vào, 1 GB ra).  
-- AWS Amplify: 0,35 USD/tháng (256 MB, request 500 ms).  
-- Amazon API Gateway: 0,01 USD/tháng (2.000 request).  
-- AWS Glue ETL Jobs: 0,02 USD/tháng (2 DPU).  
-- AWS Glue Crawlers: 0,07 USD/tháng (1 crawler).  
-- MQTT (IoT Core): 0,08 USD/tháng (5 thiết bị, 45.000 tin nhắn).  
+| Dịch vụ | Vai trò | Lý do lựa chọn |
+| --- | --- | --- |
+| Amazon S3 | Lưu audio, transcript và báo cáo sinh ra | Lưu trữ object bền vững, chi phí thấp, hỗ trợ private access |
+| AWS Lambda | Tạo upload URL, tạo job, lấy kết quả | Serverless compute phù hợp với tác vụ backend ngắn |
+| Amazon API Gateway | Cung cấp REST API cho frontend hoặc test client | Lớp API managed, hỗ trợ xác thực và giới hạn request |
+| AWS Step Functions | Điều phối workflow transcription và phân tích AI | Dễ quan sát, retry và debug xử lý bất đồng bộ |
+| Amazon Transcribe | Chuyển file hội thoại audio thành văn bản | Dịch vụ speech-to-text managed, không cần tự xây ASR |
+| Amazon Bedrock | Sinh phản hồi huấn luyện có cấu trúc | Truy cập foundation model managed, không cần vận hành model |
+| Amazon DynamoDB | Lưu metadata job, trạng thái và tham chiếu kết quả | NoSQL serverless phù hợp truy vấn key-value đơn giản |
+| Amazon CloudWatch | Lưu log và metric vận hành | Hỗ trợ debug, giám sát và xác thực |
+| AWS IAM | Kiểm soát quyền giữa các dịch vụ | Thiết kế least privilege |
 
-*Tổng*: 0,7 USD/tháng, 8,40 USD/12 tháng  
-- *Phần cứng*: 265 USD một lần (Raspberry Pi 5 và cảm biến).  
+## 6. Tiến độ
 
-### 7. Đánh giá rủi ro  
-*Ma trận rủi ro*  
-- Mất mạng: Ảnh hưởng trung bình, xác suất trung bình.  
-- Hỏng cảm biến: Ảnh hưởng cao, xác suất thấp.  
-- Vượt ngân sách: Ảnh hưởng trung bình, xác suất thấp.  
+| Giai đoạn | Thời lượng | Kết quả |
+| --- | --- | --- |
+| Phân tích yêu cầu | Tuần 1 | Problem statement, user journey, phạm vi dự án |
+| Nền tảng AWS | Tuần 2-3 | IAM, S3 bucket, DynamoDB table, Lambda cơ bản |
+| Workflow AI | Tuần 4-6 | Luồng Transcribe, prompt Bedrock, Step Functions |
+| API và kiểm thử | Tuần 7-8 | API Gateway endpoint, kiểm thử input mẫu |
+| Tài liệu | Tuần 9-10 | Workshop step, sơ đồ, screenshot, nội dung song ngữ |
+| Tối ưu và bảo vệ | Tuần 11-12 | Review bảo mật, chi phí, cleanup, luyện bảo vệ |
 
-*Chiến lược giảm thiểu*  
-- Mạng: Lưu trữ cục bộ trên Raspberry Pi với Docker.  
-- Cảm biến: Kiểm tra định kỳ, dự phòng linh kiện.  
-- Chi phí: Cảnh báo ngân sách AWS, tối ưu dịch vụ.  
+## 7. Nhận thức về chi phí
 
-*Kế hoạch dự phòng*  
-- Quay lại thu thập thủ công nếu AWS gặp sự cố.  
-- Sử dụng CloudFormation để khôi phục cấu hình liên quan đến chi phí.  
+Dự án được thiết kế cho quy mô bootcamp chi phí thấp:
 
-### 8. Kết quả kỳ vọng  
-*Cải tiến kỹ thuật*: Dữ liệu và phân tích thời gian thực thay thế quy trình thủ công. Có thể mở rộng tới 10–15 trạm.  
-*Giá trị dài hạn*: Nền tảng dữ liệu 1 năm cho nghiên cứu AI, có thể tái sử dụng cho các dự án tương lai.
+- Audio test nên giới hạn 3-5 phút.
+- Dung lượng S3 thấp vì chỉ dùng file mẫu.
+- Lambda và Step Functions chỉ chạy ở mức test.
+- Chi phí Bedrock phụ thuộc model và số token, nên prompt cần ngắn gọn.
+- Phải cleanup toàn bộ tài nguyên sau demo để tránh phát sinh chi phí.
+
+Báo cáo cuối nên bổ sung ảnh chụp hoặc file estimate từ AWS Pricing Calculator theo region và model thực tế.
+
+## 8. Rủi ro
+
+| Rủi ro | Ảnh hưởng | Cách giảm thiểu |
+| --- | --- | --- |
+| Transcript không chính xác | Chất lượng báo cáo AI giảm | Dùng audio rõ, hỗ trợ phương án upload transcript |
+| Kết quả Bedrock chung chung | Demo kém thuyết phục | Dùng prompt có cấu trúc và rubric cố định |
+| Chi phí tăng do gọi AI nhiều | Phát sinh phí ngoài dự kiến | Giới hạn thời lượng file, xóa file test, theo dõi usage |
+| Dữ liệu hội thoại nhạy cảm | Rủi ro lộ thông tin | S3 private, IAM least privilege, cleanup, thông báo consent |
+| Workflow khó debug | Chậm tiến độ | Dùng execution history của Step Functions và CloudWatch Logs |
+| Mở rộng thành trợ lý real-time | Phạm vi vượt quá sức | Giữ MVP ở dạng xử lý sau hội thoại |
+
+## 9. Tiêu chí thành công
+
+- Upload được audio hoặc transcript mẫu.
+- Hệ thống tạo job record và lưu trạng thái xử lý.
+- Audio được chuyển thành văn bản, hoặc transcript text được nhận trực tiếp.
+- Bedrock tạo báo cáo huấn luyện có cấu trúc.
+- Người dùng truy xuất và xem được kết quả.
+- Có tài liệu về log, lỗi, phân quyền, kiểm soát chi phí và cleanup.

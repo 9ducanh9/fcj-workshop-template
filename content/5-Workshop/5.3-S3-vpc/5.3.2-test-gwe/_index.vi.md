@@ -1,82 +1,77 @@
 ---
-title : "Kiểm tra Gateway Endpoint"
-date : 2024-01-01 
+title : "Tạo API upload và lấy kết quả"
+date : 2026-05-12
 weight : 2
 chapter : false
-pre : " <b> 5.3.2 </b> "
+pre : " <b> 5.3.2. </b> "
 ---
 
-#### Tạo S3 bucket
+# Tạo API upload và lấy kết quả
 
-1. Đi đến S3 management console
-2. Trong Bucket console, chọn **Create bucket**
+## Thiết kế API
 
-![Create bucket](/images/5-Workshop/5.3-S3-vpc/create-bucket.png)
+Tạo REST API đơn giản với các endpoint:
 
-3. Trong Create bucket console
-+ Đặt tên bucket: chọn 1 tên mà không bị trùng trong phạm vi toàn cầu (gợi ý: lab\<số-lab\>\<tên-bạn\>)
+| Method | Path | Mục đích |
+| --- | --- | --- |
+| `POST` | `/upload-url` | Tạo pre-signed S3 upload URL |
+| `POST` | `/jobs` | Tạo processing job sau khi upload |
+| `GET` | `/jobs/{jobId}` | Lấy trạng thái và kết quả job |
 
-![Bucket name](/images/5-Workshop/5.3-S3-vpc/bucket-name.png)
+## Lambda tạo upload URL
 
+Lambda tạo upload URL nên:
 
-+ Giữ nguyên giá trị của các fields khác (default)
-+ Kéo chuột xuống và chọn **Create bucket**
+1. Nhận file name và input type.
+2. Tạo `jobId` duy nhất.
+3. Tạo S3 key trong `uploads/`.
+4. Trả về pre-signed URL.
+5. Có thể insert job item ban đầu vào DynamoDB.
 
-![Create](/images/5-Workshop/5.3-S3-vpc/create-button.png)    
+Ví dụ response:
 
-+ Tạo thành công S3 bucket
+```json
+{
+  "jobId": "job-20260512-001",
+  "uploadUrl": "https://s3-presigned-url-example",
+  "s3Key": "uploads/job-20260512-001/sample.txt"
+}
+```
 
-![Success](/images/5-Workshop/5.3-S3-vpc/bucket-success.png)
+## Lambda tạo job
 
-#### Kết nối với EC2 bằng session manager
+Lambda tạo job nên:
 
-+ Trong workshop này, bạn sẽ dùng AWS Session Manager để kết nối đến các EC2 instances. Session Manager là 1 tính năng trong dịch vụ Systems Manager được quản lý hoàn toàn bởi AWS. System manager cho phép bạn quản lý Amazon EC2 instances và các máy ảo on-premises (VMs)thông qua 1 browser-based shell. Session Manager cung cấp khả năng quản lý phiên bản an toàn và có thể kiểm tra mà không cần mở cổng vào, duy trì máy chủ bastion host hoặc quản lý khóa SSH.
+1. Kiểm tra object đã upload có tồn tại trong S3.
+2. Insert hoặc update DynamoDB item với status `UPLOADED`.
+3. Start Step Functions execution.
+4. Trả về `jobId` và trạng thái hiện tại.
 
-+ First cloud journey [Lab](https://000058.awsstudygroup.com/1-introduce/) để hiểu sâu hơn về Session manager.
+Ví dụ response:
 
-1. Trong AWS Management Console, gõ Systems Manager trong ô tìm kiếm và nhấn Enter:
+```json
+{
+  "jobId": "job-20260512-001",
+  "status": "UPLOADED",
+  "message": "Processing workflow started"
+}
+```
 
-![system manager](/images/5-Workshop/5.3-S3-vpc/sm.png)
+## Lambda lấy kết quả
 
-2. Từ **Systems Manager** menu, tìm **Node Management** ở thanh bên trái và chọn **Session Manager**:
+Lambda lấy kết quả nên:
 
-![system manager](/images/5-Workshop/5.3-S3-vpc/sm1.png)
+1. Đọc job item từ DynamoDB.
+2. Nếu status là `COMPLETED`, trả về vị trí report hoặc nội dung report.
+3. Nếu status là `FAILED`, trả về lý do lỗi.
+4. Nếu vẫn đang xử lý, trả về trạng thái hiện tại.
 
-3. Click Start Session, và chọn EC2 instance tên **Test-Gateway-Endpoint**. 
-{{% notice info %}}
-Phiên bản EC2 này đã chạy trong "VPC cloud" và sẽ được dùng để kiểm tra khả năng kết nối với Amazon S3 thông qua điểm cuối Cổng mà bạn vừa tạo (s3-gwe). {{% /notice %}}
+## Kiểm tra
 
-![Start session](/images/5-Workshop/5.3-S3-vpc/start-session.png)
+Hãy test bằng transcript trước vì tránh biến số từ audio transcription:
 
-Session Manager sẽ mở browser tab mới với shell prompt: sh-4.2 $
+```powershell
+aws s3 cp sample_conversation.txt s3://<bucket-name>/uploads/job-test/sample_conversation.txt
+```
 
-![Success](/images/5-Workshop/5.3-S3-vpc/start-session-success.png)
-
-Bạn đã bắt đầu phiên kết nối đến EC2 trong VPC Cloud thành công. Trong bước tiếp theo, chúng ta sẽ tạo một  S3 bucket và một tệp trong đó.
-#### Create a file and upload to s3 bucket
-
-1. Đổi về ssm-user's thư mục bằng lệnh "cd ~" 
-
-![Change user's dir](/images/5-Workshop/5.3-S3-vpc/cli1.png)
-
-2. Tạo 1 file để kiểm tra bằng lệnh "fallocate -l 1G testfile.xyz", 1 file tên "testfile.xyz" có kích thước 1GB sẽ được tạo.
-
-![Create file](/images/5-Workshop/5.3-S3-vpc/cli-file.png)
-
-3. Tải file mình vừa tạo lên S3 với lệnh "aws s3 cp testfile.xyz s3://your-bucket-name". Thay your-bucket-name bằng tên S3 bạn đã tạo.
-
-![Uploaded](/images/5-Workshop/5.3-S3-vpc/uploaded.png)
-
-Bạn đã tải thành công tệp lên bộ chứa S3 của mình. Bây giờ bạn có thể kết thúc session.
-
-#### Kiểm tra object trong S3 bucket
-
-1. Đi đến S3 console.  
-2. Click tên s3 bucket của bạn
-3. Trong Bucket console, bạn sẽ thấy tệp bạn đã tải lên S3 bucket của mình
-
-![Check S3](/images/5-Workshop/5.3-S3-vpc/check-s3-bucket.png)
-
-#### Tóm tắt
-
-Chúc mừng bạn đã hoàn thành truy cập S3 từ VPC. Trong phần này, bạn đã tạo gateway endpoint cho Amazon S3 và sử dụng AWS CLI để tải file lên. Quá trình tải lên hoạt động vì gateway endpoint cho phép giao tiếp với S3 mà không cần Internet gateway gắn vào "VPC Cloud". Điều này thể hiện chức năng của gateway endpoint như một đường dẫn an toàn đến S3 mà không cần đi qua pub    lic Internet.
+Sau đó tạo DynamoDB test item thủ công hoặc gọi API `/jobs` và xác nhận job xuất hiện trong table.

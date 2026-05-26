@@ -1,40 +1,54 @@
 ---
 title: "Tự đánh giá"
-date: 2024-01-01
+date: 2026-05-12
 weight: 6
 chapter: false
 pre: " <b> 6. </b> "
 ---
 
-{{% notice warning %}}
-⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
-{{% /notice %}}
+# Tự đánh giá
 
-Trong suốt thời gian thực tập tại **[Tên công ty/tổ chức]** từ **[ngày bắt đầu]** đến **[ngày kết thúc]**, tôi đã có cơ hội học hỏi, rèn luyện và áp dụng kiến thức đã được trang bị tại trường vào môi trường làm việc thực tế.  
-Tôi đã tham gia **[mô tả ngắn gọn dự án hoặc công việc chính]**, qua đó cải thiện kỹ năng **[liệt kê kỹ năng: lập trình, phân tích, viết báo cáo, giao tiếp…]**.  
+## Kiến thức kỹ thuật
 
-Về tác phong, tôi luôn cố gắng hoàn thành tốt nhiệm vụ, tuân thủ nội quy, và tích cực trao đổi với đồng nghiệp để nâng cao hiệu quả công việc.
+Tôi hiểu rõ hơn về kiến trúc serverless, object storage, thiết kế API, điều phối workflow, tích hợp dịch vụ AI, thiết kế quyền IAM và quan sát hệ thống trên AWS. Dự án giúp tôi kết nối nhiều dịch vụ AWS thành một hệ thống thực tế thay vì học rời rạc từng dịch vụ.
 
-Để phản ánh một cách khách quan quá trình thực tập, tôi xin tự đánh giá bản thân dựa trên các tiêu chí dưới đây:
+## Khả năng học tập
 
+Tôi học được cách thu hẹp một ý tưởng sản phẩm tham vọng thành MVP thực tế. Ý tưởng ban đầu là trợ lý giao tiếp AI thời gian thực, nhưng bản triển khai cuối tập trung vào phản tư sau hội thoại vì an toàn hơn, rẻ hơn, dễ triển khai lại hơn và phù hợp hơn với đồ án bootcamp.
 
-| STT | Tiêu chí                            | Mô tả                                                                                            | Tốt | Khá | Trung bình |
-| --- | ----------------------------------- | ------------------------------------------------------------------------------------------------ | --- | --- | ---------- |
-| 1   | **Kiến thức và kỹ năng chuyên môn** | Hiểu biết về ngành, áp dụng kiến thức vào thực tế, kỹ năng sử dụng công cụ, chất lượng công việc | ✅   | ☐   | ☐          |
-| 2   | **Khả năng học hỏi**                | Tiếp thu kiến thức mới, học hỏi nhanh                                                            | ☐   | ✅   | ☐          |
-| 3   | **Chủ động**                        | Tự tìm hiểu, nhận nhiệm vụ mà không chờ chỉ dẫn                                                  | ✅   | ☐   | ☐          |
-| 4   | **Tinh thần trách nhiệm**           | Hoàn thành công việc đúng hạn, đảm bảo chất lượng                                                | ✅   | ☐   | ☐          |
-| 5   | **Kỷ luật**                         | Tuân thủ giờ giấc, nội quy, quy trình làm việc                                                   | ☐   | ☐   | ✅          |
-| 6   | **Tính cầu tiến**                   | Sẵn sàng nhận feedback và cải thiện bản thân                                                     | ☐   | ✅   | ☐          |
-| 7   | **Giao tiếp**                       | Trình bày ý tưởng, báo cáo công việc rõ ràng                                                     | ☐   | ✅   | ☐          |
-| 8   | **Hợp tác nhóm**                    | Làm việc hiệu quả với đồng nghiệp, tham gia nhóm                                                 | ✅   | ☐   | ☐          |
-| 9   | **Ứng xử chuyên nghiệp**            | Tôn trọng đồng nghiệp, đối tác, môi trường làm việc                                              | ✅   | ☐   | ☐          |
-| 10  | **Tư duy giải quyết vấn đề**        | Nhận diện vấn đề, đề xuất giải pháp, sáng tạo                                                    | ☐   | ✅   | ☐          |
-| 11  | **Đóng góp vào dự án/tổ chức**      | Hiệu quả công việc, sáng kiến cải tiến, ghi nhận từ team                                         | ✅   | ☐   | ☐          |
-| 12  | **Tổng thể**                        | Đánh giá chung về toàn bộ quá trình thực tập                                                     | ✅   | ☐   | ☐          |
+## Tinh thần chủ động
 
-### Cần cải thiện
+Tôi đề xuất một use case gốc dựa trên vấn đề giao tiếp thực tế: nhiều người hiểu một phần chủ đề nhưng khó sắp xếp và bảo vệ ý tưởng khi trao đổi. Tôi tự điều chỉnh phạm vi, chọn dịch vụ AWS và xây dựng cấu trúc workshop để người khác có thể làm theo.
 
-* Nâng cao tính kỹ luật, chấp hành nghiêm chỉnh nội quy của công ty hoặc bất kỳ trong một tổ chức nào
-* Cải thiện trong cách tư duy giải quyết vấn đề
-* Học cách giao tiếp tốt hơn trong giao tiếp hằng ngày và trong công việc, xử lý tình huống
+## Kỷ luật
+
+Tôi duy trì worklog theo tuần, viết tài liệu triển khai, và bổ sung các phần kiểm thử, giám sát, bảo mật, chi phí và cleanup. Tôi cũng giữ phạm vi dự án vừa đủ để tránh phức tạp hóa như hệ thống production.
+
+## Giao tiếp
+
+Dự án giúp tôi luyện cách giải thích lựa chọn kiến trúc rõ ràng hơn: vì sao cần từng dịch vụ AWS, trade-off nào đã được chọn, và hệ thống xử lý quyền riêng tư, chi phí, lỗi như thế nào.
+
+## Làm việc nhóm
+
+Trong bootcamp, tôi học từ mentor, trao đổi với bạn học, tài liệu AWS Study Group và các buổi sự kiện. Tôi dùng phản hồi để tinh chỉnh ý tưởng từ một trợ lý AI quá rộng thành một dự án cloud có thể hoàn thành.
+
+## Giải quyết vấn đề
+
+Thử thách chính là cân bằng giữa tham vọng và tính khả thi. Tôi giải quyết bằng cách chuyển từ real-time sang xử lý bất đồng bộ, cho phép upload transcript làm phương án dự phòng, và dùng Step Functions cùng CloudWatch để quan sát lỗi.
+
+## Đóng góp cá nhân
+
+Đóng góp cá nhân của tôi bao gồm:
+
+- Xác định vấn đề và user journey.
+- Thiết kế kiến trúc serverless trên AWS.
+- Xây dựng prompt Bedrock và rubric đánh giá.
+- Viết tài liệu workshop song ngữ.
+- Chuẩn bị kịch bản test, bước validation, review bảo mật và kế hoạch cleanup.
+
+## Điểm cần cải thiện
+
+- Bổ sung frontend UI hoàn chỉnh thay vì chủ yếu kiểm thử qua API.
+- Chụp thêm screenshot AWS thực tế sau triển khai.
+- So sánh nhiều model Bedrock về chất lượng và chi phí.
+- Thêm xác thực bằng Amazon Cognito nếu mở rộng ngoài phạm vi MVP bootcamp.

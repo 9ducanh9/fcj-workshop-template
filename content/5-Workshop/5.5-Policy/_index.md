@@ -1,99 +1,81 @@
 ---
-title : "VPC Endpoint Policies"
-date : 2024-01-01
+title : "Security, Monitoring, Testing, and Cost Optimization"
+date : 2026-05-12
 weight : 5
 chapter : false
 pre : " <b> 5.5. </b> "
 ---
 
-When you create an interface or gateway endpoint, you can attach an endpoint policy to it that controls access to the service to which you are connecting. A VPC endpoint policy is an IAM resource policy that you attach to an endpoint. If you do not attach a policy when you create an endpoint, AWS attaches a default policy for you that allows full access to the service through the endpoint.
+# Security, Monitoring, Testing, and Cost Optimization
 
-You can create a policy that restricts access to specific S3 buckets only. This is useful if you only want certain S3 Buckets to be accessible through the endpoint.
+## Security Considerations
 
-In this section you will create a VPC endpoint policy that restricts access to the S3 bucket specified in the VPC endpoint policy.
+### Data Privacy
 
-![endpoint diagram](/images/5-Workshop/5.5-Policy/s3-bucket-policy.png)
+- Upload only conversations that are allowed to be processed.
+- Do not use confidential company, customer, or personal conversations for demo.
+- Keep all S3 buckets private.
+- Use pre-signed URLs for upload instead of public write access.
+- Apply lifecycle deletion for demo data.
 
-#### Connect to an EC2 instance and verify connectivity to S3
+### IAM Least Privilege
 
-1. Start a new AWS Session Manager session on the instance named Test-Gateway-Endpoint. From the session, verify that you can list the contents of the bucket you created in Part 1: Access S3 from VPC:
+Use scoped permissions:
 
-```
-aws s3 ls s3://\<your-bucket-name\>
-```
-![test](/images/5-Workshop/5.5-Policy/test1.png)
+- Lambda can read/write only the project S3 bucket.
+- Lambda can update only the `CognitiveCoachJobs` table.
+- Lambda can invoke only the required Bedrock model.
+- Step Functions can invoke only the workflow Lambda functions.
+- Transcribe can write only to the selected S3 output prefix.
 
-The bucket contents include the two 1 GB files uploaded in earlier.
+### AI Safety Boundary
 
-2. Create a new S3 bucket; follow the naming pattern you used in Part 1, but add a '-2' to the name. Leave other fields as default and click create
+The system should clearly state that AI output is coaching feedback, not guaranteed truth. The user must review suggestions critically.
 
-![create bucket](/images/5-Workshop/5.5-Policy/create-bucket.png)
+## Monitoring and Logging
 
-Successfully create bucket
+Use CloudWatch to monitor:
 
-![Success](/images/5-Workshop/5.5-Policy/create-bucket-success.png)
+- Lambda invocation errors.
+- Lambda duration and timeout.
+- Step Functions failed executions.
+- Bedrock invocation errors.
+- Transcribe job failures.
 
-3. Navigate to: Services > VPC > Endpoints, then select the Gateway VPC endpoint you created earlier. Click the Policy tab. Click Edit policy.
+Recommended screenshots:
 
-![policy](/images/5-Workshop/5.5-Policy/policy1.png)
+- CloudWatch log group for the analysis Lambda.
+- Step Functions execution history.
+- DynamoDB item before and after completion.
 
-The default policy allows access to all S3 Buckets through the VPC endpoint.
+## Testing and Validation
 
-4. In Edit Policy console, copy & Paste the following policy, then replace yourbucketname-2 with your 2nd bucket name. This policy will allow access through the VPC endpoint to your new bucket, but not any other bucket in Amazon S3. Click Save to apply the policy.
+| Test | Expected Result |
+| --- | --- |
+| Upload transcript | Object appears in S3 `uploads/` |
+| Start job | DynamoDB item status becomes `UPLOADED` or `ANALYZING` |
+| Analyze transcript | Bedrock returns structured report |
+| Save report | S3 contains `reports/<jobId>/report.json` |
+| Retrieve result | API returns status and report |
+| Missing file | Job status becomes `FAILED` with error message |
+| Bedrock access error | Error appears in CloudWatch and job fails safely |
 
-```
-{
-  "Id": "Policy1631305502445",
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "Stmt1631305501021",
-      "Action": "s3:*",
-      "Effect": "Allow",
-      "Resource": [
-      				"arn:aws:s3:::yourbucketname-2",
-       				"arn:aws:s3:::yourbucketname-2/*"
-       ],
-      "Principal": "*"
-    }
-  ]
-}
-```
+## Cost Optimization
 
-![custom policy](/images/5-Workshop/5.5-Policy/policy2.png)
+- Use short audio files for testing.
+- Prefer transcript input during repeated development.
+- Keep prompts concise to reduce Bedrock token usage.
+- Use DynamoDB on-demand for low traffic.
+- Delete S3 objects after demo.
+- Remove unused Lambda versions, APIs, state machines, log groups, and tables.
 
-Successfully customize policy
+## Scalability Awareness
 
-![success](/static/images/5-Workshop/5.5-Policy/success.png)
+This architecture can scale better than a single server because:
 
-5. From your session on the Test-Gateway-Endpoint instance, test access to the S3 bucket you created in Part 1: Access S3 from VPC
-```
-aws s3 ls s3://<yourbucketname>
-```
+- S3 handles object storage independently.
+- Lambda scales per request.
+- Step Functions tracks each job execution.
+- DynamoDB supports high request volume with proper key design.
 
-This command will return an error because access to this bucket is not permitted by your new VPC endpoint policy:
-
-![error](/static/images/5-Workshop/5.5-Policy/error.png)
-
-6. Return to your home directory on your EC2 instance ` cd~ `
-
-+ Create a file ```fallocate -l 1G test-bucket2.xyz ```
-+ Copy file to 2nd bucket ```aws s3 cp test-bucket2.xyz s3://<your-2nd-bucket-name>```
-
-![success](/static/images/5-Workshop/5.5-Policy/test2.png)
-
-This operation succeeds because it is permitted by the VPC endpoint policy.
-
-![success](/static/images/5-Workshop/5.5-Policy/test2-success.png)
-
-+ Then we test access to the first bucket by copy the file to 1st bucket `aws s3 cp test-bucket2.xyz s3://<your-1st-bucket-name>`
-
-![fail](/static/images/5-Workshop/5.5-Policy/test2-fail.png)
-
-This command will return an error because access to this bucket is not permitted by your new VPC endpoint policy.
-
-#### Part 3 Summary:
-
-In this section, you created a VPC endpoint policy for Amazon S3, and used the AWS CLI to test the policy. AWS CLI actions targeted to your original S3 bucket failed because you applied a policy that only allowed access to the second bucket you created. AWS CLI actions targeted for your second bucket succeeded because the policy allowed them. These policies can be useful in situations where you need to control access to resources through VPC endpoints.
-
-
+However, this bootcamp version does not include full production features such as multi-user quotas, advanced authentication, PII detection, or model evaluation pipelines.

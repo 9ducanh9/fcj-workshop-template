@@ -1,47 +1,35 @@
 ---
-title: "Sharing and Feedback"
-date: 2024-01-01
+title: "Feedback and Sharing"
+date: 2026-05-12
 weight: 7
 chapter: false
 pre: " <b> 7. </b> "
 ---
 
-{{% notice warning %}}
-⚠️ **Note:** The information below is for reference purposes only. Please **do not copy verbatim** for your report, including this warning.
-{{% /notice %}}
+# Feedback and Sharing
 
-> Here, you can freely share your personal opinions about your experience participating in the First Cloud Journey program. This will help the FCJ team improve any shortcomings based on the following aspects:
+## Program Experience
 
-### Overall Evaluation
+The FCAJ AWS Bootcamp helped me move from basic AWS awareness to practical cloud solution design. The most valuable part was learning how to justify architecture decisions, not only how to create resources in the AWS Console.
 
-**1. Working Environment**  
-The working environment is very friendly and open. FCJ members are always willing to help whenever I encounter difficulties, even outside working hours. The workspace is tidy and comfortable, helping me focus better. However, I think it would be nice to have more social gatherings or team bonding activities to strengthen relationships.
+## Satisfaction
 
-**2. Support from Mentor / Team Admin**  
-The mentor provides very detailed guidance, explains clearly when I don’t understand, and always encourages me to ask questions. The admin team supports administrative tasks, provides necessary documents, and creates favorable conditions for me to work effectively. I especially appreciate that the mentor allows me to try and solve problems myself instead of just giving the answer.
+I am satisfied with the learning path because it encouraged both hands-on practice and documentation. The final project requirement pushed me to think about implementation, testing, monitoring, security, cost, and cleanup as one complete lifecycle.
 
-**3. Relevance of Work to Academic Major**  
-The tasks I was assigned align well with the knowledge I learned at university, while also introducing me to new areas I had never encountered before. This allowed me to both strengthen my foundational knowledge and gain practical skills.
+## Most Useful Lessons
 
-**4. Learning & Skill Development Opportunities**  
-During the internship, I learned many new skills such as using project management tools, teamwork skills, and professional communication in a corporate environment. The mentor also shared valuable real-world experiences that helped me better plan my career path.
+- Cloud architecture must start from a clear problem, not from randomly choosing services.
+- Serverless services are powerful for student projects because they reduce infrastructure operation work.
+- AI projects need privacy, cost, and correctness boundaries.
+- Documentation quality matters because another person should be able to reproduce the result.
 
-**5. Company Culture & Team Spirit**  
-The company culture is very positive: everyone respects each other, works seriously but still keeps things enjoyable. When there are urgent projects, everyone works together and supports one another regardless of their position. This made me feel like a real part of the team, even as an intern.
+## Improvement Suggestions
 
-**6. Internship Policies / Benefits**  
-The company provides an internship allowance and offers flexible working hours when needed. In addition, having the opportunity to join internal training sessions is a big plus.
+- Provide more example rubrics for evaluating final project architecture quality.
+- Add more sessions about IAM least privilege and cost estimation.
+- Include one workshop on designing AI workloads responsibly on AWS.
+- Give students more practice presenting trade-offs and defending architecture choices.
 
----
+## Recommendation
 
-### Additional Questions
-- What did you find **most satisfying** during your internship?  
-- What do you think the company **should improve** for future interns?  
-- If recommending to a friend, would you **suggest they intern here**? Why or why not?  
-
----
-
-### Suggestions & Expectations
-- Do you have any suggestions to improve the internship experience?  
-- Would you like to continue this program in the future?  
-- Any other comments (free sharing):
+I would recommend the program to students who want to learn AWS through practical work. The program is especially useful for learners who want to build a project portfolio and practice explaining cloud architecture clearly.

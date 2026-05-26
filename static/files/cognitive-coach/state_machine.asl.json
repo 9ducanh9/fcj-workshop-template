@@ -1,0 +1,44 @@
+{
+  "Comment": "Minimal transcript-first workflow for Cognitive Communication Coach",
+  "StartAt": "MarkAnalyzing",
+  "States": {
+    "MarkAnalyzing": {
+      "Type": "Pass",
+      "Result": "ANALYZING",
+      "ResultPath": "$.status",
+      "Next": "AnalyzeTranscript"
+    },
+    "AnalyzeTranscript": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:REGION:ACCOUNT_ID:function:cognitive-coach-analyze-transcript",
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "Lambda.ServiceException",
+            "Lambda.AWSLambdaException",
+            "Lambda.SdkClientException"
+          ],
+          "IntervalSeconds": 2,
+          "MaxAttempts": 2,
+          "BackoffRate": 2.0
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "ResultPath": "$.error",
+          "Next": "HandleFailure"
+        }
+      ],
+      "Next": "Done"
+    },
+    "HandleFailure": {
+      "Type": "Fail",
+      "Error": "WorkflowFailed",
+      "Cause": "Transcript analysis failed. Check CloudWatch logs and DynamoDB errorMessage."
+    },
+    "Done": {
+      "Type": "Succeed"
+    }
+  }
+}

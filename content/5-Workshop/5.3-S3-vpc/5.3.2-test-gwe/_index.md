@@ -1,95 +1,77 @@
 ---
-title : "Test the Gateway Endpoint"
-date : 2024-01-01 
+title : "Create Upload and Result API"
+date : 2026-05-12
 weight : 2
 chapter : false
-pre : " <b> 5.3.2 </b> "
+pre : " <b> 5.3.2. </b> "
 ---
 
-#### Create S3 bucket
+# Create Upload and Result API
 
-1. Navigate to **S3 management console**
-2. In the Bucket console, choose **Create bucket**
+## API Design
 
-![Create bucket](/images/5-Workshop/5.3-S3-vpc/create-bucket.png)
+Create a simple REST API with these endpoints:
 
-3. In **the Create bucket console**
-+ **Name the bucket**: choose a name that hasn't been given to any bucket globally (hint: lab number and your name)
+| Method | Path | Purpose |
+| --- | --- | --- |
+| `POST` | `/upload-url` | Generate a pre-signed S3 upload URL |
+| `POST` | `/jobs` | Create a processing job after upload |
+| `GET` | `/jobs/{jobId}` | Retrieve job status and result |
 
-![Bucket name](/images/5-Workshop/5.3-S3-vpc/bucket-name.png)
+## Upload URL Lambda
 
-+ Leave other fields as they are (default)
-+ Scroll down and choose **Create bucket**
+The upload URL Lambda should:
 
-![Create](/images/5-Workshop/5.3-S3-vpc/create-button.png) 
+1. Receive a file name and input type.
+2. Create a unique `jobId`.
+3. Generate an S3 key under `uploads/`.
+4. Return a pre-signed URL.
+5. Optionally insert an initial job item in DynamoDB.
 
-+ Successfully create S3 bucket.
+Example response:
 
-![Success](/images/5-Workshop/5.3-S3-vpc/bucket-success.png)
+```json
+{
+  "jobId": "job-20260512-001",
+  "uploadUrl": "https://s3-presigned-url-example",
+  "s3Key": "uploads/job-20260512-001/sample.txt"
+}
+```
 
-#### Connect to EC2 with session manager
+## Create Job Lambda
 
-+ For this workshop, you will use **AWS Session Manager** to access several **EC2 instances**. **Session Manager** is a fully managed **AWS Systems Manager** capability that allows you to manage your **Amazon EC2 instances**  and on-premises virtual machines (VMs) through an interactive one-click browser-based shell. Session Manager provides secure and auditable instance management without the need to open inbound ports, maintain bastion hosts, or manage SSH keys.
+The create job Lambda should:
 
-+ First cloud journey [Lab](https://000058.awsstudygroup.com/1-introduce/) for indepth understanding of Session manager.
+1. Validate that the uploaded object exists in S3.
+2. Insert or update the DynamoDB item with status `UPLOADED`.
+3. Start the Step Functions execution.
+4. Return the `jobId` and current status.
 
-1. In the **AWS Management Console**, start typing ```Systems Manager``` in the quick search box and press **Enter**:
+Example response:
 
-![system manager](/images/5-Workshop/5.3-S3-vpc/sm.png)
+```json
+{
+  "jobId": "job-20260512-001",
+  "status": "UPLOADED",
+  "message": "Processing workflow started"
+}
+```
 
-2. From the **Systems Manager** menu, find **Node Management** in the left menu and click **Session Manager**:
+## Result Lambda
 
-![system manager](/images/5-Workshop/5.3-S3-vpc/sm1.png)
+The result Lambda should:
 
-3. Click **Start Session**, and select **the EC2 instance** named **Test-Gateway-Endpoint**. 
-{{% notice info %}}
-This EC2 instance is already running in "VPC Cloud" and will be used to test connectivity to Amazon S3 through the Gateway endpoint you just created (s3-gwe). {{% /notice %}}
+1. Read the job item from DynamoDB.
+2. If status is `COMPLETED`, return the report location or report content.
+3. If status is `FAILED`, return the failure reason.
+4. If still processing, return the current status.
 
-![Start session](/images/5-Workshop/5.3-S3-vpc/start-session.png)
+## Validation
 
-**Session Manager** will open a new browser tab with a shell prompt: sh-4.2 $
+Use a transcript file first because it avoids audio transcription variables:
 
-![Success](/images/5-Workshop/5.3-S3-vpc/start-session-success.png)
+```powershell
+aws s3 cp sample_conversation.txt s3://<bucket-name>/uploads/job-test/sample_conversation.txt
+```
 
-You have successfully start a session - connect to the EC2 instance in VPC cloud. In the next step, we will create a S3 bucket and a file in it. 
-
-#### Create a file and upload to s3 bucket
-
-1. Change to the ssm-user's home directory by typing ```cd ~``` in the CLI
-
-![Change user's dir](/images/5-Workshop/5.3-S3-vpc/cli1.png)
-
-2. Create a new file to use for testing with the command ```fallocate -l 1G testfile.xyz```, which will create a file of 1GB size named "testfile.xyz".
-
-![Create file](/images/5-Workshop/5.3-S3-vpc/cli-file.png)
-
-3. Upload file to S3 bucket with command ```aws s3 cp testfile.xyz s3://your-bucket-name```. Replace your-bucket-name with the name of S3 bucket that you created earlier.
-
-![Uploaded](/images/5-Workshop/5.3-S3-vpc/uploaded.png)
-
-You have successfully uploaded the file to your S3 bucket. You can now terminate the session.
-
-#### Check object in S3 bucket
-
-1. Navigate to S3 console.  
-2. Click the name of your s3 bucket
-3. In the Bucket console, you will see the file you have uploaded to your S3 bucket
-
-![Check S3](/images/5-Workshop/5.3-S3-vpc/check-s3-bucket.png)
-
-#### Section summary
-
-Congratulation on completing access to S3 from VPC. In this section, you created a Gateway endpoint for Amazon S3, and used the AWS CLI to upload an object. The upload worked because the Gateway endpoint allowed communication to S3, without needing an Internet Gateway attached to "VPC Cloud". This demonstrates the functionality of the Gateway endpoint as a secure path to S3 without traversing the Public Internet.
-
-
-
-
-
-
-
-
-
-
-
-
-
+Then create a manual DynamoDB test item or trigger the `/jobs` API and confirm that the job appears in the table.
