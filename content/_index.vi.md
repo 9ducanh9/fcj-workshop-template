@@ -13,15 +13,15 @@ Báo cáo này trình bày đồ án cuối khóa FCAJ AWS Bootcamp của tôi: 
 
 Đồ án được thiết kế theo hướng **phản tư sau hội thoại** thay vì trợ lý thời gian thực. Cách tiếp cận này thực tế hơn cho một học viên, dễ triển khai lại, an toàn hơn về quyền riêng tư, nhưng vẫn giữ tinh thần ban đầu: dùng AI để hỗ trợ con người tư duy tốt hơn, không thay thế con người.
 
-Hãy thay các trường `TODO` còn lại bằng thông tin thật trước khi nộp, và bổ sung ảnh chụp màn hình thực tế ở các phần kỹ thuật khi cần.
+Hãy bổ sung ảnh chụp màn hình triển khai và bằng chứng chạy thực tế trước khi nộp chính thức.
 
 ## Thông tin học viên
 
 | Trường thông tin | Nội dung |
 | --- | --- |
 | Họ và tên | Lâm Chí Tài |
-| Số điện thoại | 0798353782 |
-| Email | lamchitai2300@gmail.com |
+| Số điện thoại | Cung cấp khi cần |
+| Email | Cung cấp khi cần |
 | Trường đại học | HUTECH - Đại học Công nghệ TP.HCM |
 | Chuyên ngành | Hệ thống thông tin (Information Systems) |
 | Công ty thực tập | Amazon Web Services Vietnam |

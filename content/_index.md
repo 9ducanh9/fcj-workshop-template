@@ -13,15 +13,15 @@ This report documents my FCAJ AWS Bootcamp final project: a serverless AI system
 
 The project intentionally focuses on **post-conversation reflection** instead of risky real-time conversation assistance. This keeps the solution realistic for one student, easier to reproduce, safer from a privacy perspective, and still aligned with the original goal: using AI to augment human thinking rather than replace it.
 
-Replace the remaining `TODO` fields with your actual information before final submission. Add your own implementation screenshots where appropriate.
+Add implementation screenshots and final deployment evidence before formal submission.
 
 ## Student Information
 
 | Field | Information |
 | --- | --- |
 | Full name | Lâm Chí Tài |
-| Phone number | 0798353782 |
-| Email | lamchitai2300@gmail.com |
+| Phone number | Available on request |
+| Email | Available on request |
 | University | HUTECH - Đại học Công nghệ TP.HCM |
 | Major | Hệ thống thông tin (Information Systems) |
 | Internship company | Amazon Web Services Vietnam |
