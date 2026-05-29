@@ -1,12 +1,12 @@
-baseURL = "https://workshop-sample.fcjuni.com/"
-relativeURLs = false
+baseURL = "/"
+relativeURLs = true
 canonifyURLs = false
 defaultContentLanguage = "en"
 
 theme = "hugo-theme-learn"
 
 [outputs]
-home = [ "HTML", "RSS", "JSON"]
+home = ["HTML", "RSS", "JSON"]
 
 [params]
   themeVariant = "workshop"
