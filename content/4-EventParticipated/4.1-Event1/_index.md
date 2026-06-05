@@ -1,29 +1,30 @@
 ---
-title: "Event 1: FCAJ AWS Bootcamp Orientation"
+title: "Event 1: AWS Study Group Technical Sharing"
 date: 2026-05-12
 weight: 1
 chapter: false
 pre: " <b> 4.1. </b> "
 ---
 
-# Event 1: FCAJ AWS Bootcamp Orientation
+# Event 1: AWS Study Group Technical Sharing
 
 | Field | Detail |
 | --- | --- |
-| Event name | FCAJ AWS Bootcamp Orientation |
-| Date/time | TODO: Add actual date and time |
-| Location | TODO: Add online/offline location |
+| Event name | AWS Study Group Technical Sharing |
+| Date/time | 2026 - update with confirmed session date before final submission |
+| Location | Online / AWS Study Group community session |
 | Role | Participant |
 
 ## Main Content
 
-- Program introduction and learning expectations.
-- Final project requirements and report structure.
-- Overview of AWS learning path and community resources.
-- Guidance on documenting weekly learning progress.
+- Practical strategies for learning AWS through hands-on labs and personal projects.
+- How to explore AWS services by starting from a real problem instead of memorizing service names.
+- Career mindset for cloud learners, including documentation discipline and project storytelling.
+- Structured project planning using the BMAD method: business value, measurable goal, architecture, and delivery plan.
 
 ## Lessons Learned / Contribution
 
-- I understood that the final project must be original, practical, and reproducible.
-- I learned that the report should include not only architecture but also implementation, testing, monitoring, security, cost, and cleanup.
-- I started planning how to adapt the FCAJ workshop template for my own project.
+- I learned that a strong bootcamp project must explain the problem, architecture, implementation path, and validation evidence clearly.
+- I applied the project planning mindset to narrow my idea from a broad real-time AI assistant into a focused post-conversation communication coach.
+- I improved my report structure by linking weekly learning outcomes to concrete implementation decisions.
+

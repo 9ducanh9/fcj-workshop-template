@@ -1,29 +1,31 @@
 ---
-title: "Event 2: AWS Study Group Technical Sharing"
+title: "Event 2: FCAJ Community Day 2026"
 date: 2026-05-12
 weight: 2
 chapter: false
 pre: " <b> 4.2. </b> "
 ---
 
-# Event 2: AWS Study Group Technical Sharing
+# Event 2: FCAJ Community Day 2026
 
 | Field | Detail |
 | --- | --- |
-| Event name | AWS Study Group Technical Sharing |
-| Date/time | TODO: Add actual date and time |
-| Location | TODO: Add online/offline location |
+| Event name | FCAJ Community Day 2026 |
+| Date/time | 2026 - update with confirmed event date before final submission |
+| Location | FCAJ community event / update confirmed venue before final submission |
 | Role | Participant |
 
 ## Main Content
 
-- Practical AWS service usage and architecture discussion.
-- Serverless design patterns for small projects.
-- IAM and security best practices.
-- Cost control and cleanup reminders for learning accounts.
+- Modern AWS and AI use cases shared by the FCAJ and AWS community.
+- GenAI operations topics, including how AI applications should be monitored, improved, and controlled after deployment.
+- CloudFront architecture considerations for secure and scalable static content delivery.
+- Enterprise-grade multi-agent system concepts and the risks of overengineering AI workflows.
+- AI-assisted UI generation, business process automation with Amazon Quick Suite, and LLM behavior analysis.
 
 ## Lessons Learned / Contribution
 
-- I learned to justify why each AWS service is used instead of adding services only to increase the count.
-- I applied the cost and security lessons to my Cognitive Communication Coach architecture.
-- I refined the project to avoid live conversation monitoring and focus on safer post-conversation analysis.
+- I learned that AI projects need clear boundaries, not only model output. The system must define what the AI can do, what it cannot do, and how users should validate the result.
+- I connected the CloudFront and static delivery discussion with this workshop website deployment.
+- I used the GenAI and LLM behavior topics to strengthen the ethics, monitoring, and human-in-the-loop sections of my final project.
+

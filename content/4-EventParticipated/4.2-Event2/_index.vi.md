@@ -1,29 +1,31 @@
 ---
-title: "Sự kiện 2: AWS Study Group Technical Sharing"
+title: "Sự kiện 2: FCAJ Community Day 2026"
 date: 2026-05-12
 weight: 2
 chapter: false
 pre: " <b> 4.2. </b> "
 ---
 
-# Sự kiện 2: AWS Study Group Technical Sharing
+# Sự kiện 2: FCAJ Community Day 2026
 
 | Trường | Nội dung |
 | --- | --- |
-| Tên sự kiện | AWS Study Group Technical Sharing |
-| Ngày/giờ | TODO: Thêm ngày giờ thực tế |
-| Địa điểm | TODO: Thêm địa điểm online/offline |
+| Tên sự kiện | FCAJ Community Day 2026 |
+| Ngày/giờ | 2026 - cập nhật ngày sự kiện chính xác trước khi nộp chính thức |
+| Địa điểm | Sự kiện cộng đồng FCAJ / cập nhật địa điểm xác nhận trước khi nộp chính thức |
 | Vai trò | Người tham gia |
 
 ## Nội dung chính
 
-- Thực hành dịch vụ AWS và thảo luận kiến trúc.
-- Mẫu thiết kế serverless cho dự án nhỏ.
-- IAM và best practice bảo mật.
-- Kiểm soát chi phí và cleanup trong tài khoản học tập.
+- Các use case AWS và AI hiện đại được chia sẻ bởi cộng đồng FCAJ và AWS.
+- Chủ đề GenAI operations, bao gồm cách giám sát, cải thiện và kiểm soát ứng dụng AI sau khi triển khai.
+- Các điểm cần lưu ý khi thiết kế CloudFront cho việc phân phối nội dung tĩnh an toàn và có khả năng mở rộng.
+- Khái niệm hệ thống multi-agent ở mức doanh nghiệp và rủi ro overengineering khi thiết kế workflow AI.
+- AI-assisted UI generation, tự động hóa quy trình nghiệp vụ với Amazon Quick Suite và phân tích hành vi LLM.
 
 ## Bài học / đóng góp
 
-- Tôi học cách giải thích vì sao dùng từng dịch vụ AWS thay vì thêm dịch vụ chỉ để tăng số lượng.
-- Tôi áp dụng bài học về chi phí và bảo mật vào kiến trúc Cognitive Communication Coach.
-- Tôi tinh chỉnh dự án để tránh theo dõi hội thoại live và tập trung vào phân tích sau hội thoại an toàn hơn.
+- Tôi học được rằng dự án AI cần có ranh giới rõ ràng, không chỉ tập trung vào output của model. Hệ thống phải xác định AI được làm gì, không nên làm gì và người dùng cần kiểm chứng kết quả như thế nào.
+- Tôi liên hệ phần CloudFront và static delivery với việc triển khai website workshop này.
+- Tôi dùng các chủ đề GenAI và hành vi LLM để củng cố phần đạo đức, giám sát và human-in-the-loop trong đồ án cuối khóa.
+

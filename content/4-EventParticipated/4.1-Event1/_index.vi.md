@@ -1,29 +1,30 @@
 ---
-title: "Sự kiện 1: FCAJ AWS Bootcamp Orientation"
+title: "Sự kiện 1: AWS Study Group Technical Sharing"
 date: 2026-05-12
 weight: 1
 chapter: false
 pre: " <b> 4.1. </b> "
 ---
 
-# Sự kiện 1: FCAJ AWS Bootcamp Orientation
+# Sự kiện 1: AWS Study Group Technical Sharing
 
 | Trường | Nội dung |
 | --- | --- |
-| Tên sự kiện | FCAJ AWS Bootcamp Orientation |
-| Ngày/giờ | TODO: Thêm ngày giờ thực tế |
-| Địa điểm | TODO: Thêm địa điểm online/offline |
+| Tên sự kiện | AWS Study Group Technical Sharing |
+| Ngày/giờ | 2026 - cập nhật ngày buổi chia sẻ chính xác trước khi nộp chính thức |
+| Địa điểm | Online / buổi chia sẻ cộng đồng AWS Study Group |
 | Vai trò | Người tham gia |
 
 ## Nội dung chính
 
-- Giới thiệu chương trình và kỳ vọng học tập.
-- Yêu cầu đồ án cuối khóa và cấu trúc báo cáo.
-- Tổng quan lộ trình học AWS và tài nguyên cộng đồng.
-- Hướng dẫn ghi lại tiến độ học theo tuần.
+- Chiến lược học AWS thực tế thông qua lab và dự án cá nhân.
+- Cách khám phá dịch vụ AWS bằng cách bắt đầu từ một bài toán thật, thay vì chỉ học thuộc tên dịch vụ.
+- Tư duy nghề nghiệp cho người học cloud, bao gồm kỷ luật tài liệu hóa và cách kể câu chuyện dự án.
+- Lập kế hoạch dự án có cấu trúc theo phương pháp BMAD: giá trị nghiệp vụ, mục tiêu đo được, kiến trúc và kế hoạch triển khai.
 
 ## Bài học / đóng góp
 
-- Tôi hiểu rằng đồ án cuối phải là dự án gốc, thực tế và có thể triển khai lại.
-- Tôi học được rằng báo cáo cần có kiến trúc, triển khai, kiểm thử, monitoring, bảo mật, chi phí và cleanup.
-- Tôi bắt đầu lên kế hoạch tùy biến FCAJ workshop template cho dự án của mình.
+- Tôi hiểu rằng một dự án bootcamp tốt cần giải thích rõ vấn đề, kiến trúc, cách triển khai và bằng chứng kiểm thử.
+- Tôi áp dụng tư duy lập kế hoạch để thu hẹp ý tưởng từ trợ lý AI thời gian thực quá rộng thành hệ thống hỗ trợ phản tư giao tiếp sau hội thoại.
+- Tôi cải thiện cấu trúc báo cáo bằng cách liên kết kết quả học từng tuần với các quyết định triển khai cụ thể.
+

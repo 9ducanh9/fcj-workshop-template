@@ -8,11 +8,16 @@ pre: " <b> 4. </b> "
 
 # Events Participated
 
-This section records learning events and community activities that supported my AWS Bootcamp progress.
+This section records the learning events and FCAJ community activities that supported my AWS Bootcamp progress. Each event helped me connect cloud concepts with practical project planning, architecture design, AI use cases, and professional communication.
 
-Replace the remaining `TODO` date, time, and location fields with your actual event information before submission.
-
-| Event | Role | Main Contribution |
+| Event | Role | Main contribution |
 | --- | --- | --- |
-| FCAJ AWS Bootcamp Orientation | Participant | Understood program expectations and final project requirements |
-| AWS Study Group Technical Sharing | Participant | Learned architecture thinking, security, and cost awareness |
+| AWS Study Group Technical Sharing | Participant | Learned practical AWS learning strategies, career mindset, and structured project planning. |
+| FCAJ Community Day 2026 | Participant | Explored modern AWS and AI topics that influenced the final project architecture and documentation. |
+
+## How These Events Supported My Project
+
+- Improved my understanding of how to explain an AWS architecture clearly.
+- Helped me refine the project from an unrealistic real-time AI assistant into a practical post-conversation reflection system.
+- Strengthened my awareness of security, monitoring, cost control, and cleanup requirements for a bootcamp-level AWS project.
+
