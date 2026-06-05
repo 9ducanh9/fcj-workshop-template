@@ -20,8 +20,8 @@ Hãy bổ sung ảnh chụp màn hình triển khai và bằng chứng chạy th
 | Trường thông tin | Nội dung |
 | --- | --- |
 | Họ và tên | Lâm Chí Tài |
-| Số điện thoại | Cung cấp khi cần |
-| Email | Cung cấp khi cần |
+| Số điện thoại | 0798353782 |
+| Email | lamchitai2300@gmail.com |
 | Trường đại học | HUTECH - Đại học Công nghệ TP.HCM |
 | Chuyên ngành | Hệ thống thông tin (Information Systems) |
 | Công ty thực tập | Amazon Web Services Vietnam |

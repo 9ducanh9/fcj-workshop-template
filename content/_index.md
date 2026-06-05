@@ -20,8 +20,8 @@ Add implementation screenshots and final deployment evidence before formal submi
 | Field | Information |
 | --- | --- |
 | Full name | Lâm Chí Tài |
-| Phone number | Available on request |
-| Email | Available on request |
+| Phone number | 0798353782 |
+| Email | lamchitai2300@gmail.com |
 | University | HUTECH - Đại học Công nghệ TP.HCM |
 | Major | Hệ thống thông tin (Information Systems) |
 | Internship company | Amazon Web Services Vietnam |
