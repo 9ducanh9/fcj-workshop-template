@@ -1,56 +1,47 @@
 ---
-title : "Add Amazon Transcribe for Audio Input"
+title : "Stream Audio to Amazon Transcribe"
 date : 2026-05-12
 weight : 2
 chapter : false
 pre : " <b> 5.4.2. </b> "
 ---
 
-# Add Amazon Transcribe for Audio Input
+# Stream Audio to Amazon Transcribe
 
-## When to Use This Step
+## Audio Pipeline
 
-Use this step after transcript input works. Audio adds more variables, so it should not be the first path tested.
+The browser captures microphone audio and sends PCM audio chunks to the backend over WSS. The backend forwards those chunks to Amazon Transcribe Streaming.
 
-## Create a Transcription Job
+Expected audio format:
 
-For audio input, the workflow should:
+| Property | Value |
+| --- | --- |
+| Encoding | PCM |
+| Sample rate | 16 kHz |
+| Channels | Mono |
+| Bit depth | 16-bit |
 
-1. Read the uploaded audio object from S3.
-2. Start an Amazon Transcribe job.
-3. Write the transcript output to `transcripts/<jobId>/`.
-4. Continue to Bedrock analysis after the transcript is available.
+## Backend Responsibilities
 
-Example AWS CLI command:
+The FastAPI WebSocket handler should:
 
-```powershell
-aws transcribe start-transcription-job `
-  --transcription-job-name cognitive-coach-job-test `
-  --language-code en-US `
-  --media MediaFileUri=s3://<bucket-name>/uploads/job-test/sample.mp3 `
-  --output-bucket-name <bucket-name> `
-  --output-key transcripts/job-test/
-```
-
-Check job status:
-
-```powershell
-aws transcribe get-transcription-job --transcription-job-name cognitive-coach-job-test
-```
-
-## Language Choices
-
-Initial testing can use:
-
-- `en-US` for English audio.
-- `vi-VN` for Vietnamese audio if supported in your selected region.
+1. Accept a new WebSocket connection.
+2. Assign a unique session ID.
+3. Start one or more Transcribe Streaming sessions.
+4. Forward binary audio frames to Transcribe.
+5. Convert partial and finalized Transcribe events into LiveCap segment messages.
+6. Map raw speaker labels such as `spk_0` to user-friendly labels such as `Speaker 1`.
+7. Send partial and finalized captions back to the browser.
+8. Log Transcribe errors through the logging service.
 
 ## Validation
 
-Confirm:
+Test with short Vietnamese and English phrases:
 
-- The Transcribe job status becomes `COMPLETED`.
-- A transcript JSON file appears in S3.
-- The transcript text is readable enough for Bedrock analysis.
+- Browser shows active microphone capture.
+- Backend logs a session start event.
+- Partial captions appear while the user is speaking.
+- Finalized captions replace partial text.
+- Speaker labels are displayed consistently within one session.
+- Transcribe integration errors are surfaced to the frontend and logged.
 
-If audio quality is poor, use the transcript upload path for the final demo.

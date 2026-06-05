@@ -1,56 +1,47 @@
 ---
-title : "Thêm Amazon Transcribe cho audio input"
+title : "Stream audio đến Amazon Transcribe"
 date : 2026-05-12
 weight : 2
 chapter : false
 pre : " <b> 5.4.2. </b> "
 ---
 
-# Thêm Amazon Transcribe cho audio input
+# Stream audio đến Amazon Transcribe
 
-## Khi nào dùng bước này
+## Audio pipeline
 
-Dùng bước này sau khi transcript input đã chạy ổn. Audio có nhiều biến số hơn nên không nên là luồng test đầu tiên.
+Browser thu microphone audio và gửi PCM audio chunk đến backend qua WSS. Backend chuyển các chunk này đến Amazon Transcribe Streaming.
 
-## Tạo transcription job
+Audio format mong đợi:
 
-Với audio input, workflow nên:
+| Thuộc tính | Giá trị |
+| --- | --- |
+| Encoding | PCM |
+| Sample rate | 16 kHz |
+| Channels | Mono |
+| Bit depth | 16-bit |
 
-1. Đọc audio object đã upload từ S3.
-2. Start Amazon Transcribe job.
-3. Ghi transcript output vào `transcripts/<jobId>/`.
-4. Tiếp tục phân tích bằng Bedrock sau khi transcript sẵn sàng.
+## Trách nhiệm backend
 
-Ví dụ AWS CLI:
+FastAPI WebSocket handler nên:
 
-```powershell
-aws transcribe start-transcription-job `
-  --transcription-job-name cognitive-coach-job-test `
-  --language-code en-US `
-  --media MediaFileUri=s3://<bucket-name>/uploads/job-test/sample.mp3 `
-  --output-bucket-name <bucket-name> `
-  --output-key transcripts/job-test/
-```
-
-Kiểm tra trạng thái job:
-
-```powershell
-aws transcribe get-transcription-job --transcription-job-name cognitive-coach-job-test
-```
-
-## Lựa chọn ngôn ngữ
-
-Test ban đầu có thể dùng:
-
-- `en-US` cho audio tiếng Anh.
-- `vi-VN` cho audio tiếng Việt nếu region đã chọn hỗ trợ.
+1. Nhận WebSocket connection mới.
+2. Gán session ID duy nhất.
+3. Start một hoặc nhiều Transcribe Streaming session.
+4. Forward binary audio frame đến Transcribe.
+5. Chuyển partial và finalized Transcribe event thành LiveCap segment message.
+6. Map raw speaker label như `spk_0` thành nhãn dễ đọc như `Speaker 1`.
+7. Gửi partial và finalized caption về browser.
+8. Ghi lỗi Transcribe thông qua logging service.
 
 ## Kiểm tra
 
-Xác nhận:
+Test bằng câu ngắn tiếng Việt và tiếng Anh:
 
-- Transcribe job chuyển sang trạng thái `COMPLETED`.
-- File transcript JSON xuất hiện trong S3.
-- Transcript đủ rõ để Bedrock phân tích.
+- Browser hiển thị trạng thái microphone đang capture.
+- Backend ghi session start event.
+- Partial caption xuất hiện khi người dùng đang nói.
+- Finalized caption thay thế partial text.
+- Speaker label hiển thị nhất quán trong một session.
+- Lỗi tích hợp Transcribe được gửi về frontend và ghi log.
 
-Nếu audio kém chất lượng, hãy dùng luồng upload transcript cho demo cuối.

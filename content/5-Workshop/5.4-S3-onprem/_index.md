@@ -1,18 +1,21 @@
 ---
-title : "Build the AI Processing Workflow"
-date : 2026-05-12
-weight : 4
-chapter : false
-pre : " <b> 5.4. </b> "
+title: "Frontend Deployment and AWS Integrations"
+date: 2026-05-12
+weight: 4
+chapter: false
+pre: " <b> 5.4. </b> "
 ---
 
-# Build the AI Processing Workflow
+# Frontend Deployment and AWS Integrations
 
-This section builds the core processing path:
+This section connects the full LiveCap application:
 
-1. Prepare transcript or audio input.
-2. Run transcription when audio is used.
-3. Analyze the transcript with Amazon Bedrock.
-4. Save and validate the coaching report.
+1. Build the React + TypeScript frontend.
+2. Host the static frontend in S3.
+3. Serve it through CloudFront.
+4. Stream audio to Amazon Transcribe Streaming.
+5. Translate finalized segments with Amazon Translate.
+6. Export transcripts to S3 and return pre-signed links.
 
-For the first successful demo, use transcript input. After that, test audio input with Amazon Transcribe.
+The most important technical requirement is secure WebSocket streaming. In production, the browser must connect to the backend through `wss://`, not plain `ws://`.
+

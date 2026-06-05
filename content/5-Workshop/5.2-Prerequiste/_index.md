@@ -1,66 +1,69 @@
 ---
-title : "Prerequisites"
-date : 2026-05-12
-weight : 2
-chapter : false
-pre : " <b> 5.2. </b> "
+title: "Prerequisites"
+date: 2026-05-12
+weight: 2
+chapter: false
+pre: " <b> 5.2. </b> "
 ---
 
 # Prerequisites
 
-## Required Knowledge
+## Required Tools
 
-- Basic AWS Management Console navigation.
-- Basic IAM concepts: user, role, policy, least privilege.
-- Basic understanding of serverless services.
-- Basic Python or JavaScript familiarity for Lambda code.
-- Basic REST API testing with `curl`, Postman, or API Gateway test console.
+| Tool | Recommended version | Purpose |
+| --- | --- | --- |
+| Python | 3.11 or later | Run the FastAPI backend |
+| Node.js | 18 LTS or later | Build the React + Vite frontend |
+| npm | 9 or later | Install frontend dependencies |
+| AWS CLI | v2 | Create and verify AWS resources |
+| Git | Latest stable | Clone and update source code |
+| Nginx | OS package version | Reverse proxy and WSS forwarding on EC2 |
 
-## AWS Account Preparation
+## AWS Account Requirements
 
-1. Use a personal AWS learning account or approved training account.
-2. Select one AWS Region that supports Amazon Bedrock and Amazon Transcribe.
-3. Enable access to the Bedrock model you plan to use.
-4. Configure AWS CLI if you will test with CLI commands.
-5. Set a billing alarm or budget before testing.
+The AWS account needs access to:
 
-## Suggested Region
+- Amazon EC2
+- Amazon S3
+- Amazon CloudFront
+- AWS IAM
+- Amazon Transcribe Streaming
+- Amazon Translate
+- Amazon CloudWatch Logs
 
-Use a region where the required services are available in your account. If Bedrock model access is limited in your preferred region, choose another supported region and keep all resources in the same region.
+Use one AWS Region consistently for backend integrations. The LiveCap reference configuration uses `us-east-1` for Transcribe, Translate, S3, and CloudWatch.
 
-## Local Tools
+## Backend Environment Variables
 
-- AWS CLI v2.
-- Python 3.11 or later for local code review.
-- A text editor.
-- Optional: Postman for API testing.
+Copy `backend/.env.example` to `backend/.env` and configure these values:
 
-## Sample Input
+| Variable | Example | Purpose |
+| --- | --- | --- |
+| `AWS_REGION` | `us-east-1` | Region for AWS service calls |
+| `S3_BUCKET` | `livecap-transcripts` | Bucket for exported TXT transcripts |
+| `DOWNLOAD_LINK_EXPIRATION` | `86400` | Pre-signed URL lifetime in seconds |
+| `SESSION_TIMEOUT` | `1800` | Maximum streaming session duration |
+| `MAX_SPEAKERS` | `5` | Speaker diarization limit |
+| `TRANSCRIBE_LANGUAGE_CODE` | `vi-VN` | Fallback fixed Transcribe language |
+| `BILINGUAL_DUAL_STREAM` | `true` | Enable Vietnamese-English bilingual mode |
+| `ALLOWED_ORIGIN` | CloudFront URL | Frontend origin allowed by CORS |
+| `CLOUDWATCH_LOG_GROUP` | `livecap` | Log group for structured backend logs |
 
-Use a short non-sensitive transcript during testing:
+Do not store `AWS_ACCESS_KEY_ID` or `AWS_SECRET_ACCESS_KEY` in `.env` on EC2. Use an EC2 IAM role instead.
 
-```text
-Mentor: Why did you choose this project?
-Student: I want to build an AI assistant for communication.
-Mentor: Why is that useful?
-Student: Because many people cannot explain ideas clearly under pressure.
-Mentor: Why should this use AWS?
-Student: AWS provides storage, transcription, AI analysis, workflow orchestration, and monitoring.
-```
+## Frontend Environment Variables
 
-## Safety Rules
+Set these values before building the frontend:
 
-- Do not upload confidential conversations.
-- Do not upload a conversation unless all required consent has been obtained.
-- Keep test audio short, ideally under five minutes.
-- Delete test files during cleanup.
+| Variable | Example | Purpose |
+| --- | --- | --- |
+| `VITE_WS_URL` | `wss://your-ec2-domain/ws/transcribe` | Secure WebSocket endpoint |
+| `VITE_API_BASE_URL` | `https://your-ec2-domain` | REST API base URL |
 
-## Files Provided in This Workshop
+## Assumptions
 
-Supporting examples are stored under `/files/cognitive-coach/`:
+- The backend runs on one EC2 instance for the MVP.
+- The frontend is hosted as static files on S3 and served through CloudFront.
+- TLS is required in production because browser microphone and WSS usage require a secure context.
+- The user has permission to process any audio used during testing.
 
-- [sample_conversation.txt](/files/cognitive-coach/sample_conversation.txt)
-- [bedrock_prompt.md](/files/cognitive-coach/bedrock_prompt.md)
-- [lambda_analyze_transcript.py](/files/cognitive-coach/lambda_analyze_transcript.py)
-- [state_machine.asl.json](/files/cognitive-coach/state_machine.asl.json)
-- [iam_policy_example.json](/files/cognitive-coach/iam_policy_example.json)

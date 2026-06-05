@@ -8,17 +8,18 @@ pre: " <b> 5. </b> "
 
 # Technical Workshop
 
-## Cognitive Communication Coach on AWS
+## LiveCap: Real-Time Bilingual Caption and Translation on AWS
 
-This workshop guides learners through building a serverless AI workflow that analyzes a short conversation transcript or audio file and generates a communication coaching report.
+LiveCap is a real-time speech caption and translation web application. It captures microphone audio in the browser, streams the audio to a FastAPI backend over WebSocket, uses Amazon Transcribe Streaming to generate captions, uses Amazon Translate for Vietnamese-English translation, and displays bilingual captions side by side.
 
-The implementation is intentionally scoped for a bootcamp final project. It demonstrates real AWS usage, but avoids production-level complexity such as multi-tenant billing, real-time audio streaming, or advanced frontend authentication.
+The project is practical for workshops, classroom sessions, community events, and meetings where participants may speak Vietnamese or English. The system also supports exporting session transcripts as TXT files, storing them in Amazon S3, and returning time-limited download links.
 
 ## Workshop Sections
 
-1. Project overview and architecture.
+1. Workshop overview and architecture.
 2. Prerequisites.
-3. Create storage, database, and IAM foundation.
-4. Build the AI processing workflow.
+3. Backend foundation on Amazon EC2.
+4. Frontend deployment and AWS service integration.
 5. Security, monitoring, testing, and cost optimization.
 6. Cleanup.
+

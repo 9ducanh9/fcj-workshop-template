@@ -1,82 +1,46 @@
 ---
-title : "Điều phối và kiểm tra workflow đầy đủ"
+title : "Kiểm tra workflow end-to-end"
 date : 2026-05-12
 weight : 4
 chapter : false
 pre : " <b> 5.4.4. </b> "
 ---
 
-# Điều phối và kiểm tra workflow đầy đủ
+# Kiểm tra workflow end-to-end
 
-## Step Functions state machine
+## Luồng test end-to-end
 
-Tạo state machine điều phối các bước xử lý. Phiên bản bootcamp đơn giản có thể gồm các state:
-
-1. `MarkAnalyzing`
-2. `AnalyzeTranscript`
-3. `SaveResult`
-4. `MarkCompleted`
-5. `HandleFailure`
-
-Nếu triển khai audio input, thêm:
-
-1. `StartTranscription`
-2. `WaitForTranscription`
-3. `CheckTranscriptionStatus`
-
-## Luồng transcript tối thiểu
-
-Để demo cuối ổn định, luồng transcript là đủ:
+Dùng workflow này sau khi đã cấu hình EC2, Nginx, CloudFront, S3 và environment variables:
 
 ```text
-Uploaded transcript -> Step Functions -> Lambda -> Bedrock -> S3 report -> DynamoDB status
+Mở frontend -> cấp quyền microphone -> start capture -> nói tiếng Việt/Anh
+-> nhận live captions -> stop capture -> export transcript
+-> upload TXT lên S3 -> tải bằng pre-signed URL
 ```
 
-## Test case 1: Phân tích transcript thành công
+## Test cases
 
-Input:
+| Test case | Kết quả mong đợi |
+| --- | --- |
+| Health check | `GET /api/health` trả về success |
+| Từ chối microphone | Frontend hiển thị lỗi quyền microphone |
+| WebSocket connection | Browser kết nối đến `wss://.../ws/transcribe` |
+| Nói tiếng Việt | Cột tiếng Việt và tiếng Anh đều có nội dung |
+| Nói tiếng Anh | Source tiếng Anh và bản dịch tiếng Việt được hiển thị |
+| Speaker label | Caption có `Speaker 1`, `Speaker 2`, ... |
+| Export transcript | S3 lưu TXT output và trả về pre-signed URL |
+| Lỗi Transcribe | Frontend nhận lỗi và CloudWatch ghi failure |
+| Lỗi upload S3 | Backend trả export error và log service bị ảnh hưởng |
 
-```json
-{
-  "jobId": "job-test-001",
-  "bucket": "<bucket-name>",
-  "transcriptKey": "uploads/job-test-001/sample_conversation.txt"
-}
-```
+## Bằng chứng cần chụp
 
-Kết quả kỳ vọng:
+Cho báo cáo cuối, cần chụp screenshot:
 
-- Step Functions execution thành công.
-- DynamoDB status chuyển thành `COMPLETED`.
-- Report nằm tại `reports/job-test-001/report.json`.
-- CloudWatch logs không có unhandled exception.
+- Trạng thái CloudFront distribution.
+- S3 frontend bucket và transcript bucket.
+- EC2 instance đang chạy.
+- `systemctl status livecap`.
+- Browser hiển thị bilingual captions.
+- S3 object được tạo sau khi export.
+- CloudWatch log stream có session events.
 
-## Test case 2: Thiếu transcript
-
-Input trỏ tới transcript key không tồn tại.
-
-Kết quả kỳ vọng:
-
-- Workflow chuyển sang xử lý lỗi.
-- DynamoDB status thành `FAILED`.
-- `errorMessage` giải thích S3 object bị thiếu.
-- CloudWatch logs có chi tiết lỗi.
-
-## Test case 3: Lỗi quyền Bedrock
-
-Tạm dùng model ID chưa được bật, hoặc bỏ quyền Bedrock khỏi role test.
-
-Kết quả kỳ vọng:
-
-- Lambda bắt được lỗi access.
-- Workflow fail có kiểm soát.
-- Lỗi hiển thị trong CloudWatch và DynamoDB.
-
-## Checklist validation cuối
-
-- Upload path hoạt động.
-- Truy xuất được trạng thái job.
-- Output Bedrock đúng cấu trúc report.
-- Có log.
-- Failure case quan sát được.
-- Cleanup được tài liệu hóa.

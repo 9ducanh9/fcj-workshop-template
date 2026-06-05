@@ -10,45 +10,48 @@ pre: " <b> 6. </b> "
 
 ## Kiến thức kỹ thuật
 
-Tôi hiểu rõ hơn về kiến trúc serverless, object storage, thiết kế API, điều phối workflow, tích hợp dịch vụ AI, thiết kế quyền IAM và quan sát hệ thống trên AWS. Dự án giúp tôi kết nối nhiều dịch vụ AWS thành một hệ thống thực tế thay vì học rời rạc từng dịch vụ.
+Tôi hiểu rõ hơn về thiết kế ứng dụng cloud thời gian thực, WebSocket communication, triển khai EC2, static hosting bằng S3, phân phối qua CloudFront, thiết kế IAM role, Amazon Transcribe Streaming, Amazon Translate và CloudWatch logging. LiveCap giúp tôi kết nối frontend audio capture, backend streaming và các dịch vụ AI managed của AWS thành một hệ thống thực tế.
 
 ## Khả năng học tập
 
-Tôi học được cách thu hẹp một ý tưởng sản phẩm tham vọng thành MVP thực tế. Ý tưởng ban đầu là trợ lý giao tiếp AI thời gian thực, nhưng bản triển khai cuối tập trung vào phản tư sau hội thoại vì an toàn hơn, rẻ hơn, dễ triển khai lại hơn và phù hợp hơn với đồ án bootcamp.
+Tôi học cách biến một ý tưởng lấy cảm hứng từ sự kiện thành MVP cụ thể. Thay vì chỉ viết về một trợ lý AI lý thuyết, tôi tập trung vào use case có thể triển khai lại: phụ đề song ngữ thời gian thực cho workshop và cuộc họp. Tôi cũng học cách đọc kỹ giới hạn dịch vụ, đặc biệt là secure WebSocket, quyền microphone trên browser và độ trễ transcription.
 
 ## Tinh thần chủ động
 
-Tôi đề xuất một use case gốc dựa trên vấn đề giao tiếp thực tế: nhiều người hiểu một phần chủ đề nhưng khó sắp xếp và bảo vệ ý tưởng khi trao đổi. Tôi tự điều chỉnh phạm vi, chọn dịch vụ AWS và xây dựng cấu trúc workshop để người khác có thể làm theo.
+Tôi chọn LiveCap vì dự án giải quyết một vấn đề giao tiếp thật mà tôi gặp trong các sự kiện kỹ thuật song ngữ. Tôi xác định user journey, tìm hiểu các dịch vụ AWS cần dùng, xây dựng cấu trúc backend/frontend và viết tài liệu triển khai để người khác có thể làm theo.
 
 ## Kỷ luật
 
-Tôi duy trì worklog theo tuần, viết tài liệu triển khai, và bổ sung các phần kiểm thử, giám sát, bảo mật, chi phí và cleanup. Tôi cũng giữ phạm vi dự án vừa đủ để tránh phức tạp hóa như hệ thống production.
+Tôi giữ kiến trúc trong phạm vi bootcamp: một EC2 backend, frontend host bằng S3 + CloudFront, và các dịch vụ AWS managed cho transcription, translation, storage và logging. Tôi tránh thêm độ phức tạp production không cần thiết như ECS, Kubernetes, user authentication, multi-room support hoặc AI summarization.
 
 ## Giao tiếp
 
-Dự án giúp tôi luyện cách giải thích lựa chọn kiến trúc rõ ràng hơn: vì sao cần từng dịch vụ AWS, trade-off nào đã được chọn, và hệ thống xử lý quyền riêng tư, chi phí, lỗi như thế nào.
+Dự án giúp tôi luyện cách giải thích vì sao dùng từng dịch vụ AWS. Tôi thực hành bảo vệ lựa chọn EC2 cho WebSocket session dài, CloudFront cho HTTPS static delivery, S3 cho transcript storage, IAM role cho an toàn credential và CloudWatch cho khả năng quan sát hệ thống.
 
 ## Làm việc nhóm
 
-Trong bootcamp, tôi học từ mentor, trao đổi với bạn học, tài liệu AWS Study Group và các buổi sự kiện. Tôi dùng phản hồi để tinh chỉnh ý tưởng từ một trợ lý AI quá rộng thành một dự án cloud có thể hoàn thành.
+Tôi học từ mentor FCAJ, AWS Study Group và các sự kiện cộng đồng. Feedback giúp tôi cải thiện tài liệu và tập trung vào bằng chứng triển khai thực tế thay vì chỉ mô tả ý tưởng sản phẩm.
 
 ## Giải quyết vấn đề
 
-Thử thách chính là cân bằng giữa tham vọng và tính khả thi. Tôi giải quyết bằng cách chuyển từ real-time sang xử lý bất đồng bộ, cho phép upload transcript làm phương án dự phòng, và dùng Step Functions cùng CloudWatch để quan sát lỗi.
+Thử thách chính là hỗ trợ real-time audio streaming bằng kiến trúc đơn giản nhưng vẫn có thể bảo vệ về mặt kỹ thuật. Tôi giải quyết bằng cách dùng EC2 cho FastAPI WebSocket backend persistent, Nginx cho TLS/WSS forwarding và các dịch vụ AWS managed cho speech-to-text, translation, storage và logging.
 
 ## Đóng góp cá nhân
 
 Đóng góp cá nhân của tôi bao gồm:
 
-- Xác định vấn đề và user journey.
-- Thiết kế kiến trúc serverless trên AWS.
-- Xây dựng prompt Bedrock và rubric đánh giá.
-- Viết tài liệu workshop song ngữ.
-- Chuẩn bị kịch bản test, bước validation, review bảo mật và kế hoạch cleanup.
+- Xác định use case LiveCap và phạm vi MVP.
+- Thiết kế kiến trúc AWS.
+- Triển khai và tài liệu hóa flow backend FastAPI.
+- Chuẩn bị hướng triển khai React frontend.
+- Tích hợp Amazon Transcribe Streaming, Amazon Translate, S3, CloudFront, EC2, IAM và CloudWatch trong thiết kế workshop.
+- Viết tài liệu song ngữ với các bước setup, testing, monitoring, security, cost và cleanup.
 
 ## Điểm cần cải thiện
 
-- Bổ sung frontend UI hoàn chỉnh thay vì chủ yếu kiểm thử qua API.
-- Chụp thêm screenshot AWS thực tế sau triển khai.
-- So sánh nhiều model Bedrock về chất lượng và chi phí.
-- Thêm xác thực bằng Amazon Cognito nếu mở rộng ngoài phạm vi MVP bootcamp.
+- Bổ sung thêm screenshot AWS từ môi trường deploy cuối.
+- Kiểm thử speaker diarization kỹ hơn với audio nhiều người nói và có nhiễu.
+- Thêm load testing cho nhiều WebSocket session đồng thời.
+- Bổ sung kế hoạch production tương lai với ALB và nhiều backend instances.
+- Chỉ cân nhắc authentication nếu dự án mở rộng vượt phạm vi MVP bootcamp.
+

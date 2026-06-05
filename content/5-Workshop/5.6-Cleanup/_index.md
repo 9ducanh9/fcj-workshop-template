@@ -1,41 +1,45 @@
 ---
-title : "Cleanup"
-date : 2026-05-12
-weight : 6
-chapter : false
-pre : " <b> 5.6. </b> "
+title: "Cleanup"
+date: 2026-05-12
+weight: 6
+chapter: false
+pre: " <b> 5.6. </b> "
 ---
 
 # Cleanup
 
-Cleanup is required to avoid unnecessary AWS charges after the demo.
+Clean up resources after testing to avoid unnecessary AWS charges.
 
 ## Cleanup Order
 
-1. Stop or delete Step Functions executions if any are still running.
-2. Delete API Gateway deployment and API.
-3. Delete Lambda functions used by the project.
-4. Delete Amazon Transcribe test jobs if they are no longer needed.
-5. Delete objects in the S3 bucket:
-   - `uploads/`
-   - `transcripts/`
-   - `reports/`
-6. Delete the S3 bucket.
-7. Delete the DynamoDB table `CognitiveCoachJobs`.
-8. Delete CloudWatch log groups created for Lambda and Step Functions.
-9. Delete IAM roles and policies created only for this project.
-10. Review AWS Billing and Cost Management to confirm no unexpected active resources remain.
+1. Stop active LiveCap sessions in the browser.
+2. Stop the backend service:
 
-## Validation After Cleanup
+```bash
+sudo systemctl stop livecap
+sudo systemctl disable livecap
+```
 
-Confirm:
+3. Remove Nginx configuration if the instance will not be reused:
 
-- S3 bucket no longer exists.
-- DynamoDB table no longer exists.
-- API Gateway endpoint no longer responds.
-- Lambda functions are deleted.
-- Step Functions state machine is deleted.
-- CloudWatch logs are deleted if not needed for evidence.
-- No active resources related to the project remain in the selected region.
+```bash
+sudo rm /etc/nginx/conf.d/livecap.conf
+sudo systemctl reload nginx
+```
 
-If screenshots are needed for final submission, capture them before deleting the resources.
+4. Delete CloudFront distribution after disabling it.
+5. Delete frontend files from the S3 frontend bucket.
+6. Delete transcript objects from the S3 transcript bucket.
+7. Delete both S3 buckets if no longer needed.
+8. Terminate the EC2 instance.
+9. Delete the EC2 IAM role and custom policies.
+10. Delete CloudWatch log groups created for LiveCap if logs are no longer needed.
+
+## Verification
+
+- CloudFront distribution no longer exists or is disabled.
+- S3 buckets are empty or deleted.
+- EC2 instance is terminated.
+- IAM role is removed.
+- CloudWatch log group is deleted if retention is not required.
+

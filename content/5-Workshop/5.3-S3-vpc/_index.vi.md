@@ -1,17 +1,20 @@
 ---
-title : "Tạo nền tảng lưu trữ và job"
-date : 2026-05-12
-weight : 3
-chapter : false
-pre : " <b> 5.3. </b> "
+title: "Nền tảng backend trên EC2"
+date: 2026-05-12
+weight: 3
+chapter: false
+pre: " <b> 5.3. </b> "
 ---
 
-# Tạo nền tảng lưu trữ và job
+# Nền tảng backend trên EC2
 
-Phần này tạo nền tảng cho workflow AI:
+Phần này chuẩn bị nền tảng backend cho LiveCap:
 
-- S3 bucket private để lưu file upload và report.
-- DynamoDB table để lưu trạng thái job.
-- IAM role và policy cho Lambda và Step Functions.
+- EC2 instance cho FastAPI backend.
+- IAM role để gọi AWS services.
+- S3 bucket để lưu transcript.
+- Backend dependencies và biến môi trường.
+- systemd service và Nginx reverse proxy cho HTTPS/WSS.
 
-Mục tiêu là giữ data model đơn giản và dễ kiểm tra trong demo cuối.
+Mục tiêu là giữ MVP đơn giản khi vận hành nhưng vẫn dùng dịch vụ AWS thật. Một EC2 instance là đủ cho đồ án bootcamp vì hỗ trợ WebSocket connection dài và dễ debug qua SSH, `systemctl` và logs.
+

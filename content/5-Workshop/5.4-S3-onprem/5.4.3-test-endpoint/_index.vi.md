@@ -1,68 +1,53 @@
 ---
-title : "Gọi Bedrock từ Lambda"
+title : "Dịch caption và export transcript"
 date : 2026-05-12
 weight : 3
 chapter : false
 pre : " <b> 5.4.3. </b> "
 ---
 
-# Gọi Bedrock từ Lambda
+# Dịch caption và export transcript
 
-## Trách nhiệm của Lambda
+## Luồng dịch
 
-Analysis Lambda nên:
+LiveCap luôn hiển thị hai cột:
 
-1. Đọc transcript text từ S3.
-2. Tạo coaching prompt.
-3. Invoke Amazon Bedrock.
-4. Lưu response của model vào `reports/<jobId>/report.json`.
-5. Cập nhật trạng thái DynamoDB thành `COMPLETED` hoặc `FAILED`.
+- Tiếng Việt ở bên trái.
+- Tiếng Anh ở bên phải.
 
-## Schema output ví dụ
+Khi finalized segment được nói bằng tiếng Việt, Amazon Translate tạo text tiếng Anh. Khi finalized segment được nói bằng tiếng Anh, Amazon Translate tạo text tiếng Việt. Frontend nhận cả `text_vi` và `text_en` để hiển thị.
+
+Ví dụ segment message:
 
 ```json
 {
-  "summary": "The student explained the project idea but needs stronger evidence.",
-  "mainTopic": "Defending an AWS AI communication coach project",
-  "strongPoints": ["Clear target problem", "AWS service mapping is relevant"],
-  "weakReasoning": ["Needs clearer business value", "Needs privacy explanation"],
-  "improvedResponse": {
-    "claim": "AWS is suitable because the workload needs managed AI and serverless orchestration.",
-    "reason": "The system has upload, transcription, AI analysis, storage, and monitoring stages.",
-    "evidence": "S3, Transcribe, Bedrock, Step Functions, DynamoDB, and CloudWatch each support one stage.",
-    "example": "A student can upload a transcript and receive a structured coaching report."
-  },
-  "whyQuestions": [
-    "Why is post-conversation analysis safer than live assistance?",
-    "Why does this need cloud services?",
-    "Why is Bedrock better than hard-coded rules for this use case?",
-    "Why should users trust the feedback?",
-    "Why is cleanup important?"
-  ],
-  "vietnameseSummary": "Sinh viên đã giải thích ý tưởng nhưng cần bổ sung giá trị thực tế và bảo mật."
+  "type": "finalized_segment",
+  "segment_id": "segment-001",
+  "speaker_label": "Speaker 1",
+  "text_vi": "Xin chào mọi người",
+  "text_en": "Hello everyone",
+  "spoken_language": "vi",
+  "is_final": true
 }
 ```
 
-## Xử lý lỗi
+## Export transcript
 
-Cần xử lý các lỗi:
+Khi người dùng export session:
 
-- Không tìm thấy transcript object.
-- Chưa có quyền truy cập Bedrock model.
-- Bedrock throttling hoặc timeout.
-- Model output không đúng định dạng.
-- Cập nhật DynamoDB thất bại.
+1. Frontend gửi transcript đã tích lũy đến backend.
+2. Backend serialize transcript thành TXT.
+3. Backend upload TXT file lên S3 dưới prefix `transcripts/`.
+4. Backend tạo pre-signed URL có thời hạn.
+5. Frontend hiển thị download link.
 
 ## Kiểm tra
 
-Dùng Lambda test console với event mẫu:
+| Test | Kết quả mong đợi |
+| --- | --- |
+| Nói tiếng Việt | Text tiếng Việt ở cột trái, bản dịch tiếng Anh ở cột phải |
+| Nói tiếng Anh | Bản dịch tiếng Việt ở cột trái, text tiếng Anh ở cột phải |
+| Export rỗng | Backend trả về file transcript rỗng hợp lệ |
+| Export có caption | S3 nhận TXT object dưới `transcripts/` |
+| Download link | Pre-signed URL tải được TXT file trước khi hết hạn |
 
-```json
-{
-  "jobId": "job-test",
-  "bucket": "<bucket-name>",
-  "transcriptKey": "uploads/job-test/sample_conversation.txt"
-}
-```
-
-Xác nhận report được lưu vào S3 và DynamoDB item được cập nhật.

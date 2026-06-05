@@ -1,83 +1,79 @@
 ---
-title : "Tạo S3 bucket và DynamoDB table"
+title : "Tạo EC2, IAM role và S3 storage"
 date : 2026-05-12
 weight : 1
 chapter : false
 pre : " <b> 5.3.1. </b> "
 ---
 
-# Tạo S3 bucket và DynamoDB table
+# Tạo EC2, IAM role và S3 storage
 
-## Bước 1: Tạo S3 bucket
+## Bước 1: Launch EC2 instance
 
-Tạo một bucket private cho dự án.
+Tạo một EC2 instance cho backend.
 
-Tên bucket gợi ý:
+Cấu hình MVP khuyến nghị:
 
-```text
-cognitive-coach-<your-name>-<account-id>
+| Cấu hình | Giá trị |
+| --- | --- |
+| AMI | Amazon Linux 2023 hoặc Ubuntu 22.04 LTS |
+| Instance type | `t3.small` hoặc lớn hơn |
+| Storage | Tối thiểu 8 GB gp3 |
+| Inbound SSH | Port `22` chỉ từ IP của bạn |
+| Inbound HTTPS/WSS | Port `443` từ `0.0.0.0/0` |
+
+Không public Uvicorn trực tiếp ra internet. Uvicorn nên listen ở `127.0.0.1:8000`, còn Nginx là public entry point.
+
+## Bước 2: Tạo S3 bucket lưu transcript
+
+Tạo S3 bucket để lưu file TXT transcript export:
+
+```bash
+aws s3 mb s3://livecap-transcripts --region us-east-1
 ```
 
-Prefix gợi ý:
-
-```text
-uploads/
-transcripts/
-reports/
-```
-
-Cấu hình:
+Cấu hình bucket khuyến nghị:
 
 - Block all public access: bật.
-- Bucket versioning: tùy chọn cho demo bootcamp.
-- Server-side encryption: bật SSE-S3.
-- Lifecycle rule: xóa object trong `uploads/`, `transcripts/`, `reports/` sau 7 ngày với môi trường demo.
+- Server-side encryption: bật.
+- Object prefix cho transcript export: `transcripts/`.
 
-## Bước 2: Tạo DynamoDB table
+## Bước 3: Tạo IAM role cho EC2
 
-Tạo table tên:
+Tạo IAM role như `livecap-ec2-role` và gắn vào EC2 instance.
 
-```text
-CognitiveCoachJobs
+Các quyền cần có:
+
+| Nhóm quyền | Mục đích |
+| --- | --- |
+| Amazon Transcribe Streaming | Stream microphone audio để speech-to-text |
+| Amazon Translate | Dịch finalized segment giữa tiếng Việt và tiếng Anh |
+| Amazon S3 | Upload TXT transcript và tạo pre-signed URL |
+| Amazon CloudWatch Logs | Ghi structured backend logs |
+
+Nên dùng scoped inline policy nếu có thể. Với S3, backend chỉ cần object access dưới transcript prefix:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:PutObject",
+        "s3:GetObject"
+      ],
+      "Resource": "arn:aws:s3:::livecap-transcripts/transcripts/*"
+    }
+  ]
+}
 ```
-
-Thiết kế table:
-
-| Thuộc tính | Kiểu | Mục đích |
-| --- | --- | --- |
-| `jobId` | String partition key | Mã job duy nhất |
-| `status` | String | `UPLOADED`, `TRANSCRIBING`, `ANALYZING`, `COMPLETED`, hoặc `FAILED` |
-| `inputType` | String | `audio` hoặc `text` |
-| `inputS3Key` | String | Đường dẫn file upload |
-| `reportS3Key` | String | Đường dẫn report cuối |
-| `createdAt` | String | ISO timestamp |
-| `updatedAt` | String | ISO timestamp |
-| `errorMessage` | String | Lý do lỗi nếu có |
-
-Dùng on-demand capacity mode cho dự án bootcamp nhỏ.
-
-## Bước 3: Tạo IAM role
-
-Tạo Lambda execution role có quyền:
-
-- Ghi log vào CloudWatch.
-- Đọc và ghi object trong S3 bucket của dự án.
-- Đọc và ghi item trong table `CognitiveCoachJobs`.
-- Gọi Bedrock model inference.
-
-Tạo Step Functions role có quyền:
-
-- Invoke các Lambda cần thiết.
-- Start và kiểm tra Amazon Transcribe job nếu dùng audio input.
-- Ghi execution log vào CloudWatch.
-
-Không dùng `AdministratorAccess` cho role của đồ án cuối. Báo cáo cuối nên thể hiện rõ tư duy phân quyền theo nguyên tắc least privilege.
 
 ## Kiểm tra
 
-Xác nhận:
+- EC2 đang chạy.
+- Security group chỉ cho SSH từ IP của bạn.
+- Security group cho HTTPS/WSS ở port `443`.
+- S3 bucket private.
+- EC2 đã gắn `livecap-ec2-role`.
 
-- S3 bucket không public.
-- Upload được object test vào `uploads/`.
-- DynamoDB table tồn tại và có `jobId` là partition key.
-- IAM role tồn tại với quyền được giới hạn.

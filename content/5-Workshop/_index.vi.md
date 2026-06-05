@@ -8,17 +8,18 @@ pre: " <b> 5. </b> "
 
 # Workshop kỹ thuật
 
-## Cognitive Communication Coach trên AWS
+## LiveCap: Phụ đề và dịch song ngữ thời gian thực trên AWS
 
-Workshop này hướng dẫn người học xây dựng workflow AI serverless để phân tích transcript hoặc file audio hội thoại ngắn và tạo báo cáo huấn luyện giao tiếp.
+LiveCap là một ứng dụng web tạo phụ đề và dịch song ngữ theo thời gian thực. Ứng dụng thu âm từ microphone trong trình duyệt, stream audio đến backend FastAPI qua WebSocket, dùng Amazon Transcribe Streaming để tạo phụ đề, dùng Amazon Translate để dịch Việt-Anh, và hiển thị phụ đề song ngữ theo hai cột.
 
-Phạm vi triển khai được giữ phù hợp với đồ án cuối khóa bootcamp. Dự án dùng dịch vụ AWS thật nhưng tránh độ phức tạp production như billing đa tenant, audio streaming thời gian thực hoặc xác thực frontend nâng cao.
+Dự án phù hợp cho workshop, lớp học, sự kiện cộng đồng và buổi họp có người tham gia nói tiếng Việt hoặc tiếng Anh. Hệ thống cũng hỗ trợ export transcript dạng TXT, lưu vào Amazon S3 và trả về download link có thời hạn.
 
-## Các phần của workshop
+## Các phần trong workshop
 
-1. Tổng quan dự án và kiến trúc.
+1. Tổng quan workshop và kiến trúc.
 2. Điều kiện tiên quyết.
-3. Tạo nền tảng storage, database và IAM.
-4. Xây dựng workflow xử lý AI.
-5. Bảo mật, monitoring, kiểm thử và tối ưu chi phí.
+3. Nền tảng backend trên Amazon EC2.
+4. Triển khai frontend và tích hợp dịch vụ AWS.
+5. Bảo mật, giám sát, kiểm thử và tối ưu chi phí.
 6. Cleanup.
+

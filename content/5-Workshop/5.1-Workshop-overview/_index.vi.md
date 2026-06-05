@@ -1,66 +1,69 @@
 ---
-title : "Tổng quan workshop"
-date : 2026-05-12
-weight : 1
-chapter : false
-pre : " <b> 5.1. </b> "
+title: "Tổng quan workshop"
+date: 2026-05-12
+weight: 1
+chapter: false
+pre: " <b> 5.1. </b> "
 ---
 
 # Tổng quan workshop
 
-## Use case
+## Vấn đề
 
-Cognitive Communication Coach giúp người dùng xem lại hội thoại sau khi cuộc trò chuyện kết thúc. Người dùng upload transcript hoặc file audio ngắn. Hệ thống phân tích nội dung và trả về báo cáo coaching có cấu trúc:
+Trong workshop và cuộc họp song ngữ, người tham gia có thể bỏ lỡ nội dung vì diễn giả dùng ngôn ngữ họ chưa thật sự quen, nói nhanh, hoặc chuyển đổi giữa tiếng Việt và tiếng Anh. Ghi chú thủ công chậm và không hỗ trợ theo thời gian thực.
 
-- Tóm tắt hội thoại.
-- Chủ đề và mục tiêu chính.
-- Điểm lập luận yếu hoặc câu trả lời chưa rõ.
-- Gợi ý phản hồi mạnh hơn theo cấu trúc claim, reason, evidence và example.
-- Năm câu hỏi "tại sao" để luyện tập.
-- Ghi chú học tập bằng tiếng Anh và tiếng Việt.
+LiveCap giải quyết vấn đề này bằng một công cụ caption trên trình duyệt: chuyển lời nói thành văn bản, dịch Việt-Anh, hiển thị caption trực tiếp và lưu transcript export trên AWS.
 
-## Sơ đồ kiến trúc
+## Mục tiêu
 
-{{< mermaid align="left" >}}
+- Thu âm trực tiếp từ microphone trong trình duyệt.
+- Stream audio đến backend bằng WebSocket.
+- Tạo caption gần thời gian thực với Amazon Transcribe Streaming.
+- Dịch finalized segment bằng Amazon Translate.
+- Hiển thị caption tiếng Việt ở cột trái và tiếng Anh ở cột phải.
+- Export transcript TXT lên Amazon S3 và trả về pre-signed download link.
+- Ghi operational event và lỗi tích hợp bằng CloudWatch logging.
+
+## Kiến trúc tổng quan
+
+```mermaid
 flowchart LR
-  User["Người dùng / học viên"] --> Client["Browser hoặc API client"]
-  Client --> APIGW["Amazon API Gateway"]
-  APIGW --> UploadFn["Lambda: tạo upload URL"]
-  APIGW --> ResultFn["Lambda: lấy kết quả"]
-  UploadFn --> S3["S3 private bucket"]
-  S3 --> Workflow["Step Functions"]
-  Workflow --> Transcribe["Amazon Transcribe"]
-  Workflow --> AnalyzeFn["Lambda: gọi Bedrock"]
-  AnalyzeFn --> Bedrock["Amazon Bedrock"]
-  Workflow --> DDB["DynamoDB job table"]
-  ResultFn --> DDB
-  Workflow --> Logs["CloudWatch Logs"]
-{{< /mermaid >}}
+  Browser["Browser: React frontend"] -->|HTTPS| CloudFront["Amazon CloudFront"]
+  CloudFront --> S3Frontend["Amazon S3: static frontend"]
+  Browser -->|WSS audio stream| Nginx["Nginx trên EC2"]
+  Nginx --> FastAPI["FastAPI backend trên EC2"]
+  FastAPI --> Transcribe["Amazon Transcribe Streaming"]
+  FastAPI --> Translate["Amazon Translate"]
+  FastAPI --> S3Transcripts["Amazon S3: transcript storage"]
+  FastAPI --> CloudWatch["Amazon CloudWatch Logs"]
+```
 
 ## Dịch vụ AWS sử dụng
 
-| Dịch vụ | Trách nhiệm |
-| --- | --- |
-| Amazon S3 | Lưu audio/transcript upload và report tạo ra |
-| Amazon API Gateway | Cung cấp REST API endpoint |
-| AWS Lambda | Chạy logic backend và tích hợp Bedrock |
-| AWS Step Functions | Điều phối xử lý bất đồng bộ |
-| Amazon Transcribe | Chuyển audio thành văn bản |
-| Amazon Bedrock | Tạo phản hồi coaching có cấu trúc |
-| Amazon DynamoDB | Lưu metadata và trạng thái job |
-| Amazon CloudWatch | Lưu log và hỗ trợ troubleshooting |
-| AWS IAM | Áp dụng least-privilege access |
+| Dịch vụ | Vai trò trong LiveCap | Lý do chọn |
+| --- | --- | --- |
+| Amazon EC2 | Chạy FastAPI backend và WebSocket process | Server persistent phù hợp với WebSocket audio stream dài |
+| Amazon S3 | Host frontend file và lưu TXT transcript export | Object storage bền vững, chi phí thấp |
+| Amazon CloudFront | Phân phối frontend qua HTTPS | Tăng hiệu năng và cung cấp HTTPS cho static asset |
+| Amazon Transcribe Streaming | Chuyển audio live thành văn bản | Dịch vụ speech-to-text managed, hỗ trợ real-time và diarization |
+| Amazon Translate | Dịch caption finalized giữa tiếng Việt và tiếng Anh | Dịch vụ managed, dễ tích hợp qua API |
+| Amazon CloudWatch | Lưu structured log và lỗi tích hợp | Cần cho monitoring và troubleshooting |
+| IAM | Kiểm soát quyền EC2 gọi AWS services | Tránh hard-code credential và hỗ trợ least privilege |
 
-## Vì sao chọn kiến trúc này
+## Luồng dữ liệu
 
-Workflow xử lý bất đồng bộ vì transcription và AI analysis có thể mất thời gian. Cách này tránh tuyên bố hệ thống là trợ lý thời gian thực. Step Functions giúp từng bước xử lý dễ quan sát, DynamoDB giúp truy vấn trạng thái job, và S3 cung cấp lưu trữ bền vững với chi phí thấp.
+1. Người dùng mở frontend qua CloudFront.
+2. Browser xin quyền microphone.
+3. Frontend mở kết nối WSS đến backend.
+4. Audio chunk được gửi từ browser đến FastAPI.
+5. FastAPI chuyển audio đến Amazon Transcribe Streaming.
+6. Finalized transcript segment được dịch bằng Amazon Translate.
+7. Caption được gửi về browser và hiển thị theo hai cột.
+8. Người dùng export transcript của session.
+9. Backend upload TXT output lên S3 và trả về pre-signed download URL.
+10. Log được ghi vào CloudWatch cho session event và lỗi tích hợp AWS.
 
-## Screenshot cần chụp
+## Phạm vi MVP
 
-Sau khi triển khai, cần chụp:
+MVP không bao gồm xác thực người dùng, tích hợp meeting platform, nhận diện danh tính speaker, multi-room, chọn ngôn ngữ ngoài Việt-Anh, hoặc AI summarization. Các tính năng này hữu ích nhưng sẽ vượt quá phạm vi đồ án bootcamp của một học viên.
 
-- S3 bucket có các prefix `uploads/`, `transcripts/`, `reports/`.
-- DynamoDB job item có trạng thái cập nhật.
-- Step Functions execution graph.
-- CloudWatch log stream của Lambda.
-- Output báo cáo coaching cuối cùng.

@@ -1,77 +1,96 @@
 ---
-title : "Create Upload and Result API"
+title : "Deploy and Test the FastAPI Backend"
 date : 2026-05-12
 weight : 2
 chapter : false
 pre : " <b> 5.3.2. </b> "
 ---
 
-# Create Upload and Result API
+# Deploy and Test the FastAPI Backend
 
-## API Design
+## Step 1: Install Backend Dependencies
 
-Create a simple REST API with these endpoints:
+SSH into the EC2 instance and install runtime dependencies.
 
-| Method | Path | Purpose |
-| --- | --- | --- |
-| `POST` | `/upload-url` | Generate a pre-signed S3 upload URL |
-| `POST` | `/jobs` | Create a processing job after upload |
-| `GET` | `/jobs/{jobId}` | Retrieve job status and result |
-
-## Upload URL Lambda
-
-The upload URL Lambda should:
-
-1. Receive a file name and input type.
-2. Create a unique `jobId`.
-3. Generate an S3 key under `uploads/`.
-4. Return a pre-signed URL.
-5. Optionally insert an initial job item in DynamoDB.
-
-Example response:
-
-```json
-{
-  "jobId": "job-20260512-001",
-  "uploadUrl": "https://s3-presigned-url-example",
-  "s3Key": "uploads/job-20260512-001/sample.txt"
-}
+```bash
+sudo dnf install -y python3.11 python3.11-pip git nginx
+git clone https://github.com/your-org/livecap.git
+cd livecap/backend
+pip3.11 install -r requirements.txt
 ```
 
-## Create Job Lambda
+## Step 2: Configure Environment
 
-The create job Lambda should:
-
-1. Validate that the uploaded object exists in S3.
-2. Insert or update the DynamoDB item with status `UPLOADED`.
-3. Start the Step Functions execution.
-4. Return the `jobId` and current status.
-
-Example response:
-
-```json
-{
-  "jobId": "job-20260512-001",
-  "status": "UPLOADED",
-  "message": "Processing workflow started"
-}
+```bash
+cp .env.example .env
+nano .env
 ```
 
-## Result Lambda
+Minimum production values:
 
-The result Lambda should:
-
-1. Read the job item from DynamoDB.
-2. If status is `COMPLETED`, return the report location or report content.
-3. If status is `FAILED`, return the failure reason.
-4. If still processing, return the current status.
-
-## Validation
-
-Use a transcript file first because it avoids audio transcription variables:
-
-```powershell
-aws s3 cp sample_conversation.txt s3://<bucket-name>/uploads/job-test/sample_conversation.txt
+```env
+AWS_REGION=us-east-1
+S3_BUCKET=livecap-transcripts
+DOWNLOAD_LINK_EXPIRATION=86400
+SESSION_TIMEOUT=1800
+MAX_SPEAKERS=5
+TRANSCRIBE_LANGUAGE_CODE=vi-VN
+BILINGUAL_DUAL_STREAM=true
+ALLOWED_ORIGIN=https://your-cloudfront-domain
+CLOUDWATCH_LOG_GROUP=livecap
 ```
 
-Then create a manual DynamoDB test item or trigger the `/jobs` API and confirm that the job appears in the table.
+## Step 3: Manual Backend Test
+
+Run the API manually first:
+
+```bash
+uvicorn app.main:app --host 127.0.0.1 --port 8000
+```
+
+Open the health endpoint from the instance:
+
+```bash
+curl http://127.0.0.1:8000/api/health
+```
+
+Expected result:
+
+- The API returns a healthy response.
+- No AWS credential is stored in `.env`.
+- If CloudWatch is unavailable during local testing, logging falls back to stdout.
+
+## Step 4: Run with systemd
+
+Copy the provided systemd unit and enable the service:
+
+```bash
+sudo cp deploy/livecap.service /etc/systemd/system/livecap.service
+sudo systemctl daemon-reload
+sudo systemctl enable livecap
+sudo systemctl start livecap
+sudo systemctl status livecap
+```
+
+View service logs:
+
+```bash
+sudo journalctl -u livecap -f
+```
+
+## Step 5: Configure Nginx for HTTPS/WSS
+
+Nginx terminates TLS and forwards traffic to Uvicorn.
+
+```bash
+sudo cp deploy/nginx.conf /etc/nginx/conf.d/livecap.conf
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+After TLS is configured, the WebSocket endpoint should be available at:
+
+```text
+wss://your-ec2-domain/ws/transcribe
+```
+

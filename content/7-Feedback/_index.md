@@ -10,26 +10,28 @@ pre: " <b> 7. </b> "
 
 ## Program Experience
 
-The FCAJ AWS Bootcamp helped me move from basic AWS awareness to practical cloud solution design. The most valuable part was learning how to justify architecture decisions, not only how to create resources in the AWS Console.
+The FCAJ AWS Bootcamp helped me move from learning AWS services individually to designing a complete cloud application. LiveCap required me to think about frontend delivery, backend operations, real-time streaming, IAM permissions, monitoring, security, testing, and cleanup as one connected system.
 
 ## Satisfaction
 
-I am satisfied with the learning path because it encouraged both hands-on practice and documentation. The final project requirement pushed me to think about implementation, testing, monitoring, security, cost, and cleanup as one complete lifecycle.
+I am satisfied with the project-based learning approach. The final project pushed me to build something practical instead of only following isolated labs. LiveCap also gave me a stronger reason to learn AWS because the use case came directly from bilingual communication challenges in technical events.
 
 ## Most Useful Lessons
 
-- Cloud architecture must start from a clear problem, not from randomly choosing services.
-- Serverless services are powerful for student projects because they reduce infrastructure operation work.
-- AI projects need privacy, cost, and correctness boundaries.
-- Documentation quality matters because another person should be able to reproduce the result.
+- A good cloud architecture starts from a real user problem.
+- Real-time systems require careful handling of latency, streaming, errors, and secure connections.
+- IAM roles are safer than storing AWS credentials in application configuration.
+- CloudWatch logs are essential when debugging integrations with Transcribe, Translate, and S3.
+- Documentation matters because another student should be able to reproduce the result.
 
 ## Improvement Suggestions
 
-- Provide more example rubrics for evaluating final project architecture quality.
-- Add more sessions about IAM least privilege and cost estimation.
-- Include one workshop on designing AI workloads responsibly on AWS.
-- Give students more practice presenting trade-offs and defending architecture choices.
+- Add more guided practice on WebSocket and real-time cloud application design.
+- Provide more examples of least-privilege IAM policies for student projects.
+- Include a session on CloudFront, S3 static hosting, and production HTTPS deployment.
+- Give students more time to present architecture trade-offs and deployment evidence.
 
 ## Recommendation
 
-I would recommend the program to students who want to learn AWS through practical work. The program is especially useful for learners who want to build a project portfolio and practice explaining cloud architecture clearly.
+I would recommend the program to students who want to learn AWS through practical projects. The bootcamp is especially useful for learners who want to build a portfolio project and practice explaining cloud architecture clearly.
+

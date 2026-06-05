@@ -1,57 +1,63 @@
 ---
-title : "Prepare Sample Input and Prompt"
+title : "Build and Deploy the Frontend"
 date : 2026-05-12
 weight : 1
 chapter : false
 pre : " <b> 5.4.1. </b> "
 ---
 
-# Prepare Sample Input and Prompt
+# Build and Deploy the Frontend
 
-## Sample Conversation
+## Step 1: Build the React App
 
-Use a short transcript first. This reduces risk and helps validate the Bedrock analysis before adding audio transcription.
+From the frontend directory:
 
-Example:
+```bash
+cd livecap/frontend
+npm install
 
-```text
-Mentor: Why did you choose this project?
-Student: I want to build an AI assistant for communication.
-Mentor: Why is that useful?
-Student: Because many people cannot explain ideas clearly under pressure.
-Mentor: Why should this use AWS?
-Student: AWS provides storage, transcription, AI analysis, workflow orchestration, and monitoring.
-Mentor: What happens if AI is wrong?
-Student: The system should be used as coaching feedback, not final truth.
+VITE_WS_URL=wss://your-ec2-domain/ws/transcribe \
+VITE_API_BASE_URL=https://your-ec2-domain \
+npm run build
 ```
 
-## Bedrock Prompt Structure
+The output is generated in `frontend/dist/`.
 
-The prompt should ask the model to return a structured coaching report:
+## Step 2: Create a Frontend S3 Bucket
 
-```text
-You are a communication coach. Analyze the transcript.
-Return:
-1. Short summary
-2. Main topic
-3. Strong points
-4. Weak reasoning points
-5. Improved answer using claim, reason, evidence, example
-6. Five why-chain practice questions
-7. Safety note that feedback is a suggestion
-8. Vietnamese summary
+```bash
+aws s3 mb s3://livecap-frontend --region us-east-1
 ```
 
-## Expected Output Quality
+Keep public access blocked. CloudFront should access the bucket through Origin Access Control.
 
-The report should be:
+## Step 3: Upload the Static Build
 
-- Specific to the transcript.
-- Practical and not generic.
-- Framed as coaching feedback.
-- Bilingual where required.
-- Clear enough for a learner to practice from.
+Upload long-lived assets with immutable cache headers:
 
-## Validation
+```bash
+aws s3 sync frontend/dist/ s3://livecap-frontend/ \
+  --delete \
+  --cache-control "max-age=31536000,immutable" \
+  --exclude "index.html"
+```
 
-Before automating the full workflow, manually test the prompt in the Amazon Bedrock console with the sample transcript and save a screenshot of the generated report.
+Upload `index.html` separately with no-cache:
+
+```bash
+aws s3 cp frontend/dist/index.html s3://livecap-frontend/index.html \
+  --cache-control "no-cache,no-store,must-revalidate"
+```
+
+## Step 4: Create a CloudFront Distribution
+
+Recommended settings:
+
+- Origin: the frontend S3 bucket.
+- Origin access: Origin Access Control.
+- Viewer protocol policy: Redirect HTTP to HTTPS.
+- Default root object: `index.html`.
+- Custom error response: `403` to `/index.html` with response code `200` for client-side routing.
+
+After the distribution status becomes `Deployed`, record the CloudFront domain and set backend `ALLOWED_ORIGIN` to that URL.
+

@@ -1,83 +1,79 @@
 ---
-title : "Create S3 Bucket and DynamoDB Table"
+title : "Create EC2, IAM Role, and S3 Storage"
 date : 2026-05-12
 weight : 1
 chapter : false
 pre : " <b> 5.3.1. </b> "
 ---
 
-# Create S3 Bucket and DynamoDB Table
+# Create EC2, IAM Role, and S3 Storage
 
-## Step 1: Create the S3 Bucket
+## Step 1: Launch an EC2 Instance
 
-Create one private bucket for the project.
+Create one EC2 instance for the backend.
 
-Suggested bucket name:
+Recommended MVP configuration:
 
-```text
-cognitive-coach-<your-name>-<account-id>
+| Setting | Value |
+| --- | --- |
+| AMI | Amazon Linux 2023 or Ubuntu 22.04 LTS |
+| Instance type | `t3.small` or larger |
+| Storage | 8 GB gp3 minimum |
+| Inbound SSH | Port `22` from your IP only |
+| Inbound HTTPS/WSS | Port `443` from `0.0.0.0/0` |
+
+Do not expose Uvicorn directly to the internet. Uvicorn should listen on `127.0.0.1:8000`, and Nginx should be the public entry point.
+
+## Step 2: Create the Transcript S3 Bucket
+
+Create an S3 bucket for exported TXT transcript files:
+
+```bash
+aws s3 mb s3://livecap-transcripts --region us-east-1
 ```
 
-Recommended prefixes:
-
-```text
-uploads/
-transcripts/
-reports/
-```
-
-Configuration:
+Recommended bucket settings:
 
 - Block all public access: enabled.
-- Bucket versioning: optional for bootcamp demo.
-- Server-side encryption: enable SSE-S3.
-- Lifecycle rule: delete objects under `uploads/`, `transcripts/`, and `reports/` after 7 days for the demo environment.
+- Server-side encryption: enabled.
+- Object prefix for transcript exports: `transcripts/`.
 
-## Step 2: Create the DynamoDB Table
+## Step 3: Create the EC2 IAM Role
 
-Create a table named:
+Create an IAM role such as `livecap-ec2-role` and attach it to the EC2 instance.
 
-```text
-CognitiveCoachJobs
+Required permissions:
+
+| Permission area | Purpose |
+| --- | --- |
+| Amazon Transcribe Streaming | Stream microphone audio for speech-to-text |
+| Amazon Translate | Translate finalized segments between Vietnamese and English |
+| Amazon S3 | Upload transcript TXT files and generate pre-signed URLs |
+| Amazon CloudWatch Logs | Write structured backend logs |
+
+Use scoped inline policies where possible. For S3, the backend only needs object access under the transcript prefix:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:PutObject",
+        "s3:GetObject"
+      ],
+      "Resource": "arn:aws:s3:::livecap-transcripts/transcripts/*"
+    }
+  ]
+}
 ```
-
-Table design:
-
-| Attribute | Type | Purpose |
-| --- | --- | --- |
-| `jobId` | String partition key | Unique job identifier |
-| `status` | String | `UPLOADED`, `TRANSCRIBING`, `ANALYZING`, `COMPLETED`, or `FAILED` |
-| `inputType` | String | `audio` or `text` |
-| `inputS3Key` | String | Uploaded file path |
-| `reportS3Key` | String | Final report path |
-| `createdAt` | String | ISO timestamp |
-| `updatedAt` | String | ISO timestamp |
-| `errorMessage` | String | Failure reason if any |
-
-Use on-demand capacity mode for a small bootcamp project.
-
-## Step 3: Create IAM Roles
-
-Create a Lambda execution role with permissions for:
-
-- Writing logs to CloudWatch.
-- Reading and writing objects in the project S3 bucket.
-- Reading and writing items in the `CognitiveCoachJobs` table.
-- Calling Bedrock model inference.
-
-Create a Step Functions role with permissions for:
-
-- Invoking required Lambda functions.
-- Starting and checking Amazon Transcribe jobs if using audio input.
-- Writing execution logs to CloudWatch.
-
-Do not use `AdministratorAccess` for the final project roles. For the final report, keep the IAM design aligned with least-privilege principles.
 
 ## Validation
 
-Confirm:
+- EC2 is running.
+- Security group allows SSH only from your IP.
+- Security group allows HTTPS/WSS on port `443`.
+- S3 bucket is private.
+- EC2 has the `livecap-ec2-role` attached.
 
-- The S3 bucket is not public.
-- A test object can be uploaded to `uploads/`.
-- The DynamoDB table exists and has `jobId` as the partition key.
-- IAM roles exist with scoped permissions.

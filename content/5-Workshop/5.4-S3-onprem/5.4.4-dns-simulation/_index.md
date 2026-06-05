@@ -1,82 +1,46 @@
 ---
-title : "Orchestrate and Validate the Full Workflow"
+title : "Validate the End-to-End Workflow"
 date : 2026-05-12
 weight : 4
 chapter : false
 pre : " <b> 5.4.4. </b> "
 ---
 
-# Orchestrate and Validate the Full Workflow
+# Validate the End-to-End Workflow
 
-## Step Functions State Machine
+## End-to-End Test Path
 
-Create a state machine that coordinates the processing stages. A simple bootcamp version can use these states:
-
-1. `MarkAnalyzing`
-2. `AnalyzeTranscript`
-3. `SaveResult`
-4. `MarkCompleted`
-5. `HandleFailure`
-
-If you implement audio input, add:
-
-1. `StartTranscription`
-2. `WaitForTranscription`
-3. `CheckTranscriptionStatus`
-
-## Minimal Transcript Path
-
-For a reliable final demo, the transcript path is enough:
+Use this workflow after EC2, Nginx, CloudFront, S3, and environment variables are configured:
 
 ```text
-Uploaded transcript -> Step Functions -> Lambda -> Bedrock -> S3 report -> DynamoDB status
+Open frontend -> allow microphone -> start capture -> speak Vietnamese/English
+-> receive live captions -> stop capture -> export transcript
+-> upload TXT to S3 -> download with pre-signed URL
 ```
 
-## Test Case 1: Successful Transcript Analysis
+## Test Cases
 
-Input:
+| Test case | Expected result |
+| --- | --- |
+| Health check | `GET /api/health` returns success |
+| Microphone denied | Frontend shows microphone permission error |
+| WebSocket connection | Browser connects to `wss://.../ws/transcribe` |
+| Vietnamese speech | Vietnamese and English columns are populated |
+| English speech | English source and Vietnamese translation are populated |
+| Speaker label | Captions include `Speaker 1`, `Speaker 2`, etc. |
+| Export transcript | S3 stores TXT output and returns a pre-signed URL |
+| Transcribe failure | Frontend receives an error and CloudWatch records the failure |
+| S3 upload failure | Backend returns an export error and logs the affected service |
 
-```json
-{
-  "jobId": "job-test-001",
-  "bucket": "<bucket-name>",
-  "transcriptKey": "uploads/job-test-001/sample_conversation.txt"
-}
-```
+## Evidence to Capture
 
-Expected result:
+For the final report, capture screenshots of:
 
-- Step Functions execution succeeds.
-- DynamoDB status becomes `COMPLETED`.
-- Report exists under `reports/job-test-001/report.json`.
-- CloudWatch logs show no unhandled exception.
+- CloudFront distribution status.
+- S3 frontend bucket and transcript bucket.
+- EC2 instance running.
+- `systemctl status livecap`.
+- Browser showing bilingual captions.
+- S3 object created after export.
+- CloudWatch log stream with session events.
 
-## Test Case 2: Missing Transcript
-
-Input references a transcript key that does not exist.
-
-Expected result:
-
-- Workflow moves to failure handling.
-- DynamoDB status becomes `FAILED`.
-- `errorMessage` explains that the S3 object is missing.
-- CloudWatch logs contain the failure details.
-
-## Test Case 3: Bedrock Access Error
-
-Temporarily use a model ID that is not enabled, or remove Bedrock permission from the test role.
-
-Expected result:
-
-- Lambda catches the access error.
-- Workflow fails in a controlled way.
-- Error is visible in CloudWatch and DynamoDB.
-
-## Final Validation Checklist
-
-- Upload path works.
-- Job status can be retrieved.
-- Bedrock output follows the report structure.
-- Logs are available.
-- Failure cases are visible.
-- Cleanup steps are documented.

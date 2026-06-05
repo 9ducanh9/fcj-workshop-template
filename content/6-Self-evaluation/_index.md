@@ -10,45 +10,48 @@ pre: " <b> 6. </b> "
 
 ## Technical Knowledge
 
-I improved my understanding of serverless architecture, object storage, API design, workflow orchestration, AI service integration, IAM permission design, and observability on AWS. The project helped me connect individual AWS services into one practical system instead of learning them separately.
+I improved my understanding of real-time cloud application design, WebSocket communication, EC2 deployment, S3 static hosting, CloudFront distribution, IAM role design, Amazon Transcribe Streaming, Amazon Translate, and CloudWatch logging. LiveCap helped me connect frontend audio capture, backend streaming, and managed AWS AI services into one practical system.
 
 ## Learning Ability
 
-I learned to reduce an ambitious product idea into a realistic MVP. The original idea was a real-time AI communication assistant, but the final implementation focuses on post-conversation reflection because it is safer, cheaper, more reproducible, and technically defensible for a bootcamp project.
+I learned how to turn an event-inspired idea into a concrete MVP. Instead of only documenting a theoretical AI assistant, I focused on a reproducible use case: real-time bilingual captions for workshops and meetings. I also learned to read service limitations carefully, especially around secure WebSocket connections, browser microphone permissions, and real-time transcription latency.
 
 ## Initiative
 
-I proposed an original use case based on a real communication problem I observed: people often understand a topic partially but struggle to organize and defend ideas during conversations. I independently redesigned the scope, selected AWS services, and created a workshop structure that another learner can follow.
+I selected LiveCap because it solves a real communication problem I experienced in bilingual technical events. I defined the user journey, studied the AWS services needed, built the backend/frontend structure, and documented a deployment path that another learner can reproduce.
 
 ## Discipline
 
-I followed a weekly worklog, documented implementation steps, and included testing, monitoring, security, cost, and cleanup sections. I also kept the project bounded to avoid unrealistic production-level complexity.
+I kept the architecture within bootcamp scope: one EC2 backend, S3 + CloudFront frontend hosting, and managed AWS services for transcription, translation, storage, and logging. I avoided adding unnecessary production complexity such as ECS, Kubernetes, user authentication, multi-room support, or AI summarization.
 
 ## Communication
 
-The project improved my ability to explain architecture choices clearly. I practiced describing why each AWS service is needed, what trade-offs were made, and how the system handles privacy, cost, and failure scenarios.
+The project improved my ability to explain why each AWS service is used. I practiced justifying EC2 for long-lived WebSocket sessions, CloudFront for HTTPS static delivery, S3 for transcript storage, IAM roles for credential safety, and CloudWatch for operational visibility.
 
 ## Teamwork
 
-During the bootcamp, I learned from mentors, peer discussions, AWS Study Group materials, and event sessions. I used feedback to refine the idea from an overly broad AI assistant into a focused, deliverable cloud project.
+I learned from FCAJ mentors, AWS Study Group sessions, and community events. Feedback helped me improve the documentation and focus on practical implementation evidence instead of only describing the product idea.
 
 ## Problem Solving
 
-The main design challenge was balancing ambition and feasibility. I solved this by moving from real-time processing to asynchronous processing, adding transcript upload as a fallback, and using Step Functions plus CloudWatch to make errors observable.
+The main design challenge was supporting real-time audio streaming in a simple but defensible architecture. I solved this by using EC2 for the persistent FastAPI WebSocket backend, Nginx for TLS/WSS forwarding, and managed AWS services for speech-to-text, translation, storage, and logging.
 
 ## Project Contribution
 
 My personal contribution includes:
 
-- Defining the problem and target user journey.
-- Designing the AWS serverless architecture.
-- Creating the Bedrock coaching prompt and evaluation rubric.
-- Writing bilingual workshop documentation.
-- Preparing test scenarios, validation steps, security review, and cleanup plan.
+- Defining the LiveCap use case and MVP boundaries.
+- Designing the AWS architecture.
+- Implementing and documenting the FastAPI backend flow.
+- Preparing the React frontend deployment path.
+- Integrating Amazon Transcribe Streaming, Amazon Translate, S3, CloudFront, EC2, IAM, and CloudWatch in the workshop design.
+- Writing bilingual documentation with setup, testing, monitoring, security, cost, and cleanup steps.
 
 ## Areas to Improve
 
-- Add a complete frontend UI instead of relying mainly on API testing.
-- Capture more real AWS screenshots after deployment.
-- Compare multiple Bedrock models for quality and cost.
-- Add authentication with Amazon Cognito if extending beyond the bootcamp MVP.
+- Add more AWS screenshots from the final deployed environment.
+- Improve speaker diarization validation with noisy multi-speaker test audio.
+- Add load testing for concurrent WebSocket sessions.
+- Add a future production plan using ALB and multiple backend instances.
+- Consider authentication only if the project grows beyond the bootcamp MVP.
+

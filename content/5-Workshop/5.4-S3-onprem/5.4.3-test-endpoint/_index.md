@@ -1,68 +1,53 @@
 ---
-title : "Invoke Bedrock from Lambda"
+title : "Translate Captions and Export Transcripts"
 date : 2026-05-12
 weight : 3
 chapter : false
 pre : " <b> 5.4.3. </b> "
 ---
 
-# Invoke Bedrock from Lambda
+# Translate Captions and Export Transcripts
 
-## Lambda Responsibility
+## Translation Flow
 
-The analysis Lambda should:
+LiveCap always renders two columns:
 
-1. Read transcript text from S3.
-2. Build the coaching prompt.
-3. Invoke Amazon Bedrock.
-4. Save the model response to `reports/<jobId>/report.json`.
-5. Update DynamoDB status to `COMPLETED` or `FAILED`.
+- Vietnamese on the left.
+- English on the right.
 
-## Example Output Schema
+When a finalized segment is spoken in Vietnamese, Amazon Translate produces English text. When a finalized segment is spoken in English, Amazon Translate produces Vietnamese text. The frontend receives both `text_vi` and `text_en` for display.
+
+Example segment message:
 
 ```json
 {
-  "summary": "The student explained the project idea but needs stronger evidence.",
-  "mainTopic": "Defending an AWS AI communication coach project",
-  "strongPoints": ["Clear target problem", "AWS service mapping is relevant"],
-  "weakReasoning": ["Needs clearer business value", "Needs privacy explanation"],
-  "improvedResponse": {
-    "claim": "AWS is suitable because the workload needs managed AI and serverless orchestration.",
-    "reason": "The system has upload, transcription, AI analysis, storage, and monitoring stages.",
-    "evidence": "S3, Transcribe, Bedrock, Step Functions, DynamoDB, and CloudWatch each support one stage.",
-    "example": "A student can upload a transcript and receive a structured coaching report."
-  },
-  "whyQuestions": [
-    "Why is post-conversation analysis safer than live assistance?",
-    "Why does this need cloud services?",
-    "Why is Bedrock better than hard-coded rules for this use case?",
-    "Why should users trust the feedback?",
-    "Why is cleanup important?"
-  ],
-  "vietnameseSummary": "Sinh viên đã giải thích ý tưởng nhưng cần bổ sung giá trị thực tế và bảo mật."
+  "type": "finalized_segment",
+  "segment_id": "segment-001",
+  "speaker_label": "Speaker 1",
+  "text_vi": "Xin chào mọi người",
+  "text_en": "Hello everyone",
+  "spoken_language": "vi",
+  "is_final": true
 }
 ```
 
-## Error Handling
+## Transcript Export
 
-Handle these errors:
+When the user exports a session:
 
-- Missing transcript object.
-- Bedrock model access denied.
-- Bedrock throttling or timeout.
-- Invalid model output.
-- DynamoDB update failure.
+1. Frontend sends the accumulated transcript to the backend.
+2. Backend serializes it into TXT.
+3. Backend uploads the TXT file to S3 under `transcripts/`.
+4. Backend generates a time-limited pre-signed URL.
+5. Frontend displays the download link.
 
 ## Validation
 
-Use the Lambda test console with a sample event:
+| Test | Expected result |
+| --- | --- |
+| Vietnamese speech | Vietnamese text appears on the left, English translation appears on the right |
+| English speech | Vietnamese translation appears on the left, English text appears on the right |
+| Empty export | Backend returns a valid empty transcript file |
+| Export with captions | S3 receives a TXT object under `transcripts/` |
+| Download link | Pre-signed URL downloads the TXT file before expiration |
 
-```json
-{
-  "jobId": "job-test",
-  "bucket": "<bucket-name>",
-  "transcriptKey": "uploads/job-test/sample_conversation.txt"
-}
-```
-
-Confirm the report is saved to S3 and the DynamoDB item is updated.

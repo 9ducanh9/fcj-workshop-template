@@ -10,26 +10,28 @@ pre: " <b> 7. </b> "
 
 ## Trải nghiệm chương trình
 
-FCAJ AWS Bootcamp giúp tôi chuyển từ mức biết cơ bản về AWS sang tư duy thiết kế giải pháp cloud thực tế. Phần giá trị nhất là học cách giải thích và bảo vệ quyết định kiến trúc, không chỉ thao tác tạo resource trên AWS Console.
+FCAJ AWS Bootcamp giúp tôi chuyển từ việc học từng dịch vụ AWS riêng lẻ sang tư duy thiết kế một ứng dụng cloud hoàn chỉnh. LiveCap buộc tôi phải suy nghĩ về frontend delivery, backend operation, real-time streaming, IAM permissions, monitoring, security, testing và cleanup như một hệ thống liên kết.
 
 ## Mức độ hài lòng
 
-Tôi hài lòng với lộ trình học vì chương trình kết hợp thực hành và tài liệu hóa. Yêu cầu đồ án cuối khóa buộc tôi nhìn dự án theo vòng đời đầy đủ: triển khai, kiểm thử, giám sát, bảo mật, chi phí và cleanup.
+Tôi hài lòng với cách học dựa trên dự án. Đồ án cuối khóa thúc đẩy tôi xây dựng một sản phẩm thực tế thay vì chỉ làm các lab rời rạc. LiveCap cũng tạo động lực học AWS rõ hơn vì use case xuất phát trực tiếp từ thách thức giao tiếp song ngữ trong các sự kiện kỹ thuật.
 
 ## Bài học hữu ích nhất
 
-- Kiến trúc cloud phải bắt đầu từ vấn đề rõ ràng, không phải chọn dịch vụ ngẫu nhiên.
-- Serverless phù hợp với dự án sinh viên vì giảm công sức vận hành hạ tầng.
-- Dự án AI cần có ranh giới về quyền riêng tư, chi phí và độ tin cậy.
-- Chất lượng tài liệu quan trọng vì người khác cần triển khai lại được.
+- Kiến trúc cloud tốt bắt đầu từ vấn đề thật của người dùng.
+- Hệ thống thời gian thực cần xử lý cẩn thận latency, streaming, lỗi và secure connection.
+- IAM role an toàn hơn việc lưu AWS credential trong file cấu hình ứng dụng.
+- CloudWatch logs rất quan trọng khi debug tích hợp với Transcribe, Translate và S3.
+- Tài liệu quan trọng vì một học viên khác cần có thể triển khai lại kết quả.
 
 ## Gợi ý cải thiện
 
-- Cung cấp thêm rubric mẫu để đánh giá chất lượng kiến trúc đồ án cuối.
-- Bổ sung thêm buổi học về IAM least privilege và ước tính chi phí.
-- Có thêm workshop về thiết kế AI workload có trách nhiệm trên AWS.
-- Cho học viên luyện trình bày trade-off và bảo vệ lựa chọn kiến trúc nhiều hơn.
+- Bổ sung thêm thực hành về WebSocket và thiết kế ứng dụng cloud thời gian thực.
+- Cung cấp thêm ví dụ IAM least-privilege policy cho dự án sinh viên.
+- Thêm buổi học về CloudFront, S3 static hosting và HTTPS deployment.
+- Cho học viên thêm thời gian trình bày trade-off kiến trúc và bằng chứng triển khai.
 
 ## Có giới thiệu chương trình không?
 
-Tôi sẽ giới thiệu chương trình cho sinh viên muốn học AWS thông qua thực hành. Chương trình đặc biệt hữu ích với người muốn xây dựng portfolio dự án và luyện khả năng giải thích kiến trúc cloud rõ ràng.
+Tôi sẽ giới thiệu chương trình cho sinh viên muốn học AWS thông qua dự án thực tế. Bootcamp đặc biệt hữu ích với người muốn xây dựng portfolio project và luyện khả năng giải thích kiến trúc cloud rõ ràng.
+

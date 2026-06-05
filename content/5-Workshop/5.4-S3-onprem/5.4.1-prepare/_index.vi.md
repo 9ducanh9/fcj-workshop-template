@@ -1,57 +1,63 @@
 ---
-title : "Chuẩn bị input mẫu và prompt"
+title : "Build và deploy frontend"
 date : 2026-05-12
 weight : 1
 chapter : false
 pre : " <b> 5.4.1. </b> "
 ---
 
-# Chuẩn bị input mẫu và prompt
+# Build và deploy frontend
 
-## Hội thoại mẫu
+## Bước 1: Build React app
 
-Dùng transcript ngắn trước. Cách này giảm rủi ro và giúp kiểm tra phân tích Bedrock trước khi thêm audio transcription.
+Từ thư mục frontend:
 
-Ví dụ:
+```bash
+cd livecap/frontend
+npm install
 
-```text
-Mentor: Why did you choose this project?
-Student: I want to build an AI assistant for communication.
-Mentor: Why is that useful?
-Student: Because many people cannot explain ideas clearly under pressure.
-Mentor: Why should this use AWS?
-Student: AWS provides storage, transcription, AI analysis, workflow orchestration, and monitoring.
-Mentor: What happens if AI is wrong?
-Student: The system should be used as coaching feedback, not final truth.
+VITE_WS_URL=wss://your-ec2-domain/ws/transcribe \
+VITE_API_BASE_URL=https://your-ec2-domain \
+npm run build
 ```
 
-## Cấu trúc prompt Bedrock
+Output được tạo trong `frontend/dist/`.
 
-Prompt nên yêu cầu model trả về báo cáo coaching có cấu trúc:
+## Bước 2: Tạo S3 bucket cho frontend
 
-```text
-You are a communication coach. Analyze the transcript.
-Return:
-1. Short summary
-2. Main topic
-3. Strong points
-4. Weak reasoning points
-5. Improved answer using claim, reason, evidence, example
-6. Five why-chain practice questions
-7. Safety note that feedback is a suggestion
-8. Vietnamese summary
+```bash
+aws s3 mb s3://livecap-frontend --region us-east-1
 ```
 
-## Chất lượng output kỳ vọng
+Giữ public access ở trạng thái blocked. CloudFront nên truy cập bucket qua Origin Access Control.
 
-Báo cáo nên:
+## Bước 3: Upload static build
 
-- Bám sát transcript.
-- Thực tế, không chung chung.
-- Được trình bày như feedback coaching.
-- Có phần song ngữ khi cần.
-- Đủ rõ để người học luyện tập.
+Upload asset dài hạn với immutable cache headers:
 
-## Kiểm tra
+```bash
+aws s3 sync frontend/dist/ s3://livecap-frontend/ \
+  --delete \
+  --cache-control "max-age=31536000,immutable" \
+  --exclude "index.html"
+```
 
-Trước khi tự động hóa toàn bộ workflow, hãy test prompt thủ công trong Amazon Bedrock console với transcript mẫu và lưu screenshot report tạo ra.
+Upload `index.html` riêng với no-cache:
+
+```bash
+aws s3 cp frontend/dist/index.html s3://livecap-frontend/index.html \
+  --cache-control "no-cache,no-store,must-revalidate"
+```
+
+## Bước 4: Tạo CloudFront distribution
+
+Cấu hình khuyến nghị:
+
+- Origin: frontend S3 bucket.
+- Origin access: Origin Access Control.
+- Viewer protocol policy: Redirect HTTP to HTTPS.
+- Default root object: `index.html`.
+- Custom error response: `403` đến `/index.html` với response code `200` cho client-side routing.
+
+Sau khi distribution chuyển sang `Deployed`, ghi lại CloudFront domain và set backend `ALLOWED_ORIGIN` bằng URL đó.
+

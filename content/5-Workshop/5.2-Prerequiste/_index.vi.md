@@ -1,66 +1,69 @@
 ---
-title : "Điều kiện tiên quyết"
-date : 2026-05-12
-weight : 2
-chapter : false
-pre : " <b> 5.2. </b> "
+title: "Điều kiện tiên quyết"
+date: 2026-05-12
+weight: 2
+chapter: false
+pre: " <b> 5.2. </b> "
 ---
 
 # Điều kiện tiên quyết
 
-## Kiến thức cần có
+## Công cụ cần có
 
-- Biết thao tác cơ bản trên AWS Management Console.
-- Hiểu khái niệm IAM: user, role, policy, least privilege.
-- Hiểu cơ bản về dịch vụ serverless.
-- Biết Python hoặc JavaScript cơ bản để đọc Lambda code.
-- Biết test REST API bằng `curl`, Postman hoặc API Gateway test console.
+| Công cụ | Phiên bản khuyến nghị | Mục đích |
+| --- | --- | --- |
+| Python | 3.11 trở lên | Chạy FastAPI backend |
+| Node.js | 18 LTS trở lên | Build React + Vite frontend |
+| npm | 9 trở lên | Cài frontend dependencies |
+| AWS CLI | v2 | Tạo và kiểm tra AWS resources |
+| Git | Bản ổn định mới | Clone và cập nhật source code |
+| Nginx | Theo package của OS | Reverse proxy và forward WSS trên EC2 |
 
-## Chuẩn bị tài khoản AWS
+## Yêu cầu tài khoản AWS
 
-1. Dùng tài khoản AWS học tập cá nhân hoặc tài khoản training được cho phép.
-2. Chọn một AWS Region hỗ trợ Amazon Bedrock và Amazon Transcribe.
-3. Bật quyền truy cập model Bedrock dự định sử dụng.
-4. Cấu hình AWS CLI nếu muốn test bằng CLI.
-5. Tạo billing alarm hoặc budget trước khi test.
+Tài khoản AWS cần quyền sử dụng:
 
-## Region gợi ý
+- Amazon EC2
+- Amazon S3
+- Amazon CloudFront
+- AWS IAM
+- Amazon Transcribe Streaming
+- Amazon Translate
+- Amazon CloudWatch Logs
 
-Hãy dùng region có đủ dịch vụ trong tài khoản của bạn. Nếu Bedrock model chưa khả dụng ở region mong muốn, chọn region khác được hỗ trợ và giữ toàn bộ resource trong cùng một region.
+Dùng nhất quán một AWS Region cho các tích hợp backend. Cấu hình tham chiếu của LiveCap dùng `us-east-1` cho Transcribe, Translate, S3 và CloudWatch.
 
-## Công cụ local
+## Biến môi trường backend
 
-- AWS CLI v2.
-- Python 3.11 hoặc mới hơn để đọc code.
-- Text editor.
-- Tùy chọn: Postman để test API.
+Copy `backend/.env.example` thành `backend/.env` và cấu hình các giá trị:
 
-## Input mẫu
+| Biến | Ví dụ | Mục đích |
+| --- | --- | --- |
+| `AWS_REGION` | `us-east-1` | Region cho AWS service call |
+| `S3_BUCKET` | `livecap-transcripts` | Bucket lưu TXT transcript export |
+| `DOWNLOAD_LINK_EXPIRATION` | `86400` | Thời hạn pre-signed URL theo giây |
+| `SESSION_TIMEOUT` | `1800` | Thời lượng tối đa của streaming session |
+| `MAX_SPEAKERS` | `5` | Giới hạn speaker diarization |
+| `TRANSCRIBE_LANGUAGE_CODE` | `vi-VN` | Ngôn ngữ fallback cho Transcribe |
+| `BILINGUAL_DUAL_STREAM` | `true` | Bật chế độ song ngữ Việt-Anh |
+| `ALLOWED_ORIGIN` | CloudFront URL | Frontend origin được CORS cho phép |
+| `CLOUDWATCH_LOG_GROUP` | `livecap` | Log group cho structured backend logs |
 
-Dùng transcript ngắn và không nhạy cảm khi test:
+Không lưu `AWS_ACCESS_KEY_ID` hoặc `AWS_SECRET_ACCESS_KEY` trong `.env` trên EC2. Hãy dùng IAM role gắn với EC2.
 
-```text
-Mentor: Why did you choose this project?
-Student: I want to build an AI assistant for communication.
-Mentor: Why is that useful?
-Student: Because many people cannot explain ideas clearly under pressure.
-Mentor: Why should this use AWS?
-Student: AWS provides storage, transcription, AI analysis, workflow orchestration, and monitoring.
-```
+## Biến môi trường frontend
 
-## Nguyên tắc an toàn
+Set các giá trị này trước khi build frontend:
 
-- Không upload hội thoại bí mật.
-- Không upload hội thoại nếu chưa có consent cần thiết.
-- Giữ audio test ngắn, tốt nhất dưới năm phút.
-- Xóa file test trong bước cleanup.
+| Biến | Ví dụ | Mục đích |
+| --- | --- | --- |
+| `VITE_WS_URL` | `wss://your-ec2-domain/ws/transcribe` | Secure WebSocket endpoint |
+| `VITE_API_BASE_URL` | `https://your-ec2-domain` | REST API base URL |
 
-## File hỗ trợ trong workshop
+## Giả định triển khai
 
-Các ví dụ hỗ trợ nằm trong `/files/cognitive-coach/`:
+- Backend chạy trên một EC2 instance trong MVP.
+- Frontend được host dạng static files trên S3 và phân phối qua CloudFront.
+- Production cần TLS vì microphone trên browser và WSS yêu cầu secure context.
+- Người dùng có quyền xử lý audio được dùng khi kiểm thử.
 
-- [sample_conversation.txt](/files/cognitive-coach/sample_conversation.txt)
-- [bedrock_prompt.md](/files/cognitive-coach/bedrock_prompt.md)
-- [lambda_analyze_transcript.py](/files/cognitive-coach/lambda_analyze_transcript.py)
-- [state_machine.asl.json](/files/cognitive-coach/state_machine.asl.json)
-- [iam_policy_example.json](/files/cognitive-coach/iam_policy_example.json)
