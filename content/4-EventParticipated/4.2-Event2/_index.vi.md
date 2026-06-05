@@ -1,6 +1,6 @@
 ---
 title: "Sự kiện 2: FCAJ Community Day 2026"
-date: 2026-05-12
+date: 2026-05-23
 weight: 2
 chapter: false
 pre: " <b> 4.2. </b> "
@@ -11,21 +11,26 @@ pre: " <b> 4.2. </b> "
 | Trường | Nội dung |
 | --- | --- |
 | Tên sự kiện | FCAJ Community Day 2026 |
-| Ngày/giờ | 2026 - cập nhật ngày sự kiện chính xác trước khi nộp chính thức |
-| Địa điểm | Sự kiện cộng đồng FCAJ / cập nhật địa điểm xác nhận trước khi nộp chính thức |
+| Ngày/giờ | 23 May 2026 |
+| Địa điểm | AWS Event Hall, Tầng 26, Bitexco Financial Tower, TP. Hồ Chí Minh |
 | Vai trò | Người tham gia |
 
 ## Nội dung chính
 
-- Các use case AWS và AI hiện đại được chia sẻ bởi cộng đồng FCAJ và AWS.
-- Chủ đề GenAI operations, bao gồm cách giám sát, cải thiện và kiểm soát ứng dụng AI sau khi triển khai.
-- Các điểm cần lưu ý khi thiết kế CloudFront cho việc phân phối nội dung tĩnh an toàn và có khả năng mở rộng.
-- Khái niệm hệ thống multi-agent ở mức doanh nghiệp và rủi ro overengineering khi thiết kế workflow AI.
-- AI-assisted UI generation, tự động hóa quy trình nghiệp vụ với Amazon Quick Suite và phân tích hành vi LLM.
+- GenAIOps: Essential DevOps for Generative Applications - Context Is Everything.
+- Amazon CloudFront: From Edge to Origin.
+- Enterprise-Grade Multi-Agent System: The Case of Startup Credit Scoring.
+- Building UTMorpho from Idea to Reality (LotusHacks 2026).
+- Automate Any Business Process Using Amazon Quick Suite.
+- Non-Determinism of "Deterministic" LLM Settings.
 
 ## Bài học / đóng góp
 
-- Tôi học được rằng dự án AI cần có ranh giới rõ ràng, không chỉ tập trung vào output của model. Hệ thống phải xác định AI được làm gì, không nên làm gì và người dùng cần kiểm chứng kết quả như thế nào.
-- Tôi liên hệ phần CloudFront và static delivery với việc triển khai website workshop này.
-- Tôi dùng các chủ đề GenAI và hành vi LLM để củng cố phần đạo đức, giám sát và human-in-the-loop trong đồ án cuối khóa.
+- Tôi hiểu sâu hơn về cách context engineering ảnh hưởng đến hiệu năng của hệ thống AI.
+- Một insight khiến tôi nhớ nhất là: "Context quality is more important than context quantity." Ý tưởng này ảnh hưởng đến cách tôi suy nghĩ về việc xây dựng hệ thống AI và sau đó định hình một số quyết định kiến trúc trong đồ án AWS Bootcamp cuối khóa.
+- Tôi học được cách CloudFront cải thiện hiệu năng, khả năng mở rộng và trải nghiệm người dùng thông qua edge locations.
+- Case study về hệ thống multi-agent cho credit scoring giúp tôi hiểu rõ hơn về kiến trúc AI doanh nghiệp và governance.
+- Phần trình bày UTMorpho cho thấy AI có thể tăng tốc quá trình prototype sản phẩm và phát triển UI.
+- Phiên Amazon Quick Suite giới thiệu các cách tiếp cận thực tế để tự động hóa quy trình nghiệp vụ.
+- Phiên về LLM non-determinism giúp tôi hiểu rõ hơn về giới hạn và hành vi của hệ thống AI khi đưa vào production.
 

@@ -1,6 +1,6 @@
 ---
 title: "Event 1: AWS Study Group Technical Sharing"
-date: 2026-05-12
+date: 2026-05-09
 weight: 1
 chapter: false
 pre: " <b> 4.1. </b> "
@@ -11,20 +11,22 @@ pre: " <b> 4.1. </b> "
 | Field | Detail |
 | --- | --- |
 | Event name | AWS Study Group Technical Sharing |
-| Date/time | 2026 - update with confirmed session date before final submission |
-| Location | Online / AWS Study Group community session |
+| Date/time | 09 May 2026 |
+| Location | AWS Event Hall, Floor 26, Bitexco Financial Tower, Ho Chi Minh City |
 | Role | Participant |
 
 ## Main Content
 
-- Practical strategies for learning AWS through hands-on labs and personal projects.
-- How to explore AWS services by starting from a real problem instead of memorizing service names.
-- Career mindset for cloud learners, including documentation discipline and project storytelling.
-- Structured project planning using the BMAD method: business value, measurable goal, architecture, and delivery plan.
+- Learning AWS through hands-on projects instead of memorizing services.
+- Applying dopamine-driven learning strategies to maintain motivation and consistency.
+- Understanding career mindset, professional attitude, and preparation before entering the technology industry.
+- Exploring the BMAD Method for structured project planning and execution.
+- Learning how personal projects and technical blogging can accelerate AWS learning.
 
 ## Lessons Learned / Contribution
 
-- I learned that a strong bootcamp project must explain the problem, architecture, implementation path, and validation evidence clearly.
-- I applied the project planning mindset to narrow my idea from a broad real-time AI assistant into a focused post-conversation communication coach.
-- I improved my report structure by linking weekly learning outcomes to concrete implementation decisions.
+- I learned that cloud learning becomes more effective when it is connected to solving real problems rather than focusing only on service features.
+- The session reinforced the importance of documentation, project storytelling, and continuous learning.
+- The BMAD framework helped me structure my AWS Bootcamp project more clearly, from problem identification to architecture design and implementation planning.
+- I applied these ideas when refining my final project scope into a realistic and achievable AWS MVP.
 

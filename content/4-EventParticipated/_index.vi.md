@@ -12,12 +12,11 @@ Phần này ghi lại các sự kiện học tập và hoạt động cộng đ�
 
 | Sự kiện | Vai trò | Đóng góp chính |
 | --- | --- | --- |
-| AWS Study Group Technical Sharing | Người tham gia | Học chiến lược học AWS thực tế, tư duy nghề nghiệp và cách lập kế hoạch dự án có cấu trúc. |
-| FCAJ Community Day 2026 | Người tham gia | Tìm hiểu các chủ đề AWS và AI hiện đại, hỗ trợ việc hoàn thiện kiến trúc và tài liệu đồ án. |
+| AWS Study Group Technical Sharing | Người tham gia | Học chiến lược học AWS qua dự án thực hành, duy trì động lực, tư duy nghề nghiệp và lập kế hoạch theo BMAD. |
+| FCAJ Community Day 2026 | Người tham gia | Tìm hiểu GenAIOps, CloudFront, multi-agent systems, AI-assisted prototyping, tự động hóa nghiệp vụ và hành vi LLM. |
 
 ## Các sự kiện hỗ trợ đồ án như thế nào
 
 - Cải thiện khả năng giải thích kiến trúc AWS một cách rõ ràng.
 - Giúp tôi tinh chỉnh ý tưởng từ trợ lý AI thời gian thực quá rộng thành hệ thống phản tư sau hội thoại thực tế hơn.
 - Tăng nhận thức về bảo mật, giám sát, kiểm soát chi phí và cleanup trong một dự án AWS ở mức bootcamp.
-
