@@ -12,6 +12,6 @@ Phần này gồm ba bài viết kỹ thuật liên quan đến quá trình họ
 
 | Bài viết | Chủ đề | Liên hệ với đồ án |
 | --- | --- | --- |
-| Blog 1 | Từ trợ lý AI thời gian thực đến MVP AWS thực tế | Giải thích quá trình thu hẹp phạm vi sản phẩm |
+| Blog 1 | Sắp xếp ưu tiên kiến trúc với Tech Roadmap Prioritization (TRP) | Tư duy kiến trúc và framework ưu tiên hóa |
 | Blog 2 | Thiết kế workflow AI serverless bằng AWS Step Functions | Giải thích kiến trúc backend |
 | Blog 3 | Bảo mật, quyền riêng tư và chi phí cho dữ liệu hội thoại AI | Giải thích thiết kế AI workload có trách nhiệm |
