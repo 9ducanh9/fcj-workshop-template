@@ -280,31 +280,4 @@ pre: " <b> 1.2. </b> "
     </div>
   </div>
 
-  <!-- 30/04/2026 -->
-  <div class="day-card">
-    <div class="day-header">
-      <div class="day-icon"><i class="fas fa-calendar-day"></i></div>
-      <h4 class="day-title">30/04/2026 (Thursday)</h4>
-    </div>
-    <div class="day-body">
-      <div class="section-work">
-        <h5><i class="fas fa-tasks"></i> Work Completed</h5>
-        <ul>
-          <li>Discussed task management using GitHub Projects (Kanban).</li>
-          <li>Prepared proposal content for the project.</li>
-          <li>Evaluated ideas based on feasibility, AWS compatibility, and implementation capability.</li>
-          <li>Planned the phase for system architecture design.</li>
-        </ul>
-      </div>
-      <div class="section-result">
-        <h5><i class="fas fa-trophy"></i> Results Achieved</h5>
-        <ul>
-          <li>Identified potential project directions.</li>
-          <li>Prepared the foundation for selecting the main idea next week.</li>
-          <li>Began building the deployment plan and task division.</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
 </div>

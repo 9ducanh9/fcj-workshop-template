@@ -280,31 +280,4 @@ pre: " <b> 1.2. </b> "
     </div>
   </div>
 
-  <!-- 30/04/2026 -->
-  <div class="day-card">
-    <div class="day-header">
-      <div class="day-icon"><i class="fas fa-calendar-day"></i></div>
-      <h4 class="day-title">30/04/2026 (Thứ Năm)</h4>
-    </div>
-    <div class="day-body">
-      <div class="section-work">
-        <h5><i class="fas fa-tasks"></i> Công việc đã làm</h5>
-        <ul>
-          <li>Thảo luận cách quản lý công việc bằng GitHub Projects (Kanban).</li>
-          <li>Chuẩn bị nội dung proposal cho dự án.</li>
-          <li>Đánh giá các ý tưởng theo tiêu chí tính thực tế, mức độ phù hợp với AWS và khả năng triển khai.</li>
-          <li>Lên kế hoạch cho giai đoạn thiết kế kiến trúc hệ thống.</li>
-        </ul>
-      </div>
-      <div class="section-result">
-        <h5><i class="fas fa-trophy"></i> Kết quả đạt được</h5>
-        <ul>
-          <li>Xác định được các hướng dự án tiềm năng.</li>
-          <li>Chuẩn bị cơ sở cho việc lựa chọn ý tưởng chính ở tuần tiếp theo.</li>
-          <li>Bắt đầu xây dựng kế hoạch triển khai và phân chia công việc.</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
 </div>
