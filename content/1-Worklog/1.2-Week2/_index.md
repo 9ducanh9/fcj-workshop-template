@@ -8,20 +8,303 @@ pre: " <b> 1.2. </b> "
 
 # Week 2 Worklog
 
-## Work Completed
+<style>
+.worklog-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin: 30px 0;
+}
 
-- Created and configured the AWS learning environment.
-- Practiced using AWS Management Console and AWS CLI.
-- Studied IAM users, roles, policies, and least-privilege access.
-- Reviewed common mistakes that can create unnecessary AWS costs.
+.day-card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid #eef2f5;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
 
-## Results Achieved
+.day-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  border-color: #4881cd;
+}
 
-- Verified access to AWS services needed for the project.
-- Documented the need for separate permissions for S3, Lambda, Step Functions, Transcribe, Bedrock, DynamoDB, and CloudWatch.
-- Decided to avoid public buckets and long-running resources.
+.day-header {
+  background: linear-gradient(135deg, #283e5b 0%, #1c222a 100%);
+  color: #ffffff;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
 
-## Learning Outcomes
+.day-icon {
+  background: rgba(255, 255, 255, 0.2);
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+}
 
-- IAM design is part of architecture, not an afterthought.
-- Cost control must be considered from the beginning, especially when using AI services.
+.day-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: #ffffff !important;
+  margin: 0 !important;
+}
+
+.day-body {
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .day-body {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+}
+
+.section-work, .section-result {
+  background: #f8fafc;
+  padding: 16px;
+  border-radius: 8px;
+  border-left: 4px solid #4881cd;
+  height: 100%;
+}
+
+.section-result {
+  border-left-color: #fd9827;
+  background: #fffcf8;
+}
+
+.section-work h5, .section-result h5 {
+  margin-top: 0 !important;
+  margin-bottom: 12px !important;
+  font-size: 0.95rem !important;
+  font-weight: bold !important;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-work h5 {
+  color: #283e5b !important;
+}
+
+.section-result h5 {
+  color: #d97706 !important;
+}
+
+.day-body ul {
+  margin: 0 !important;
+  padding-left: 20px !important;
+}
+
+.day-body li {
+  margin-bottom: 8px !important;
+  font-size: 0.9rem !important;
+  line-height: 1.6 !important;
+  color: #4a5568 !important;
+  list-style-type: disc !important;
+}
+
+.day-body li:last-child {
+  margin-bottom: 0 !important;
+}
+</style>
+
+<div class="worklog-timeline">
+
+  <!-- 24/04/2026 -->
+  <div class="day-card">
+    <div class="day-header">
+      <div class="day-icon"><i class="fas fa-calendar-day"></i></div>
+      <h4 class="day-title">24/04/2026 (Friday)</h4>
+    </div>
+    <div class="day-body">
+      <div class="section-work">
+        <h5><i class="fas fa-tasks"></i> Work Completed</h5>
+        <ul>
+          <li>Participated in the first team meeting to discuss the Bootcamp project direction.</li>
+          <li>Discussed project goals, program requirements, and evaluation criteria.</li>
+          <li>Exchanged ideas on individual technical directions (AI, Web, Security, System).</li>
+        </ul>
+      </div>
+      <div class="section-result">
+        <h5><i class="fas fa-trophy"></i> Results Achieved</h5>
+        <ul>
+          <li>Team members understood their roles and individual goals.</li>
+          <li>Agreed to start the survey phase and select project ideas.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 25/04/2026 -->
+  <div class="day-card">
+    <div class="day-header">
+      <div class="day-icon"><i class="fas fa-calendar-day"></i></div>
+      <h4 class="day-title">25/04/2026 (Saturday)</h4>
+    </div>
+    <div class="day-body">
+      <div class="section-work">
+        <h5><i class="fas fa-tasks"></i> Work Completed</h5>
+        <ul>
+          <li>Read and researched the FCAJ Project Guidelines document.</li>
+          <li>Studied the AWS Well-Architected Framework.</li>
+          <li>Reviewed architecture, security, performance, and scalability requirements on Cloud systems.</li>
+        </ul>
+      </div>
+      <div class="section-result">
+        <h5><i class="fas fa-trophy"></i> Results Achieved</h5>
+        <ul>
+          <li>Grasped the project evaluation criteria.</li>
+          <li>Understood design principles for systems built on AWS.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 26/04/2026 -->
+  <div class="day-card">
+    <div class="day-header">
+      <div class="day-icon"><i class="fas fa-calendar-day"></i></div>
+      <h4 class="day-title">26/04/2026 (Sunday)</h4>
+    </div>
+    <div class="day-body">
+      <div class="section-work">
+        <h5><i class="fas fa-tasks"></i> Work Completed</h5>
+        <ul>
+          <li>Brainstormed potential project ideas.</li>
+          <li>Proposed application ideas related to Crypto and real-time data.</li>
+          <li>Discussed building automation systems and middleware platforms.</li>
+          <li>Exchanged ideas on combining AI into web applications.</li>
+        </ul>
+      </div>
+      <div class="section-result">
+        <h5><i class="fas fa-trophy"></i> Results Achieved</h5>
+        <ul>
+          <li>Formulated various implementation pathways.</li>
+          <li>Identified potential idea groups to develop into the main project.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 27/04/2026 -->
+  <div class="day-card">
+    <div class="day-header">
+      <div class="day-icon"><i class="fas fa-calendar-day"></i></div>
+      <h4 class="day-title">27/04/2026 (Monday)</h4>
+    </div>
+    <div class="day-body">
+      <div class="section-work">
+        <h5><i class="fas fa-tasks"></i> Work Completed</h5>
+        <ul>
+          <li>Discussed technical requirements for the project.</li>
+          <li>Researched feasibility of applying Real-time Data Processing.</li>
+          <li>Exchanged ideas on authorization mechanisms and system security.</li>
+          <li>Discussed solutions to mitigate bots and DDoS.</li>
+        </ul>
+      </div>
+      <div class="section-result">
+        <h5><i class="fas fa-trophy"></i> Results Achieved</h5>
+        <ul>
+          <li>Identified critical non-functional requirements for the system.</li>
+          <li>Began forming an architectural mindset rather than just focusing on features.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 28/04/2026 -->
+  <div class="day-card">
+    <div class="day-header">
+      <div class="day-icon"><i class="fas fa-calendar-day"></i></div>
+      <h4 class="day-title">28/04/2026 (Tuesday)</h4>
+    </div>
+    <div class="day-body">
+      <div class="section-work">
+        <h5><i class="fas fa-tasks"></i> Work Completed</h5>
+        <ul>
+          <li>Completed AWS Lab 1.</li>
+          <li>Researched AWS Free Tier 2025 program and AWS Credit allocation mechanism.</li>
+          <li>Studied differences between Free Plan and Paid Plan on AWS.</li>
+          <li>Researched services with cost risks and budget control measures.</li>
+          <li>Explored monitoring and cost optimization methods on AWS.</li>
+        </ul>
+      </div>
+      <div class="section-result">
+        <h5><i class="fas fa-trophy"></i> Results Achieved</h5>
+        <ul>
+          <li>Understood how to use AWS Free Tier and AWS Credits effectively.</li>
+          <li>Grasped basic principles of cost management on the AWS platform.</li>
+          <li>Recognized common risks leading to unintended cost occurrences.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 29/04/2026 -->
+  <div class="day-card">
+    <div class="day-header">
+      <div class="day-icon"><i class="fas fa-calendar-day"></i></div>
+      <h4 class="day-title">29/04/2026 (Wednesday)</h4>
+    </div>
+    <div class="day-body">
+      <div class="section-work">
+        <h5><i class="fas fa-tasks"></i> Work Completed</h5>
+        <ul>
+          <li>Learned about the Spec Driven Development method.</li>
+          <li>Got familiar with Kiro IDE and Kiro CI.</li>
+          <li>Practiced building application prototypes following Kiro's approach.</li>
+          <li>Researched how AI supports DevOps, Monitoring, and Automation.</li>
+        </ul>
+      </div>
+      <div class="section-result">
+        <h5><i class="fas fa-trophy"></i> Results Achieved</h5>
+        <ul>
+          <li>Understood the product development flow under Spec Driven Development.</li>
+          <li>Grasped key features of Kiro IDE and Kiro CI.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 30/04/2026 -->
+  <div class="day-card">
+    <div class="day-header">
+      <div class="day-icon"><i class="fas fa-calendar-day"></i></div>
+      <h4 class="day-title">30/04/2026 (Thursday)</h4>
+    </div>
+    <div class="day-body">
+      <div class="section-work">
+        <h5><i class="fas fa-tasks"></i> Work Completed</h5>
+        <ul>
+          <li>Discussed task management using GitHub Projects (Kanban).</li>
+          <li>Prepared proposal content for the project.</li>
+          <li>Evaluated ideas based on feasibility, AWS compatibility, and implementation capability.</li>
+          <li>Planned the phase for system architecture design.</li>
+        </ul>
+      </div>
+      <div class="section-result">
+        <h5><i class="fas fa-trophy"></i> Results Achieved</h5>
+        <ul>
+          <li>Identified potential project directions.</li>
+          <li>Prepared the foundation for selecting the main idea next week.</li>
+          <li>Began building the deployment plan and task division.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
