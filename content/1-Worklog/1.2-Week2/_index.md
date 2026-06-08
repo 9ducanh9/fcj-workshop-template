@@ -280,4 +280,18 @@ pre: " <b> 1.2. </b> "
     </div>
   </div>
 
+  <!-- 30/04/2026 -->
+  <div class="day-card" style="border-left: 4px solid #e2e8f0;">
+    <div class="day-header" style="background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);">
+      <div class="day-icon"><i class="fas fa-umbrella-beach"></i></div>
+      <h4 class="day-title">30/04/2026 (Thursday)</h4>
+    </div>
+    <div class="day-body" style="grid-template-columns: 1fr; padding: 25px;">
+      <div style="background: #f7fafc; padding: 20px; border-radius: 8px; text-align: center; border: 1px dashed #cbd5e0;">
+        <h5 style="color: #4a5568 !important; margin: 0 0 8px 0 !important; font-weight: bold;"><i class="fas fa-glass-cheers"></i> Liberation / Reunification Day Holiday (30/04)</h5>
+        <p style="margin: 0; color: #718096; font-size: 0.95rem;">No learning or project activities carried out during the public holiday.</p>
+      </div>
+    </div>
+  </div>
+
 </div>
