@@ -1,23 +1,23 @@
 ---
-title: "Sự kiện 3: Week 3 Reflection – Data Analytics, DevOps, AWS Community và tư duy xây dựng hệ thống thực tế"
+title: "Sự kiện 3: Data Analytics, DevOps, AWS Community và tư duy xây dựng hệ thống thực tế"
 date: 2026-06-13
 weight: 3
 chapter: false
 pre: " <b> 4.3. </b> "
 ---
 
-# Week 3 Reflection: Data Analytics, DevOps, AWS Community và tư duy xây dựng hệ thống thực tế
+# Sự kiện 3: Data Analytics, DevOps, AWS Community và tư duy xây dựng hệ thống thực tế
 
 | Trường | Nội dung |
 | --- | --- |
-| Tên sự kiện | Week 3 Reflection: Data Analytics, DevOps, AWS Community và tư duy xây dựng hệ thống thực tế |
+| Tên sự kiện | Data Analytics, DevOps, AWS Community và tư duy xây dựng hệ thống thực tế |
 | Ngày/giờ | 13 tháng 6 năm 2026 |
 | Địa điểm | AWS Event Hall, Tầng 26, Bitexco Financial Tower, TP. Hồ Chí Minh |
 | Vai trò | Người tham gia |
 
 ## Mở đầu
 
-Week 3 giúp tôi quan sát công việc công nghệ qua bốn góc độ liên quan: Data Analytics Engineering trong doanh nghiệp; DevOps và vòng đời ứng dụng; cộng đồng AWS; và thiết kế giải pháp qua bài toán URL Shortening Service.
+Sự kiện 3 giúp tôi quan sát công việc công nghệ qua bốn góc độ liên quan: Data Analytics Engineering trong doanh nghiệp; DevOps và vòng đời ứng dụng; cộng đồng AWS; và thiết kế giải pháp qua bài toán URL Shortening Service.
 
 Điểm chung là kỹ thuật chỉ tạo giá trị khi đi cùng tư duy hệ thống, nghiệp vụ, giao tiếp và vận hành. LiveCap vì vậy không nên dừng ở việc kết nối dịch vụ AWS, mà phải thể hiện vấn đề người dùng, luồng dữ liệu và quyết định kiến trúc.
 
@@ -65,7 +65,7 @@ Ví dụ thể hiện tư duy Solution Architect: bắt đầu từ yêu cầu, 
 
 LiveCap cũng có độ phức tạp ẩn: truyền audio, phiên âm, dịch, lưu transcript, export, giám sát lỗi, chi phí và mở rộng. Chất lượng dự án vì vậy nằm cả ở kiến trúc và khả năng giải thích vì sao kiến trúc phù hợp, không chỉ ở danh sách tính năng.
 
-## Bài học tổng hợp sau Week 3
+## Bài học tổng hợp sau sự kiện
 
 Bốn chủ đề bổ sung cho nhau: dữ liệu phải dẫn đến quyết định; DevOps phải hiểu vận hành thật; cộng đồng AWS xây dựng visibility và consistency; một dịch vụ đơn giản vẫn cần system design nghiêm túc khi mở rộng.
 
@@ -73,7 +73,7 @@ Kỹ thuật cần thiết nhưng chưa đủ. Nghiệp vụ, giao tiếp, cộn
 
 ## Đóng góp cá nhân và kế hoạch áp dụng vào LiveCap
 
-Sau Week 3, tôi xác định năm nhóm hành động:
+Sau sự kiện, tôi xác định năm nhóm hành động:
 
 1. **Cải thiện production readiness.** Tôi sẽ rà soát deployment flow, làm rõ environment configuration, bổ sung tài liệu logging, monitoring, error handling và retry. Kiến trúc cần mô tả cách mở rộng, cân nhắc chi phí, bảo mật và phương án phục hồi khi thành phần gặp lỗi.
 
@@ -87,4 +87,4 @@ Sau Week 3, tôi xác định năm nhóm hành động:
 
 ## Kết luận
 
-Week 3 giúp tôi hiểu kỹ thuật thực tế không chỉ là viết code hoặc sử dụng dịch vụ cloud. Data Analytics cần tạo tác động kinh doanh; DevOps cần hiểu vận hành; cộng đồng AWS cần sự tham gia và đóng góp; còn thiết kế giải pháp cần tư duy hệ thống. Bước tiếp theo của tôi là tiếp tục phát triển LiveCap thành một dự án kỹ thuật và portfolio artifact thể hiện rõ quá trình học, production mindset và định hướng nghề nghiệp.
+Sự kiện 3 giúp tôi hiểu kỹ thuật thực tế không chỉ là viết code hoặc sử dụng dịch vụ cloud. Data Analytics cần tạo tác động kinh doanh; DevOps cần hiểu vận hành; cộng đồng AWS cần sự tham gia và đóng góp; còn thiết kế giải pháp cần tư duy hệ thống. Bước tiếp theo của tôi là tiếp tục phát triển LiveCap thành một dự án kỹ thuật và portfolio artifact thể hiện rõ quá trình học, production mindset và định hướng nghề nghiệp.

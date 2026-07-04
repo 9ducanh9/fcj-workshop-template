@@ -1,23 +1,23 @@
 ---
-title: "Event 3: Week 3 Reflection – Data Analytics, DevOps, AWS Community, and Real-World System Thinking"
+title: "Event 3: Data Analytics, DevOps, AWS Community, and Real-World System Thinking"
 date: 2026-06-13
 weight: 3
 chapter: false
 pre: " <b> 4.3. </b> "
 ---
 
-# Week 3 Reflection: Data Analytics, DevOps, AWS Community, and Real-World System Thinking
+# Event 3: Data Analytics, DevOps, AWS Community, and Real-World System Thinking
 
 | Field | Detail |
 | --- | --- |
-| Event name | Week 3 Reflection: Data Analytics, DevOps, AWS Community, and Real-World System Thinking |
+| Event name | Data Analytics, DevOps, AWS Community, and Real-World System Thinking |
 | Date/time | 13 June 2026 |
 | Location | AWS Event Hall, Floor 26, Bitexco Financial Tower, Ho Chi Minh City |
 | Role | Participant |
 
 ## Introduction
 
-Week 3 presented four connected views of technology work: Data Analytics Engineering in business and manufacturing, DevOps as responsibility for the application lifecycle, AWS communities as learning environments beyond the classroom, and scalable solution design through a URL shortening service. Together, the sessions showed that technical knowledge creates value only when combined with business understanding, communication, operational awareness, and system thinking.
+Event 3 presented four connected views of technology work: Data Analytics Engineering in business and manufacturing, DevOps as responsibility for the application lifecycle, AWS communities as learning environments beyond the classroom, and scalable solution design through a URL shortening service. Together, the sessions showed that technical knowledge creates value only when combined with business understanding, communication, operational awareness, and system thinking.
 
 These lessons are directly relevant to LiveCap. The project should not stop at connecting AWS services. It should demonstrate a clear user problem, useful data outputs, justified architecture decisions, and an understanding of how the system behaves in production.
 
@@ -59,7 +59,7 @@ The system must generate unique codes, store mappings, handle high traffic, redi
 
 LiveCap has similar hidden complexity. Behind a captioning interface are reliable audio streaming, transcription and translation, transcript storage, useful exports, error monitoring, cost control, and scaling for more users. The URL shortener example reinforced that project quality depends on the architecture behind the features and the ability to explain its trade-offs.
 
-## Week 3 synthesis
+## Lessons synthesized after the event
 
 The four topics reinforce one another. Data work must lead to business decisions. DevOps requires understanding real application operations. AWS community participation builds visibility and long-term identity. Even a small service needs deliberate system design when it must scale.
 
@@ -67,7 +67,7 @@ Technical ability is necessary but insufficient. My directions toward Cloud/Data
 
 ## Personal contribution and LiveCap action plan
 
-After Week 3, I defined five concrete actions:
+After the event, I defined five concrete actions:
 
 1. **Improve production readiness:** review deployment and environment configuration; document logging, monitoring, error handling, retries, scalability, cost, security, and recovery.
 2. **Increase data and user value:** treat transcripts and translations as reusable data; improve exports and consider timestamps, speaker separation, translation quality, and session history.
@@ -77,4 +77,4 @@ After Week 3, I defined five concrete actions:
 
 ## Conclusion
 
-Week 3 showed me that real engineering is not only code or cloud services. Data Analytics requires business impact, DevOps requires operational understanding, community requires participation, and solution design requires system thinking. My next step is to keep developing LiveCap as both a technical system and a portfolio artifact that demonstrates my learning process, production mindset, and career direction.
+Event 3 showed me that real engineering is not only code or cloud services. Data Analytics requires business impact, DevOps requires operational understanding, community requires participation, and solution design requires system thinking. My next step is to keep developing LiveCap as both a technical system and a portfolio artifact that demonstrates my learning process, production mindset, and career direction.
