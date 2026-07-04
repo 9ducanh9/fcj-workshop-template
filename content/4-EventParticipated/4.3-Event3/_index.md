@@ -1,70 +1,80 @@
 ---
-title: "Event 3: A Practical View of Cloud Computing, AI, and Career Direction for IT Students"
+title: "Event 3: Week 3 Reflection – Data Analytics, DevOps, AWS Community, and Real-World System Thinking"
 date: 2026-06-13
 weight: 3
 chapter: false
 pre: " <b> 4.3. </b> "
 ---
 
-# A Practical View of Cloud Computing, AI, and Career Direction for IT Students
+# Week 3 Reflection: Data Analytics, DevOps, AWS Community, and Real-World System Thinking
 
 | Field | Detail |
 | --- | --- |
-| Event name | A Practical View of Cloud Computing, AI, and Career Direction for IT Students |
+| Event name | Week 3 Reflection: Data Analytics, DevOps, AWS Community, and Real-World System Thinking |
 | Date/time | 13 June 2026 |
 | Location | AWS Event Hall, Floor 26, Bitexco Financial Tower, Ho Chi Minh City |
 | Role | Participant |
 
-This event helped me see the gap between academic knowledge, a side project that works, and what companies expect in practice. Cloud Computing is not only a technical trend. It is a long-term strategy involving infrastructure, operations, security, cost, and business growth.
+## Introduction
 
-## Cloud market, skill gaps, and career positioning
+Week 3 presented four connected views of technology work: Data Analytics Engineering in business and manufacturing, DevOps as responsibility for the application lifecycle, AWS communities as learning environments beyond the classroom, and scalable solution design through a URL shortening service. Together, the sessions showed that technical knowledge creates value only when combined with business understanding, communication, operational awareness, and system thinking.
 
-Nguyen Gia Hung's session was my main focus because it placed cloud learning in the real job market. **Cloud-first is becoming a default direction for many modern enterprises**, supported by faster delivery, scalability, and long-term investment.
+These lessons are directly relevant to LiveCap. The project should not stop at connecting AWS services. It should demonstrate a clear user problem, useful data outputs, justified architecture decisions, and an understanding of how the system behaves in production.
 
-The session described AWS's presence in Vietnam as more than selling software licenses. Its long-term investment has three pillars: **local talent**, with most Amazon/AWS employees in Vietnam being Vietnamese; **infrastructure**, including CDN, caching, Local Zone, and low-latency systems; and **future talent**, which means developing the next generation of engineers and builders. The market therefore needs people who understand how technology serves organizational goals, not only how to configure services.
+## Topic 1 – Cuong Nguyen and Dat Pham: Data Analytics Engineering and MNC culture
 
-The job market is also becoming harsher. AI reduces some junior-level tasks while senior expectations continue to rise. Students cannot depend only on a degree, certificates, or English. Even interns may be rejected when they lack an understanding of production systems, Kubernetes, infrastructure, and real system complexity. What matters is **project depth**: being able to explain architecture choices, limitations, error handling, monitoring, and cost. A certificate may be an entry ticket, but project depth demonstrates engineering thinking.
+The speakers contrasted classroom analysis with Data Analytics Engineering in real organizations. At Kamereo, the work involved daily, weekly, and monthly reports, trend dashboards, anomaly detection, and root cause analysis for operational decisions. At Colgate-Palmolive, the focus included machine and IoT data, production cost optimization, operational efficiency, and digital transformation.
 
-Career positioning should not stop at role names such as Data Engineer or AI Engineer. Domain knowledge in finance, banking, retail, or manufacturing can make cloud and data skills more valuable.
+A strong Data Analytics Engineer does more than report numbers. Critical thinking is needed to explain why a metric such as GMV changed and what action should follow. Data Storytelling turns dry figures into a meaningful narrative that stakeholders can understand and use.
 
-The session summarized career growth with this formula:
+The five-stage growth model moves from **Follower** and **Learner** to **Problem Solver**, **System Thinker**, and eventually **Super Star**, who builds data vision and develops others. The speakers also discussed STAR-based recruitment and No-Blame Post-Mortems, where incident reviews focus on root causes and system improvement rather than individual blame.
 
-> **Result = Capability x Visibility x Consistency**
+I learned that data work becomes valuable when it supports decisions. This matters across Cloud/Data Platform Engineering, BSA, and Solution Architect roles. For LiveCap, transcripts should become useful outputs with readable structure, timestamps, speaker separation, translations, summaries, and practical export formats. When defects occur, I should document causes and prevention instead of patching symptoms only.
 
-Capability is real competence, Visibility makes that competence discoverable, and Consistency shows sustained learning. Public code, documentation, blogs, and projects make skills easier to verify. This also relates to the **hidden job market**, where many opportunities come through referrals and internal networks rather than public job posts.
+## Topic 2 – Trong H. Truong: Understanding the DevOps Engineer role
 
-When AI can support CV screening, recruiters may review public code, documentation quality, side projects, and learning history instead of relying only on certificates. “Invest in yourself” and lifelong learning should therefore be supported by visible evidence.
+Trong H. Truong clarified that DevOps is not limited to CI/CD, Docker, Kubernetes, or late-night incident response. Its real purpose is understanding how an application is built, tested, deployed, configured, monitored, and maintained.
 
-AI should support research, code review, edge-case discovery, and documentation, not replace understanding. A final project should move toward production readiness through scalability, security, documentation, observability, and practical value.
+The learning path begins with Linux, networking, and a language such as Python or Golang. It then moves to application behavior, builds, testing, deployment, configuration, and environment management. Practical learning starts with deploying a simple application, automating repetitive work, adding monitoring, and learning by breaking and repairing systems.
 
-## The gap between school and enterprise work
+The key principle is to ask **“Why” before “How.”** Copying a command is less valuable than understanding why it is needed. DevOps is also not a lone-hero role: communication and automation should make work clearer, repeatable, and easier for the whole team. AI can provide leverage, but it cannot replace engineering understanding.
 
-Binh Cam Vinh explained that academic data is usually clean, while business data may be incomplete, incorrect, or inconsistent. School requirements are clear, while real requirements change. A classroom error loses points; a business error may affect revenue.
+For LiveCap, production thinking includes build and deployment flows, safe configuration, logs, monitoring, error handling, security, cost control, and recovery. I need to explain the roles of CloudFront, S3, CloudWatch, Amazon Transcribe, and Amazon Translate, and assess when a target architecture may justify ALB, ECS/Fargate, or WAF. Every choice has trade-offs in simplicity, cost, scalability, security, and operational complexity.
 
-Memorizing tools is not enough. Students need to understand the architecture and “DNA” of a system: data flow, component ownership, and failure points. AI can assist with code and reports, but business understanding and communication remain human advantages.
+## Topic 3 – Danh Hoang Hieu Nghi: The AWS ecosystem and community
 
-## Communication, visibility, and Blue Ocean strategy
+Danh Hoang Hieu Nghi emphasized that obtaining a technology role is only the beginning of a career. Growth also comes from events, communities, networking, sharing, and contribution—not only classrooms and certificates.
 
-Nhu Tran shared that fear of mistakes or managers can be reduced through small talk and proactive communication. Miscommunication often comes from mismatched interpretations, so it is important to understand the real intention behind a manager's or customer's words.
+The programs discussed included **First Cloud AI Journey**, a structured path evolved from First Cloud Journey; **AWS Student Builder Group**, where students can learn with other builders; and the broader **AWS Community Builder** and **AWS Partners** ecosystems for professional connection and contribution.
 
-Instead of competing only for highly visible jobs with many applicants, students can create “Blue Ocean” opportunities through relationships, visibility, attitude, and trust. This is not a shortcut; it is a way for real capability to be seen by the right community.
+I learned that community is not simply a place to attend events. It is a platform for building visibility, consistency, and professional identity. Students do not need to wait until they feel fully qualified; they can learn by asking questions, writing reflections, documenting projects, and sharing progress.
 
-## AI mindset and long-term choices for freshers
+Community feedback can help validate whether LiveCap solves a real problem for workshops, meetings, and bilingual learning. Publishing progress on GitHub or LinkedIn is evidence of learning and contribution, not self-promotion. AWS Bootcamp can therefore become the starting point for sustained AWS learning and community involvement.
 
-Khang Nguyen emphasized that we should not let AI “understand” on our behalf. AI can accelerate work, but weak fundamentals make its output difficult to verify. For freshers, attitude is often the first signal, followed by skill and experience.
+## Topic 4 – Kien and Tho: AWS solution design through a URL shortening service
 
-The first job should not be judged only by salary. Learning opportunities, practical experience, network, and long-term growth also matter.
+The speakers used a URL shortening service to illustrate practical solution design. A user submits a long URL, the system generates a short one, and visits to that short URL redirect to the original address. The feature appears simple, but making it scalable and reliable introduces significant design questions.
 
-## Personal direction and LiveCap
+The system must generate unique codes, store mappings, handle high traffic, redirect with low latency, monitor usage, and remain available. This requires reasoning about scalability, availability, routing, storage, latency, monitoring, and operations as one system. The lesson was not to add services for visual complexity, but to select components that solve explicit requirements and justify their operational cost.
 
-As a final-year Information Systems student and AWS Bootcamp intern, I am working toward Cloud/Data Platform Engineering, Business System Analyst, and Solution Architect roles. I need technical foundations, business thinking, and communication skills to turn requirements into deployable solutions.
+LiveCap has similar hidden complexity. Behind a captioning interface are reliable audio streaming, transcription and translation, transcript storage, useful exports, error monitoring, cost control, and scaling for more users. The URL shortener example reinforced that project quality depends on the architecture behind the features and the ability to explain its trade-offs.
 
-LiveCap is the clearest example of how my project standards have changed. The project should not only demonstrate Amazon Transcribe, Amazon Translate, S3, CloudWatch, CloudFront, an Application Load Balancer, and ECS Fargate. A real-time caption flow that “works” is only the starting point. A production-oriented system must also consider error handling, bounded retries, logs and metrics, cost control, data protection, deployment documentation, and scalability.
+## Week 3 synthesis
 
-AI can help review implementation and find missing cases, but I still need to explain the flow from the browser through CloudFront, ALB, and ECS Fargate to AWS services; understand security risks; and distinguish the deployed system from the target architecture.
+The four topics reinforce one another. Data work must lead to business decisions. DevOps requires understanding real application operations. AWS community participation builds visibility and long-term identity. Even a small service needs deliberate system design when it must scale.
 
-I also need to invest in GitHub, documentation, blogs, and public project updates. These improve visibility and require me to explain technical decisions clearly. Moving toward BSA and Solution Architect roles requires both technical capability and domain understanding. Employability is not only “knowing cloud,” but proving that I can learn consistently, communicate clearly, and turn technology into business value.
+Technical ability is necessary but insufficient. My directions toward Cloud/Data Platform Engineering, Business System Analyst, and Solution Architect also require business understanding, communication, community participation, production awareness, and system thinking.
+
+## Personal contribution and LiveCap action plan
+
+After Week 3, I defined five concrete actions:
+
+1. **Improve production readiness:** review deployment and environment configuration; document logging, monitoring, error handling, retries, scalability, cost, security, and recovery.
+2. **Increase data and user value:** treat transcripts and translations as reusable data; improve exports and consider timestamps, speaker separation, translation quality, and session history.
+3. **Improve documentation and visibility:** maintain a clear README, architecture explanation, setup guide, event reflections, and consistent project updates.
+4. **Practice DevOps and system thinking:** understand how LiveCap runs, fails, recovers, logs, and scales; ask “why” before selecting tools; use AI for review without outsourcing understanding.
+5. **Prepare for my career direction:** deepen AWS, data architecture, system design, and deployment knowledge while practicing technical and business communication and participating in communities.
 
 ## Conclusion
 
-Cloud, AI, and career development are directly connected. Strong students are not only those who know many tools, but those who understand systems, business context, communication, and long-term self-investment.
+Week 3 showed me that real engineering is not only code or cloud services. Data Analytics requires business impact, DevOps requires operational understanding, community requires participation, and solution design requires system thinking. My next step is to keep developing LiveCap as both a technical system and a portfolio artifact that demonstrates my learning process, production mindset, and career direction.

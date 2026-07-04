@@ -14,7 +14,7 @@ Phần này ghi lại các sự kiện học tập và hoạt động cộng đ�
 | --- | --- | --- |
 | AWS Study Group Technical Sharing | Người tham gia | Học chiến lược học AWS qua dự án thực hành, duy trì động lực, tư duy nghề nghiệp và lập kế hoạch theo BMAD. |
 | FCAJ Community Day 2026 | Người tham gia | Tìm hiểu GenAIOps, CloudFront, multi-agent systems, AI-assisted prototyping, tự động hóa nghiệp vụ và hành vi LLM. |
-| Góc nhìn thực tế về Cloud Computing, AI và định hướng nghề nghiệp cho sinh viên IT | Người tham gia | Hiểu rõ hơn về thị trường cloud, khoảng cách kỹ năng, tác động của AI, visibility và cách chuẩn bị cho công việc thực tế. |
+| Week 3 Reflection: Data Analytics, DevOps, AWS Community và tư duy xây dựng hệ thống thực tế | Người tham gia | Kết nối Data Analytics, DevOps, cộng đồng AWS và system design với định hướng nghề nghiệp cùng kế hoạch cải thiện LiveCap. |
 
 ## Các sự kiện hỗ trợ đồ án như thế nào
 
