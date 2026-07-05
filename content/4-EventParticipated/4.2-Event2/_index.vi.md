@@ -37,7 +37,7 @@ Chủ đề **Context Is Everything** làm rõ rằng sức mạnh của mô hì
 
 *Goal, situation, constraints và relevant evidence biến một yêu cầu mơ hồ thành bài toán có thể xử lý.*
 
-Bài học này ảnh hưởng trực tiếp đến cách em suy nghĩ về LiveCap. Nếu ứng dụng AI vào transcript hoặc nội dung sau phiên họp, em cần cung cấp mục tiêu, ngữ cảnh cuộc trao đổi và bằng chứng liên quan một cách có cấu trúc. Việc đưa thật nhiều dữ liệu vào hệ thống không bảo đảm đầu ra tốt nếu dữ liệu thiếu liên quan hoặc không làm rõ yêu cầu.
+Bài học này ảnh hưởng trực tiếp đến cách em định hướng project. Nếu ứng dụng AI vào transcript hoặc nội dung sau phiên họp, em cần cung cấp mục tiêu, ngữ cảnh cuộc trao đổi và bằng chứng liên quan một cách có cấu trúc. Việc đưa thật nhiều dữ liệu vào hệ thống không bảo đảm đầu ra tốt nếu dữ liệu thiếu liên quan hoặc không làm rõ yêu cầu.
 
 ## Chủ đề 2 – Phạm Nguyễn Hải Anh: Friendly AI Assistant with Amazon Quick
 
@@ -47,7 +47,7 @@ Bài học này ảnh hưởng trực tiếp đến cách em suy nghĩ về Live
 
 Phần trình bày **Friendly AI Assistant with Amazon Quick** giới thiệu một cách tiếp cận thực tế để đưa AI vào hỗ trợ công việc và tự động hóa quy trình nghiệp vụ. Điều em quan tâm không chỉ là khả năng tạo phản hồi, mà là cách một trợ lý AI cần được đặt vào quy trình có mục tiêu, dữ liệu đầu vào và người sử dụng rõ ràng.
 
-Với LiveCap, bài học này giúp em nhìn xa hơn tính năng transcript thời gian thực. Kết quả sau phiên có thể được tổ chức để người dùng dễ xem lại và tái sử dụng, nhưng mọi chức năng AI bổ sung phải phục vụ nhu cầu cụ thể thay vì được thêm chỉ vì công nghệ cho phép.
+Với project của em, bài học này giúp em nhìn xa hơn tính năng transcript thời gian thực. Kết quả sau phiên có thể được tổ chức để người dùng dễ xem lại và tái sử dụng, nhưng mọi chức năng AI bổ sung phải phục vụ nhu cầu cụ thể thay vì được thêm chỉ vì công nghệ cho phép.
 
 ## Chủ đề 3 – Nguyễn Thịnh: From Edge To Origin – CloudFront as Your Foundation
 
@@ -57,7 +57,7 @@ Với LiveCap, bài học này giúp em nhìn xa hơn tính năng transcript th�
 
 Chủ đề **From Edge To Origin: CloudFront as Your Foundation** giúp em hiểu rõ hơn vai trò của CloudFront trong việc phân phối nội dung từ edge location đến origin. CloudFront không chỉ cải thiện tốc độ truy cập mà còn ảnh hưởng đến khả năng mở rộng, độ ổn định và trải nghiệm người dùng của một ứng dụng được phục vụ trên phạm vi rộng.
 
-Đối với LiveCap, CloudFront là một phần cần được giải thích bằng luồng request thực tế, không chỉ xuất hiện như một biểu tượng trong sơ đồ. Em cần làm rõ nội dung nào được phân phối qua edge, origin nằm ở đâu, cache áp dụng cho thành phần nào và những luồng thời gian thực nào không thể xử lý như tài nguyên tĩnh.
+Đối với project của em, CloudFront là một phần cần được giải thích bằng luồng request thực tế, không chỉ xuất hiện như một biểu tượng trong sơ đồ. Em cần làm rõ nội dung nào được phân phối qua edge, origin nằm ở đâu, cache áp dụng cho thành phần nào và những luồng thời gian thực nào không thể xử lý như tài nguyên tĩnh.
 
 ## Chủ đề 4 – Lê Phạm Ngọc Uyển, Nguyễn Ngọc Quỳnh Mai và Nguyễn Phương Thảo: 36 hrs with LotusHacks
 
@@ -67,7 +67,7 @@ Chủ đề **From Edge To Origin: CloudFront as Your Foundation** giúp em hi�
 
 **36 hrs with LotusHacks – Building UTMorpho from Idea to Reality** mô tả quá trình nhóm bắt đầu với một ý tưởng chưa hoàn chỉnh, xác định vấn đề từ công việc hằng ngày rồi phát triển thành UTMorpho trong thời gian hackathon giới hạn. Phần chia sẻ cho thấy AI có thể tăng tốc brainstorming, prototype và phát triển giao diện, nhưng nhóm vẫn phải tự xác định vấn đề và ưu tiên phần quan trọng nhất.
 
-Em học được rằng phạm vi rõ ràng và tốc độ phản hồi quan trọng hơn việc cố xây mọi chức năng ngay từ đầu. Khi phát triển LiveCap, em cần bảo vệ mục tiêu cốt lõi, kiểm chứng từng bước và dùng AI như công cụ tăng tốc thay vì để công cụ làm dự án mất trọng tâm.
+Em học được rằng phạm vi rõ ràng và tốc độ phản hồi quan trọng hơn việc cố xây mọi chức năng ngay từ đầu. Khi phát triển project, em cần bảo vệ mục tiêu cốt lõi, kiểm chứng từng bước và dùng AI như công cụ tăng tốc thay vì để công cụ làm project mất trọng tâm.
 
 ## Chủ đề 5 – Đào Minh Đức: Non-Determinism of “Deterministic” LLM Settings
 
@@ -77,7 +77,7 @@ Em học được rằng phạm vi rõ ràng và tốc độ phản hồi quan t
 
 Trong **Non-Determinism of “Deterministic” LLM Settings**, [Đào Minh Đức](https://www.linkedin.com/in/itsdmd/) phân tích việc hệ thống LLM vẫn có thể tạo ra kết quả khác nhau ngay cả khi một số tham số được cấu hình theo hướng deterministic. Bài học quan trọng là không nên giả định một thiết lập có vẻ cố định sẽ bảo đảm đầu ra giống hệt trong mọi lần chạy.
 
-Điều này giúp em thận trọng hơn khi đánh giá hệ thống AI trong production. Nếu LiveCap sử dụng AI cho tóm tắt hoặc xử lý nội dung sau phiên, em cần có tiêu chí kiểm thử, cách quan sát kết quả và phương án xử lý sai lệch. Một demo tạo kết quả tốt một lần chưa đủ để chứng minh tính ổn định.
+Điều này giúp em thận trọng hơn khi đánh giá hệ thống AI trong production. Nếu project của em sử dụng AI cho tóm tắt hoặc xử lý nội dung sau phiên, em cần có tiêu chí kiểm thử, cách quan sát kết quả và phương án xử lý sai lệch. Một demo tạo kết quả tốt một lần chưa đủ để chứng minh tính ổn định.
 
 ## Chủ đề 6 – Lâm Hoàng Cát Vy: Enterprise-Grade Multi-Agent System
 
@@ -87,10 +87,10 @@ Trong **Non-Determinism of “Deterministic” LLM Settings**, [Đào Minh Đứ
 
 Chủ đề **Enterprise-Grade Multi-Agent System: The Case of Startup Credit Scoring** mang đến góc nhìn về kiến trúc AI ở cấp doanh nghiệp. Một hệ thống multi-agent không chỉ cần các agent thực hiện nhiệm vụ, mà còn phải quan tâm đến cấu trúc tổng thể, khả năng phối hợp, governance, bảo mật và cách đánh giá kết quả.
 
-Từ case study này, em hiểu rằng việc chia hệ thống thành nhiều agent không tự động làm giải pháp tốt hơn. Mỗi agent cần có trách nhiệm rõ, dữ liệu phù hợp và cơ chế kiểm soát. Với LiveCap, em chỉ nên mở rộng sang workflow AI phức tạp khi bài toán thực sự cần, thay vì tăng độ phức tạp để chạy theo xu hướng.
+Từ case study này, em hiểu rằng việc chia hệ thống thành nhiều agent không tự động làm giải pháp tốt hơn. Mỗi agent cần có trách nhiệm rõ, dữ liệu phù hợp và cơ chế kiểm soát. Với project của em, em chỉ nên mở rộng sang workflow AI phức tạp khi bài toán thực sự cần, thay vì tăng độ phức tạp để chạy theo xu hướng.
 
 ## Bài học tổng hợp
 
 Sự kiện giúp em kết nối nhiều lớp của một hệ thống hiện đại: context quyết định chất lượng tương tác AI; Amazon Quick cho thấy khả năng đưa AI vào quy trình; CloudFront là nền tảng phân phối nội dung; UTMorpho minh họa tốc độ biến ý tưởng thành prototype; LLM non-determinism nhắc về giới hạn khi vận hành; còn multi-agent credit scoring cho thấy yêu cầu kiến trúc và governance ở cấp doanh nghiệp.
 
-Đối với LiveCap, những bài học này được chuyển thành các hành động cụ thể: giải thích rõ kiến trúc từ edge đến backend, thiết kế context có cấu trúc cho tính năng AI, kiểm thử đầu ra thay vì tin vào một lần chạy, giữ phạm vi sản phẩm thực tế và chỉ thêm độ phức tạp khi có nhu cầu người dùng rõ ràng.
+Đối với project của em, những bài học này được chuyển thành các hành động cụ thể: giải thích rõ kiến trúc từ edge đến backend, thiết kế context có cấu trúc cho tính năng AI, kiểm thử đầu ra thay vì tin vào một lần chạy, giữ phạm vi sản phẩm thực tế và chỉ thêm độ phức tạp khi có nhu cầu người dùng rõ ràng.

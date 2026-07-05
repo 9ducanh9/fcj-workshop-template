@@ -19,7 +19,7 @@ pre: " <b> 4.3. </b> "
 
 Sự kiện 3 giúp em quan sát công việc công nghệ qua bốn góc độ liên quan: Data Analytics Engineering trong doanh nghiệp; DevOps và vòng đời ứng dụng; cộng đồng AWS; và thiết kế giải pháp qua bài toán URL Shortening Service.
 
-Điểm chung là kỹ thuật chỉ tạo giá trị khi đi cùng tư duy hệ thống, nghiệp vụ, giao tiếp và vận hành. LiveCap vì vậy không nên dừng ở việc kết nối dịch vụ AWS, mà phải thể hiện vấn đề người dùng, luồng dữ liệu và quyết định kiến trúc.
+Điểm chung là kỹ thuật chỉ tạo giá trị khi đi cùng tư duy hệ thống, nghiệp vụ, giao tiếp và vận hành. Project của em vì vậy không nên dừng ở việc kết nối dịch vụ AWS, mà phải thể hiện vấn đề người dùng, luồng dữ liệu và quyết định kiến trúc.
 
 ## Chủ đề 1 – Nguyễn Cường và Phạm Đạt: Data Analytics Engineer và văn hóa MNC
 
@@ -31,7 +31,7 @@ Mô hình phát triển gồm **Follower**, người học theo hướng dẫn; 
 
 Em nhận ra giá trị của Data Analytics Engineering nằm ở việc giúp doanh nghiệp hiểu chuyện gì xảy ra, nguyên nhân và quyết định tiếp theo. Điều này liên quan trực tiếp đến Cloud/Data Platform Engineering, BSA và Solution Architect, nơi kỹ thuật phải gắn với bối cảnh nghiệp vụ.
 
-Với LiveCap, transcript nên trở thành đầu ra dễ đọc, có timestamp, người nói, bản dịch, tóm tắt và định dạng export tái sử dụng. Khi có lỗi, em cần ghi triệu chứng, nguyên nhân gốc và cách phòng ngừa thay vì chỉ vá để hệ thống chạy lại.
+Với project của em, transcript nên trở thành đầu ra dễ đọc, có timestamp, người nói, bản dịch, tóm tắt và định dạng export tái sử dụng. Khi có lỗi, em cần ghi triệu chứng, nguyên nhân gốc và cách phòng ngừa thay vì chỉ vá để hệ thống chạy lại.
 
 ## Chủ đề 2 – Trong H. Truong: Giải mã vai trò DevOps Engineer
 
@@ -41,7 +41,7 @@ Lộ trình bắt đầu từ Linux, networking và Python hoặc Golang, sau đ
 
 Triết lý chính là hỏi **“Why” trước “How”**: hiểu lý do quan trọng hơn sao chép command. DevOps không phải vai trò “người hùng cô độc”; giao tiếp và automation phải làm quy trình rõ, lặp lại được cho cả nhóm. System thinking kết nối application, infrastructure, security và operations. AI tạo đòn bẩy nhưng không thay sự hiểu biết.
 
-Bài học của em là DevOps chính là production thinking. LiveCap cần build, deploy, cấu hình an toàn, logging, monitoring, error handling, kiểm soát chi phí và phục hồi. Em phải giải thích không chỉ “triển khai thế nào” mà cả “vì sao chọn mô hình này”.
+Bài học của em là DevOps chính là production thinking. Project của em cần build, deploy, cấu hình an toàn, logging, monitoring, error handling, kiểm soát chi phí và phục hồi. Em phải giải thích không chỉ “triển khai thế nào” mà cả “vì sao chọn mô hình này”.
 
 Em cần giải thích được CloudFront, S3, CloudWatch, Transcribe, Translate và khi nào kiến trúc mục tiêu nên cân nhắc ALB, ECS/Fargate hay WAF. Mỗi lựa chọn có trade-off về đơn giản, chi phí, mở rộng, bảo mật và vận hành. AI có thể review, nhưng quyết định cuối cùng phải do em hiểu và trình bày được.
 
@@ -53,7 +53,7 @@ Anh Danh Hoàng Hiếu Nghị nhấn mạnh rằng có được công việc Sol
 
 Em hiểu cộng đồng là môi trường xây dựng visibility, consistency và bản sắc nghề nghiệp. Sinh viên có thể trưởng thành bằng cách đặt câu hỏi, viết reflection, tài liệu hóa dự án và chia sẻ điều đã học. Những hoạt động này cũng rèn giao tiếp và khả năng tạo niềm tin cần cho Cloud/Data Platform Engineering, BSA và Solution Architect.
 
-Phản hồi cộng đồng giúp kiểm tra LiveCap có giải quyết đúng vấn đề workshop, cuộc họp và học tập song ngữ hay không. Tiến độ trên GitHub hoặc LinkedIn là bằng chứng về năng lực và tính nhất quán. AWS Bootcamp có thể trở thành điểm khởi đầu cho việc học AWS và tham gia cộng đồng lâu dài.
+Phản hồi cộng đồng giúp kiểm tra project của em có giải quyết đúng vấn đề workshop, cuộc họp và học tập song ngữ hay không. Tiến độ trên GitHub hoặc LinkedIn là bằng chứng về năng lực và tính nhất quán. AWS Bootcamp có thể trở thành điểm khởi đầu cho việc học AWS và tham gia cộng đồng lâu dài.
 
 ## Chủ đề 4 – Kiên và Thọ: Thiết kế giải pháp AWS qua URL Shortening Service
 
@@ -63,7 +63,7 @@ Các câu hỏi gồm cách tạo mã duy nhất, lưu mapping, xử lý traffic
 
 Ví dụ thể hiện tư duy Solution Architect: bắt đầu từ yêu cầu, xác định non-functional requirements, chọn thành phần và giải thích trade-off. Không nên thêm dịch vụ để sơ đồ trông phức tạp; mỗi thành phần phải giải quyết một yêu cầu cụ thể.
 
-LiveCap cũng có độ phức tạp ẩn: truyền audio, phiên âm, dịch, lưu transcript, export, giám sát lỗi, chi phí và mở rộng. Chất lượng dự án vì vậy nằm cả ở kiến trúc và khả năng giải thích vì sao kiến trúc phù hợp, không chỉ ở danh sách tính năng.
+Project của em cũng có độ phức tạp ẩn: truyền audio, phiên âm, dịch, lưu transcript, export, giám sát lỗi, chi phí và mở rộng. Chất lượng project vì vậy nằm cả ở kiến trúc và khả năng giải thích vì sao kiến trúc phù hợp, không chỉ ở danh sách tính năng.
 
 ## Bài học tổng hợp sau sự kiện
 
@@ -71,7 +71,7 @@ Bốn chủ đề bổ sung cho nhau: dữ liệu phải dẫn đến quyết đ
 
 Kỹ thuật cần thiết nhưng chưa đủ. Nghiệp vụ, giao tiếp, cộng đồng, production mindset và tư duy hệ thống là nền tảng chung cho Cloud/Data Platform Engineering, Business System Analyst và Solution Architect.
 
-## Đóng góp cá nhân và kế hoạch áp dụng vào LiveCap
+## Đóng góp cá nhân và kế hoạch áp dụng vào project của em
 
 Sau sự kiện, em xác định năm nhóm hành động:
 
@@ -81,10 +81,10 @@ Sau sự kiện, em xác định năm nhóm hành động:
 
 3. **Cải thiện tài liệu và visibility.** README, giải thích kiến trúc và hướng dẫn setup/deployment phải đủ rõ để người khác hiểu dự án. Em sẽ tiếp tục viết reflection, cập nhật tiến độ trên GitHub và chia sẻ phù hợp trên LinkedIn như bằng chứng về capability, visibility và consistency.
 
-4. **Thực hành DevOps và system thinking.** Em không xem một lần deploy thành công là điểm kết thúc. Em cần hiểu LiveCap chạy, lỗi, phục hồi, ghi log và mở rộng thế nào; luôn hỏi “why” trước khi chọn công cụ. AI được dùng để review và tăng tốc, nhưng em phải tự giải thích từng quyết định.
+4. **Thực hành DevOps và system thinking.** Em không xem một lần deploy thành công là điểm kết thúc. Em cần hiểu project vận hành, gặp lỗi, phục hồi, ghi log và mở rộng thế nào; luôn hỏi “why” trước khi chọn công cụ. AI được dùng để review và tăng tốc, nhưng em phải tự giải thích từng quyết định.
 
 5. **Chuẩn bị cho định hướng nghề nghiệp.** Em sẽ đào sâu AWS, data architecture, system design và deployment; đồng thời luyện cách giải thích hệ thống bằng ngôn ngữ kỹ thuật lẫn kinh doanh. Việc tham gia cộng đồng, đặt câu hỏi và tài liệu hóa quá trình học sẽ giúp em từng bước chuyển từ Learner sang Problem Solver và System Thinker.
 
 ## Kết luận
 
-Sự kiện 3 giúp em hiểu kỹ thuật thực tế không chỉ là viết code hoặc sử dụng dịch vụ cloud. Data Analytics cần tạo tác động kinh doanh; DevOps cần hiểu vận hành; cộng đồng AWS cần sự tham gia và đóng góp; còn thiết kế giải pháp cần tư duy hệ thống. Bước tiếp theo của em là tiếp tục phát triển LiveCap thành một dự án kỹ thuật và portfolio artifact thể hiện rõ quá trình học, production mindset và định hướng nghề nghiệp.
+Sự kiện 3 giúp em hiểu kỹ thuật thực tế không chỉ là viết code hoặc sử dụng dịch vụ cloud. Data Analytics cần tạo tác động kinh doanh; DevOps cần hiểu vận hành; cộng đồng AWS cần sự tham gia và đóng góp; còn thiết kế giải pháp cần tư duy hệ thống. Bước tiếp theo của em là tiếp tục phát triển project thành một sản phẩm kỹ thuật và portfolio artifact thể hiện rõ quá trình học, production mindset và định hướng nghề nghiệp.
