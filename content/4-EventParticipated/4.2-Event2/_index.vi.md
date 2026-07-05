@@ -23,13 +23,13 @@ FCAJ Community Day 2026 mang đến nhiều góc nhìn thực tế về AI, ki�
 
 ## Phần mở đầu – Nguyễn Gia Hưng: AI và sự thay đổi của thị trường việc làm
 
+![Nguyễn Gia Hưng chia sẻ phần mở đầu về AI và thị trường việc làm](/images/4-EventParticipated/Event2/nguyen-gia-hung-opening.png)
+
+*Nguyễn Gia Hưng chia sẻ ngắn về tác động của AI đối với thị trường việc làm và sự chuẩn bị cần thiết của sinh viên.*
+
 Anh Nguyễn Gia Hưng mở đầu sự kiện trong khoảng 10 phút với nội dung về tác động của AI đối với thị trường việc làm và những hành trang cần thiết để thích ứng. Đây là phần định hướng ngắn, không được xem là một chủ đề kỹ thuật chính của chương trình. Thông điệp tôi ghi nhận là sinh viên cần duy trì nền tảng chuyên môn, khả năng học liên tục và tư duy giải quyết vấn đề thay vì chỉ phụ thuộc vào công cụ AI.
 
 ## Chủ đề 1 – Tinh Truong: Context Is Everything
-
-![Tinh Truong trình bày chủ đề Context Is Everything](/images/4-EventParticipated/Event2/context-is-everything-overview.png)
-
-*Phần mở đầu của “Context Is Everything – Making AI Actually Work for You”.*
 
 Chủ đề **Context Is Everything** làm rõ rằng sức mạnh của mô hình AI chưa đủ để tạo ra kết quả hữu ích nếu context không phù hợp. Goal, situation, constraints và relevant evidence giúp AI hiểu đúng nhiệm vụ thay vì chỉ phản hồi một yêu cầu mơ hồ. Insight tôi ghi nhớ là **chất lượng context quan trọng hơn số lượng context**.
 
@@ -70,6 +70,10 @@ Chủ đề **From Edge To Origin: CloudFront as Your Foundation** giúp tôi hi
 Tôi học được rằng phạm vi rõ ràng và tốc độ phản hồi quan trọng hơn việc cố xây mọi chức năng ngay từ đầu. Khi phát triển LiveCap, tôi cần bảo vệ mục tiêu cốt lõi, kiểm chứng từng bước và dùng AI như công cụ tăng tốc thay vì để công cụ làm dự án mất trọng tâm.
 
 ## Chủ đề 5 – Duc Dao Minh: Non-Determinism of “Deterministic” LLM Settings
+
+![Duc Dao Minh giải thích vai trò của Temperature, Top-P và Top-K](/images/4-EventParticipated/Event2/duc-dao-minh.png)
+
+*[Duc Dao Minh](https://www.linkedin.com/in/itsdmd/) trình bày ảnh hưởng của Temperature, Top-P và Top-K đến tính ổn định của đầu ra LLM.*
 
 Trong **Non-Determinism of “Deterministic” LLM Settings**, [Duc Dao Minh](https://www.linkedin.com/in/itsdmd/) phân tích việc hệ thống LLM vẫn có thể tạo ra kết quả khác nhau ngay cả khi một số tham số được cấu hình theo hướng deterministic. Bài học quan trọng là không nên giả định một thiết lập có vẻ cố định sẽ bảo đảm đầu ra giống hệt trong mọi lần chạy.
 
