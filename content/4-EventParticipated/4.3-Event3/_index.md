@@ -1,16 +1,16 @@
 ---
-title: "Event 3: Data Analytics, DevOps, AWS Community, and Real-World System Thinking"
+title: "Event 3: FCAJ Meetup"
 date: 2026-06-13
 weight: 3
 chapter: false
 pre: " <b> 4.3. </b> "
 ---
 
-# Event 3: Data Analytics, DevOps, AWS Community, and Real-World System Thinking
+# FCAJ Meetup
 
 | Field | Detail |
 | --- | --- |
-| Event name | Data Analytics, DevOps, AWS Community, and Real-World System Thinking |
+| Event name | FCAJ Meetup |
 | Date/time | 13 June 2026 |
 | Location | AWS Event Hall, Floor 26, Bitexco Financial Tower, Ho Chi Minh City |
 | Role | Participant |

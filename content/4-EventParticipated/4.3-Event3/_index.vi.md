@@ -1,16 +1,16 @@
 ---
-title: "Sự kiện 3: Data Analytics, DevOps, AWS Community và tư duy xây dựng hệ thống thực tế"
+title: "Sự kiện 3: FCAJ Meetup"
 date: 2026-06-13
 weight: 3
 chapter: false
 pre: " <b> 4.3. </b> "
 ---
 
-# Sự kiện 3: Data Analytics, DevOps, AWS Community và tư duy xây dựng hệ thống thực tế
+# FCAJ Meetup
 
 | Trường | Nội dung |
 | --- | --- |
-| Tên sự kiện | Data Analytics, DevOps, AWS Community và tư duy xây dựng hệ thống thực tế |
+| Tên sự kiện | FCAJ Meetup |
 | Ngày/giờ | 13 tháng 6 năm 2026 |
 | Địa điểm | AWS Event Hall, Tầng 26, Bitexco Financial Tower, TP. Hồ Chí Minh |
 | Vai trò | Người tham gia |
