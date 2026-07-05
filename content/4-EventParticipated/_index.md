@@ -15,7 +15,7 @@ This section records the learning events and FCAJ community activities that supp
 | AWS Study Group Technical Sharing | Participant | Learned hands-on AWS learning strategies, dopamine-driven consistency, career mindset, and BMAD-based project planning. |
 | FCAJ Community Day 2026 | Participant | Explored GenAIOps, CloudFront, multi-agent systems, AI-assisted prototyping, business automation, and LLM behavior. |
 | Data Analytics, DevOps, AWS Community, and Real-World System Thinking | Participant | Connected data analytics, DevOps, AWS community participation, and system design with career development and LiveCap improvements. |
-| Practical Perspectives on Cloud, Data, AI, and Career Direction from AWS Bootcamp | Participant | Connected lessons about cloud, data, communication, and AI with career development and LiveCap improvements. |
+| Enterprise Cloud Architectures and Industry Applications | Participant | Connected lessons about cloud, data, communication, and AI with career development and LiveCap improvements. |
 
 ## How These Events Supported My Project
 

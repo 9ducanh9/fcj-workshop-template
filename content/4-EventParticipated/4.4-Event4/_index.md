@@ -1,16 +1,16 @@
 ---
-title: "Event 4: Practical Perspectives on Cloud, Data, AI, and Career Direction from AWS Bootcamp"
+title: "Event 4: Enterprise Cloud Architectures and Industry Applications"
 date: 2026-07-04
 weight: 4
 chapter: false
 pre: " <b> 4.4. </b> "
 ---
 
-# Practical Perspectives on Cloud, Data, AI, and Career Direction from AWS Bootcamp
+# Enterprise Cloud Architectures and Industry Applications
 
 | Field | Detail |
 | --- | --- |
-| Event name | Practical Perspectives on Cloud, Data, AI, and Career Direction from AWS Bootcamp |
+| Event name | Enterprise Cloud Architectures and Industry Applications |
 | Date/time | 04 July 2026 |
 | Location | AWS Event Hall, Floor 26, Bitexco Financial Tower, Ho Chi Minh City |
 | Role | Participant |

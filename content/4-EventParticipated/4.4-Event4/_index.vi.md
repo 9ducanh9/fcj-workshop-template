@@ -1,16 +1,16 @@
 ---
-title: "Sự kiện 4: Góc nhìn thực tế về Cloud, Data, AI và định hướng nghề nghiệp từ AWS Bootcamp"
+title: "Sự kiện 4: Enterprise Cloud Architectures and Industry Applications"
 date: 2026-07-04
 weight: 4
 chapter: false
 pre: " <b> 4.4. </b> "
 ---
 
-# Góc nhìn thực tế về Cloud, Data, AI và định hướng nghề nghiệp từ AWS Bootcamp
+# Enterprise Cloud Architectures and Industry Applications
 
 | Trường | Nội dung |
 | --- | --- |
-| Tên sự kiện | Góc nhìn thực tế về Cloud, Data, AI và định hướng nghề nghiệp từ AWS Bootcamp |
+| Tên sự kiện | Enterprise Cloud Architectures and Industry Applications |
 | Ngày/giờ | 04 tháng 7 năm 2026 |
 | Địa điểm | AWS Event Hall, Tầng 26, Bitexco Financial Tower, TP. Hồ Chí Minh |
 | Vai trò | Người tham gia |
