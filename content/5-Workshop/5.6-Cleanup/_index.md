@@ -1,45 +1,51 @@
 ---
-title: "Cleanup"
-date: 2026-05-12
+title: "Release Safety and Remaining Work"
+date: 2026-07-05
 weight: 6
 chapter: false
 pre: " <b> 5.6. </b> "
 ---
 
-# Cleanup
+# Release Safety and Remaining Work
 
-Clean up resources after testing to avoid unnecessary AWS charges.
+## Completed Baseline
 
-## Cleanup Order
+- Public CloudFront landing page and caption dashboard.
+- ECS Fargate backend behind a multi-AZ ALB.
+- Real bilingual Transcribe/Translate WebSocket flow.
+- Heartbeat, bounded reconnect, timeout, and abuse guards.
+- Private TXT transcript export with 14-day retention and no raw audio storage.
+- CloudWatch logging with 14-day retention.
+- Terraform source for remote state, target networking, WAF, dashboard, budget,
+  wake-on-demand, idle scaling, and blue/green cutover.
+- GitHub Actions validation and secret scanning.
 
-1. Stop active LiveCap sessions in the browser.
-2. Stop the backend service:
+## Safe Change Process
 
-```bash
-sudo systemctl stop livecap
-sudo systemctl disable livecap
-```
+1. Work on a branch and keep changes in reviewable frontend/backend/infra batches.
+2. Run backend, frontend, Terraform, and Gitleaks gates.
+3. Review `git diff` and open a pull request.
+4. Merge only after both PR and post-merge main CI pass.
+5. Build images with immutable SHA tags.
+6. Reconcile Terraform state and review the plan before any infrastructure apply.
 
-3. Remove Nginx configuration if the instance will not be reused:
+## Remaining Target Work
 
-```bash
-sudo rm /etc/nginx/conf.d/livecap.conf
-sudo systemctl reload nginx
-```
+1. Import/reconcile the existing AWS environment into reviewed remote state.
+2. Create the parallel dedicated VPC, private task service, ALB, and NAT target.
+3. Validate ECR pull, health, WebSocket, AI calls, S3, logs, WAF metrics, wake,
+   and idle scaling on the target stack.
+4. Cut CloudFront API/WebSocket routes over only after smoke tests pass.
+5. Keep the legacy path during a rollback observation window.
+6. Confirm ownership before deleting any stopped EC2, EBS, old security group,
+   old S3 bucket, or other legacy resource.
 
-4. Delete CloudFront distribution after disabling it.
-5. Delete frontend files from the S3 frontend bucket.
-6. Delete transcript objects from the S3 transcript bucket.
-7. Delete both S3 buckets if no longer needed.
-8. Terminate the EC2 instance.
-9. Delete the EC2 IAM role and custom policies.
-10. Delete CloudWatch log groups created for LiveCap if logs are no longer needed.
+## Architecture Boundary
 
-## Verification
+The target is self-healing, not active-active HA. Maximum ECS capacity remains
+one until the active-session registry moves to a shared store. A second NAT
+Gateway and two-task service can be evaluated later when availability needs
+justify their recurring cost.
 
-- CloudFront distribution no longer exists or is disabled.
-- S3 buckets are empty or deleted.
-- EC2 instance is terminated.
-- IAM role is removed.
-- CloudWatch log group is deleted if retention is not required.
-
+Do not run `terraform destroy` as workshop cleanup. Resource deletion is a
+separate, reviewed operation based on state ownership and cost evidence.

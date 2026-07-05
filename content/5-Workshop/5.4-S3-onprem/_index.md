@@ -1,21 +1,22 @@
 ---
-title: "Frontend Deployment and AWS Integrations"
-date: 2026-05-12
+title: "Frontend Delivery and Real-Time Integrations"
+date: 2026-07-05
 weight: 4
 chapter: false
 pre: " <b> 5.4. </b> "
 ---
 
-# Frontend Deployment and AWS Integrations
+# Frontend Delivery and Real-Time Integrations
 
-This section connects the full LiveCap application:
+The LiveCap frontend is a React 18, TypeScript, Vite, Tailwind CSS, and GSAP
+application. `/` is a product landing page with scroll-driven presentation;
+`/app` is the lightweight caption dashboard used during live sessions.
 
-1. Build the React + TypeScript frontend.
-2. Host the static frontend in S3.
-3. Serve it through CloudFront.
-4. Stream audio to Amazon Transcribe Streaming.
-5. Translate finalized segments with Amazon Translate.
-6. Export transcripts to S3 and return pre-signed links.
+CloudFront is the single browser entrypoint. It serves static assets from a
+private S3 bucket through OAC and routes `/api/*` and `/ws/*` to the ALB. The
+backend then coordinates Transcribe, Translate, transcript export, and session
+cleanup.
 
-The most important technical requirement is secure WebSocket streaming. In production, the browser must connect to the backend through `wss://`, not plain `ws://`.
-
+Heavy animation is limited to the landing page. The live dashboard prioritizes
+stable transcript rendering, microphone controls, connection status, and the
+session timer.

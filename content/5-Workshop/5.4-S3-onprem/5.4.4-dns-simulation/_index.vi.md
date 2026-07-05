@@ -1,46 +1,48 @@
 ---
-title : "Kiểm tra workflow end-to-end"
-date : 2026-05-12
-weight : 4
-chapter : false
-pre : " <b> 5.4.4. </b> "
+title: "Xác minh workflow end-to-end"
+date: 2026-07-05
+weight: 4
+chapter: false
+pre: " <b> 5.4.4. </b> "
 ---
 
-# Kiểm tra workflow end-to-end
+# Xác minh workflow end-to-end
 
-## Luồng test end-to-end
+## Luồng trình bày cho reviewer
 
-Dùng workflow này sau khi đã cấu hình EC2, Nginx, CloudFront, S3 và environment variables:
+1. Mở landing page CloudFront và `/api/health`.
+2. Vào `/app`, chọn **Start** và cấp quyền microphone.
+3. Xác nhận UI chuyển sang Recording và WebSocket session bắt đầu.
+4. Nói một câu ngắn bằng tiếng Anh hoặc tiếng Việt.
+5. Xác nhận một finalized bilingual row xuất hiện ở hai cột.
+6. Kiểm tra heartbeat giữ socket và **Stop** kết thúc sạch.
+7. Chọn **Export TXT** và mở temporary download link.
 
-```text
-Mở frontend -> cấp quyền microphone -> start capture -> nói tiếng Việt/Anh
--> nhận live captions -> stop capture -> export transcript
--> upload TXT lên S3 -> tải bằng pre-signed URL
-```
+## Gate tự động
 
-## Test cases
-
-| Test case | Kết quả mong đợi |
+| Khu vực | Gate |
 | --- | --- |
-| Health check | `GET /api/health` trả về success |
-| Từ chối microphone | Frontend hiển thị lỗi quyền microphone |
-| WebSocket connection | Browser kết nối đến `wss://.../ws/transcribe` |
-| Nói tiếng Việt | Cột tiếng Việt và tiếng Anh đều có nội dung |
-| Nói tiếng Anh | Source tiếng Anh và bản dịch tiếng Việt được hiển thị |
-| Speaker label | Caption có `Speaker 1`, `Speaker 2`, ... |
-| Export transcript | S3 lưu TXT output và trả về pre-signed URL |
-| Lỗi Transcribe | Frontend nhận lỗi và CloudWatch ghi failure |
-| Lỗi upload S3 | Backend trả export error và log service bị ảnh hưởng |
+| Backend | `python -m compileall app` và 204 test |
+| Frontend | 11 test và production build |
+| Terraform | format, `init -backend=false` và validate |
+| Secret | Gitleaks scan toàn history |
+| Container | health check và smoke test local |
+| Dependency | production npm audit và review ECR scan |
 
-## Bằng chứng cần chụp
+GitHub Actions chạy Backend, Frontend, Terraform và Secret scan trên pull
+request và push vào main. CI không deploy, apply Terraform hoặc migrate state.
 
-Cho báo cáo cuối, cần chụp screenshot:
+## Bằng chứng production đã xác minh
 
-- Trạng thái CloudFront distribution.
-- S3 frontend bucket và transcript bucket.
-- EC2 instance đang chạy.
-- `systemctl status livecap`.
-- Browser hiển thị bilingual captions.
-- S3 object được tạo sau khi export.
-- CloudWatch log stream có session events.
+Ngày 2026-07-04, luồng production đã pass CloudFront `/`, `/app`, health,
+WebSocket start, ping/pong, transcription PCM 16 kHz thật, dịch Anh-Việt, stop
+sạch, S3 export và tải TXT qua presigned URL. Browser UI test với microphone WAV
+kiểm soát được đã append ba finalized bilingual row và dừng sạch.
 
+## Trường hợp lỗi mong đợi
+
+- Từ chối microphone tạo lỗi rõ ràng trên UI.
+- Vượt session limit trả `TOO_MANY_SESSIONS` trước khi mở AWS stream.
+- Disconnect bất ngờ chỉ retry ba lần rồi dừng capture.
+- Timeout tự kết thúc session ở 30 phút.
+- ALB không gửi traffic đến ECS target unhealthy.

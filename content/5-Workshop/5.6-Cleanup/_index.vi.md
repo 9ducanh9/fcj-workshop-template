@@ -1,45 +1,50 @@
 ---
-title: "Cleanup"
-date: 2026-05-12
+title: "An toàn release và phần việc còn lại"
+date: 2026-07-05
 weight: 6
 chapter: false
 pre: " <b> 5.6. </b> "
 ---
 
-# Cleanup
+# An toàn release và phần việc còn lại
 
-Dọn tài nguyên sau khi test để tránh phát sinh chi phí AWS không cần thiết.
+## Baseline đã hoàn thành
 
-## Thứ tự cleanup
+- Landing page và caption dashboard công khai qua CloudFront.
+- Backend ECS Fargate sau ALB multi-AZ.
+- Luồng WebSocket Transcribe/Translate song ngữ thật.
+- Heartbeat, reconnect có giới hạn, timeout và abuse guard.
+- Export TXT private, retention 14 ngày và không lưu raw audio.
+- CloudWatch logging với retention 14 ngày.
+- Terraform source cho remote state, target network, WAF, dashboard, budget,
+  wake-on-demand, idle scaling và blue/green cutover.
+- GitHub Actions validation và secret scanning.
 
-1. Stop các LiveCap session đang chạy trong browser.
-2. Stop backend service:
+## Quy trình thay đổi an toàn
 
-```bash
-sudo systemctl stop livecap
-sudo systemctl disable livecap
-```
+1. Làm việc trên branch và chia frontend/backend/infra thành batch dễ review.
+2. Chạy gate backend, frontend, Terraform và Gitleaks.
+3. Review `git diff` rồi mở pull request.
+4. Chỉ merge sau khi CI của PR và post-merge main đều pass.
+5. Build image bằng immutable SHA tag.
+6. Reconcile Terraform state và review plan trước mọi infrastructure apply.
 
-3. Xóa Nginx configuration nếu không dùng lại instance:
+## Phần target còn lại
 
-```bash
-sudo rm /etc/nginx/conf.d/livecap.conf
-sudo systemctl reload nginx
-```
+1. Import/reconcile môi trường AWS hiện hữu vào remote state đã review.
+2. Tạo song song VPC riêng, private task service, ALB và NAT target.
+3. Xác minh ECR pull, health, WebSocket, AI call, S3, log, WAF metric, wake và
+   idle scaling trên target stack.
+4. Chỉ chuyển CloudFront API/WebSocket route sau khi smoke test pass.
+5. Giữ legacy path trong rollback observation window.
+6. Xác nhận ownership trước khi xóa EC2 stopped, EBS, security group cũ, S3
+   bucket cũ hoặc tài nguyên legacy khác.
 
-4. Disable rồi xóa CloudFront distribution.
-5. Xóa frontend files trong S3 frontend bucket.
-6. Xóa transcript objects trong S3 transcript bucket.
-7. Xóa hai S3 bucket nếu không còn cần.
-8. Terminate EC2 instance.
-9. Xóa EC2 IAM role và custom policies.
-10. Xóa CloudWatch log groups của LiveCap nếu không cần giữ logs.
+## Ranh giới kiến trúc
 
-## Kiểm tra
+Target là self-healing, chưa phải active-active HA. ECS max vẫn là một đến khi
+active-session registry chuyển sang shared store. NAT Gateway thứ hai và service
+hai task chỉ nên xét khi yêu cầu availability đủ để biện minh recurring cost.
 
-- CloudFront distribution không còn tồn tại hoặc đã disabled.
-- S3 buckets đã rỗng hoặc đã bị xóa.
-- EC2 instance đã terminated.
-- IAM role đã được xóa.
-- CloudWatch log group đã bị xóa nếu không cần retention.
-
+Không chạy `terraform destroy` như một bước cleanup workshop. Xóa tài nguyên là
+operation riêng, cần review theo state ownership và bằng chứng chi phí.

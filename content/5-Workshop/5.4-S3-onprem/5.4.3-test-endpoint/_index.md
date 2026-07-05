@@ -1,53 +1,40 @@
 ---
-title : "Translate Captions and Export Transcripts"
-date : 2026-05-12
-weight : 3
-chapter : false
-pre : " <b> 5.4.3. </b> "
+title: "Translate and Export Finalized Transcripts"
+date: 2026-07-05
+weight: 3
+chapter: false
+pre: " <b> 5.4.3. </b> "
 ---
 
-# Translate Captions and Export Transcripts
+# Translate and Export Finalized Transcripts
 
 ## Translation Flow
 
-LiveCap always renders two columns:
+Amazon Translate is called only for finalized text selected from the
+Transcribe streams. The backend returns a normalized caption message containing
+the session context, speaker label, timestamp, original text, translated text,
+and final-state marker. The dashboard appends finalized messages to the two
+caption columns.
 
-- Vietnamese on the left.
-- English on the right.
+## TXT Export Flow
 
-When a finalized segment is spoken in Vietnamese, Amazon Translate produces English text. When a finalized segment is spoken in English, Amazon Translate produces Vietnamese text. The frontend receives both `text_vi` and `text_en` for display.
+1. The user selects **Export TXT** after captions have been finalized.
+2. The frontend sends the finalized session rows to the export API.
+3. FastAPI validates and serializes the bilingual transcript.
+4. The backend writes a TXT object to the private transcript S3 bucket.
+5. S3 returns a time-limited presigned download URL through the backend.
 
-Example segment message:
+The bucket is encrypted, blocks public access, and removes transcript objects
+after 14 days. Presigned links expire independently (24 hours by default).
 
-```json
-{
-  "type": "finalized_segment",
-  "segment_id": "segment-001",
-  "speaker_label": "Speaker 1",
-  "text_vi": "Xin chào mọi người",
-  "text_en": "Hello everyone",
-  "spoken_language": "vi",
-  "is_final": true
-}
-```
+## Data Boundary
 
-## Transcript Export
+LiveCap does not upload or store raw microphone audio in the MVP. Audio exists
+only in the browser/WebSocket/Transcribe streaming path. S3 contains finalized
+text exports, which reduces storage cost and limits retained sensitive data.
 
-When the user exports a session:
+## Failure Handling
 
-1. Frontend sends the accumulated transcript to the backend.
-2. Backend serializes it into TXT.
-3. Backend uploads the TXT file to S3 under `transcripts/`.
-4. Backend generates a time-limited pre-signed URL.
-5. Frontend displays the download link.
-
-## Validation
-
-| Test | Expected result |
-| --- | --- |
-| Vietnamese speech | Vietnamese text appears on the left, English translation appears on the right |
-| English speech | Vietnamese translation appears on the left, English text appears on the right |
-| Empty export | Backend returns a valid empty transcript file |
-| Export with captions | S3 receives a TXT object under `transcripts/` |
-| Download link | Pre-signed URL downloads the TXT file before expiration |
-
+Translate or export failures return structured errors to the UI and are logged
+without exposing credentials. A session cleanup still runs when a Transcribe
+stream or internal worker fails, preventing leaked active-session counts.

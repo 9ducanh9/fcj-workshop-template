@@ -1,63 +1,50 @@
 ---
-title : "Build and Deploy the Frontend"
-date : 2026-05-12
-weight : 1
-chapter : false
-pre : " <b> 5.4.1. </b> "
+title: "Build and Deliver the React Frontend"
+date: 2026-07-05
+weight: 1
+chapter: false
+pre: " <b> 5.4.1. </b> "
 ---
 
-# Build and Deploy the Frontend
+# Build and Deliver the React Frontend
 
-## Step 1: Build the React App
+## Step 1: Test and Build
 
-From the frontend directory:
-
-```bash
-cd livecap/frontend
-npm install
-
-VITE_WS_URL=wss://your-ec2-domain/ws/transcribe \
-VITE_API_BASE_URL=https://your-ec2-domain \
+```powershell
+cd frontend
+npm ci
+npm test
 npm run build
 ```
 
-The output is generated in `frontend/dist/`.
+The build runs TypeScript checking and creates the Vite `dist` output. The
+verified baseline has 11 passing frontend tests and zero known production npm
+vulnerabilities at release time.
 
-## Step 2: Create a Frontend S3 Bucket
+## Step 2: Store Static Assets Privately
 
-```bash
-aws s3 mb s3://livecap-frontend --region us-east-1
-```
+The frontend S3 bucket blocks public access and uses encryption and versioning.
+Browser access goes through CloudFront Origin Access Control rather than an S3
+website endpoint or public bucket policy.
 
-Keep public access blocked. CloudFront should access the bucket through Origin Access Control.
+## Step 3: Configure CloudFront Routes
 
-## Step 3: Upload the Static Build
+| Path | Origin |
+| --- | --- |
+| `/` and static assets | Private frontend S3 bucket |
+| `/api/*` | Application Load Balancer |
+| `/ws/*` | Application Load Balancer with WebSocket upgrade |
+| `/api/wake` | IAM-protected Lambda origin in the reviewed target only |
 
-Upload long-lived assets with immutable cache headers:
+CloudFront terminates viewer HTTPS/WSS. The current CloudFront-to-ALB origin is
+HTTP, which is recorded as a residual security gap for a later ACM/custom
+origin-domain improvement.
 
-```bash
-aws s3 sync frontend/dist/ s3://livecap-frontend/ \
-  --delete \
-  --cache-control "max-age=31536000,immutable" \
-  --exclude "index.html"
-```
+## Step 4: Keep Runtime Configuration External
 
-Upload `index.html` separately with no-cache:
+Local development uses `frontend/.env`. Production values are injected during
+the build and are not hard-coded into reusable components. If no wake URL is
+configured, the frontend skips the optional wake flow and connects normally.
 
-```bash
-aws s3 cp frontend/dist/index.html s3://livecap-frontend/index.html \
-  --cache-control "no-cache,no-store,must-revalidate"
-```
-
-## Step 4: Create a CloudFront Distribution
-
-Recommended settings:
-
-- Origin: the frontend S3 bucket.
-- Origin access: Origin Access Control.
-- Viewer protocol policy: Redirect HTTP to HTTPS.
-- Default root object: `index.html`.
-- Custom error response: `403` to `/index.html` with response code `200` for client-side routing.
-
-After the distribution status becomes `Deployed`, record the CloudFront domain and set backend `ALLOWED_ORIGIN` to that URL.
-
+The deployed landing page and `/app` dashboard were verified on desktop and a
+390 px mobile viewport.

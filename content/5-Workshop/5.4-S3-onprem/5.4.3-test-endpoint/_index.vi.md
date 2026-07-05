@@ -1,53 +1,39 @@
 ---
-title : "Dịch caption và export transcript"
-date : 2026-05-12
-weight : 3
-chapter : false
-pre : " <b> 5.4.3. </b> "
+title: "Dịch và export transcript finalized"
+date: 2026-07-05
+weight: 3
+chapter: false
+pre: " <b> 5.4.3. </b> "
 ---
 
-# Dịch caption và export transcript
+# Dịch và export transcript finalized
 
 ## Luồng dịch
 
-LiveCap luôn hiển thị hai cột:
+Amazon Translate chỉ được gọi cho finalized text đã chọn từ các Transcribe
+stream. Backend trả caption message chuẩn hóa gồm session context, speaker
+label, timestamp, original text, translated text và final marker. Dashboard chỉ
+append message finalized vào hai cột caption.
 
-- Tiếng Việt ở bên trái.
-- Tiếng Anh ở bên phải.
+## Luồng export TXT
 
-Khi finalized segment được nói bằng tiếng Việt, Amazon Translate tạo text tiếng Anh. Khi finalized segment được nói bằng tiếng Anh, Amazon Translate tạo text tiếng Việt. Frontend nhận cả `text_vi` và `text_en` để hiển thị.
+1. Người dùng chọn **Export TXT** sau khi caption đã finalized.
+2. Frontend gửi các finalized row của session đến export API.
+3. FastAPI validate và serialize transcript song ngữ.
+4. Backend ghi object TXT vào transcript S3 bucket private.
+5. Backend trả presigned download URL có thời hạn.
 
-Ví dụ segment message:
+Bucket được mã hóa, chặn public access và tự xóa transcript sau 14 ngày.
+Presigned link hết hạn độc lập, mặc định sau 24 giờ.
 
-```json
-{
-  "type": "finalized_segment",
-  "segment_id": "segment-001",
-  "speaker_label": "Speaker 1",
-  "text_vi": "Xin chào mọi người",
-  "text_en": "Hello everyone",
-  "spoken_language": "vi",
-  "is_final": true
-}
-```
+## Ranh giới dữ liệu
 
-## Export transcript
+LiveCap không upload hoặc lưu raw microphone audio trong MVP. Audio chỉ tồn tại
+trên luồng browser/WebSocket/Transcribe. S3 chỉ chứa text export đã finalized,
+giúp giảm chi phí storage và giới hạn dữ liệu nhạy cảm được giữ lại.
 
-Khi người dùng export session:
+## Xử lý lỗi
 
-1. Frontend gửi transcript đã tích lũy đến backend.
-2. Backend serialize transcript thành TXT.
-3. Backend upload TXT file lên S3 dưới prefix `transcripts/`.
-4. Backend tạo pre-signed URL có thời hạn.
-5. Frontend hiển thị download link.
-
-## Kiểm tra
-
-| Test | Kết quả mong đợi |
-| --- | --- |
-| Nói tiếng Việt | Text tiếng Việt ở cột trái, bản dịch tiếng Anh ở cột phải |
-| Nói tiếng Anh | Bản dịch tiếng Việt ở cột trái, text tiếng Anh ở cột phải |
-| Export rỗng | Backend trả về file transcript rỗng hợp lệ |
-| Export có caption | S3 nhận TXT object dưới `transcripts/` |
-| Download link | Pre-signed URL tải được TXT file trước khi hết hạn |
-
+Lỗi Translate hoặc export được trả về UI dưới dạng có cấu trúc và ghi log mà
+không lộ credential. Session cleanup vẫn chạy khi Transcribe stream hoặc worker
+lỗi để active-session count không bị leak.

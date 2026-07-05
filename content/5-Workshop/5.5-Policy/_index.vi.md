@@ -1,68 +1,75 @@
 ---
-title: "Bảo mật, giám sát, kiểm thử và tối ưu chi phí"
-date: 2026-05-12
+title: "Bảo mật, quan sát, kiểm thử và chi phí"
+date: 2026-07-05
 weight: 5
 chapter: false
 pre: " <b> 5.5. </b> "
 ---
 
-# Bảo mật, giám sát, kiểm thử và tối ưu chi phí
+# Bảo mật, quan sát, kiểm thử và chi phí
 
-## Cân nhắc bảo mật
+## Control bảo mật đã triển khai
 
-- Dùng HTTPS cho frontend thông qua CloudFront.
-- Dùng WSS để stream microphone audio đến backend.
-- Giữ Uvicorn private ở `127.0.0.1:8000`; chỉ expose Nginx ở port `443`.
-- Giới hạn SSH chỉ từ IP cá nhân.
-- Gắn IAM role vào EC2 thay vì lưu AWS key trong `.env`.
-- Giữ S3 bucket private và dùng CloudFront Origin Access Control cho frontend hosting.
-- Scope quyền S3 transcript vào `transcripts/*`.
-- Set CORS `ALLOWED_ORIGIN` đúng bằng CloudFront frontend URL.
-- Không xử lý hội thoại riêng tư nếu chưa có sự đồng ý.
+- IAM role thay credential AWS tĩnh trong container và source code.
+- Frontend và transcript S3 bucket đều private; frontend truy cập qua OAC.
+- Transcript download dùng presigned URL có thời hạn.
+- Không lưu raw audio; transcript object hết hạn sau 14 ngày.
+- CORS giới hạn frontend origin được chấp nhận.
+- Giới hạn session global/per-IP và timeout 30 phút giảm abuse.
+- Gitleaks chạy trong CI; tfstate, tfvars, plan và `.env` thật không được track.
+- ECR image dùng tag immutable từ Git SHA và kết quả scan được review.
 
-## Monitoring và logging
+## Trạng thái WAF và network
 
-LiveCap ghi structured backend logs vào CloudWatch thông qua logging service.
+Terraform target định nghĩa hai Web ACL riêng: CloudFront (`CLOUDFRONT`) và ALB
+(`REGIONAL`), gồm managed rule và rate rule ở COUNT mode. COUNT chỉ quan sát
+traffic match, chưa block. Các WAF association này chưa deploy nên không được
+mô tả live demo là đã có WAF bảo vệ.
 
-Các event quan trọng cần theo dõi:
+Task hiện tại có public IP trong VPC hiện hữu. Target đã review tạo hai public
+và hai private subnet trên hai AZ, đặt ALB ở public subnet, Fargate ở private
+subnet và dùng một NAT Gateway. Một NAT là tradeoff tiết kiệm chi phí, đồng thời
+là outbound dependency single-AZ chứ không phải network HA đầy đủ.
 
-- Session start và session end.
-- Lỗi WebSocket connection.
-- Lỗi Amazon Transcribe Streaming.
-- Lỗi Amazon Translate.
-- Lỗi upload S3 hoặc tạo pre-signed URL.
-- Backend startup và shutdown.
+## Quan sát hệ thống
 
-Nếu CloudWatch chưa dùng được trong development, backend fallback về stdout logging để vẫn test local được.
+- FastAPI phát structured session/integration log đến CloudWatch khi handler
+  khởi tạo được, nếu không sẽ fallback stdout.
+- Backend log retention là 14 ngày.
+- ALB, ECS và Lambda cung cấp metric CloudWatch chuẩn.
+- Terraform target định nghĩa dashboard cho ECS CPU/memory, ALB traffic/health,
+  wake Lambda và WAF mà không bật Container Insights tốn thêm phí.
 
-## Checklist kiểm thử
+Dashboard và WAF metric chỉ có ý nghĩa sau khi target resource tương ứng được
+apply và associate.
 
-| Khu vực | Cách kiểm tra |
-| --- | --- |
-| Backend health | `/api/health` trả về success |
-| WebSocket | Browser kết nối được qua WSS |
-| Audio format | Backend reject audio format sai |
-| Transcription | Partial và finalized caption xuất hiện |
-| Translation | Cả cột tiếng Việt và tiếng Anh đều có nội dung |
-| Export | TXT transcript được upload lên S3 |
-| Download | Pre-signed URL hoạt động trước khi hết hạn |
-| Monitoring | CloudWatch nhận session và error logs |
+## CI và verification
 
-## Tối ưu chi phí
+GitHub Actions kiểm tra mọi pull request và push vào main:
 
-- Dùng `t3.small` hoặc EC2 nhỏ cho MVP testing.
-- Stop EC2 instance khi không test.
-- Xóa transcript export không còn cần trong S3.
-- Dùng lifecycle rule cho transcript bucket nếu test thường xuyên.
-- Giữ CloudFront cache rule đơn giản.
-- Tắt audio pipeline debug log sau khi troubleshooting xong.
-- Giới hạn session duration bằng `SESSION_TIMEOUT`.
+1. Gitleaks scan secret với toàn bộ Git history.
+2. Python 3.11 compile backend và pytest.
+3. Node 20 cài frontend, chạy test và production build.
+4. Terraform 1.10.5 format/validate với `-backend=false`.
 
-## Nhận thức về khả năng mở rộng
+CI chủ ý không deploy production, Terraform apply, destroy hoặc migrate state.
 
-MVP dùng một EC2 instance để triển khai đơn giản. Cách này phù hợp cho đồ án bootcamp nhưng có giới hạn:
+## Kiểm soát chi phí
 
-- Một instance giới hạn số WebSocket session đồng thời.
-- Phiên bản production sau này nên cân nhắc Application Load Balancer hỗ trợ WSS và nhiều backend instances.
-- ECS Fargate có thể được xem xét sau cho managed deployment và horizontal scaling.
+- Transcribe và Translate tính theo usage, chủ yếu chạy khi có session active.
+- Giới hạn duration/concurrency kiểm soát AI usage ngoài ý muốn.
+- Transcript và log cùng retention 14 ngày.
+- Terraform target có AWS Budget `$50/month` cấu hình được; alert billing có độ
+  trễ, không phải enforcement realtime.
+- Wake/idle target cho phép ECS `0 <-> 1`, nhưng live service hiện giữ một task
+  để demo ổn định.
 
+ALB, NAT Gateway và WAF vẫn có fixed/baseline cost khi tồn tại. Scale ECS về 0
+không xóa các khoản phí này.
+
+## Rủi ro còn lại
+
+- CloudFront hiện kết nối ALB origin qua HTTP.
+- Registry in-memory chưa cho phép scale an toàn nhiều task.
+- Một active task khiến thay task làm gián đoạn WebSocket đang chạy.
+- Finding package nền trong ECR vẫn được theo dõi đến khi có bản vá tương thích.

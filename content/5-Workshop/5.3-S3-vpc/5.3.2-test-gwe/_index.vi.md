@@ -1,96 +1,48 @@
 ---
-title : "Deploy và kiểm tra FastAPI backend"
-date : 2026-05-12
-weight : 2
-chapter : false
-pre : " <b> 5.3.2. </b> "
+title: "Deploy và xác minh ECS Fargate"
+date: 2026-07-05
+weight: 2
+chapter: false
+pre: " <b> 5.3.2. </b> "
 ---
 
-# Deploy và kiểm tra FastAPI backend
+# Deploy và xác minh ECS Fargate
 
-## Bước 1: Cài backend dependencies
+## Thành phần runtime
 
-SSH vào EC2 instance và cài runtime dependencies.
+1. ECS task definition tham chiếu ECR image immutable, port 8000, environment,
+   execution role và task role.
+2. ECS service duy trì task mong muốn và đăng ký task vào ALB target group.
+3. ALB kiểm tra `/api/health` và chỉ forward đến target healthy.
+4. CloudFront route `/api/*` và `/ws/*` đến ALB origin.
 
-```bash
-sudo dnf install -y python3.11 python3.11-pip git nginx
-git clone https://github.com/your-org/livecap.git
-cd livecap/backend
-pip3.11 install -r requirements.txt
-```
+## An toàn session
 
-## Bước 2: Cấu hình environment
+Trước khi mở Transcribe, WebSocket handler xác định client IP và kiểm tra active
+session registry trong memory. Giới hạn tham chiếu là bốn session toàn hệ thống
+và một session trên mỗi IP. Client vượt giới hạn nhận `TOO_MANY_SESSIONS` mà
+không mở công việc Transcribe/Translate tốn phí.
 
-```bash
-cp .env.example .env
-nano .env
-```
+Mọi đường kết thúc đều unregister session, cleanup audio queue và worker task.
+Backend còn hỗ trợ heartbeat ping/pong và timeout 30 phút.
 
-Giá trị production tối thiểu:
+## Cơ chế availability
 
-```env
-AWS_REGION=us-east-1
-S3_BUCKET=livecap-transcripts
-DOWNLOAD_LINK_EXPIRATION=86400
-SESSION_TIMEOUT=1800
-MAX_SPEAKERS=5
-TRANSCRIBE_LANGUAGE_CODE=vi-VN
-BILINGUAL_DUAL_STREAM=true
-ALLOWED_ORIGIN=https://your-cloudfront-domain
-CLOUDWATCH_LOG_GROUP=livecap
-```
+ECS thay task unhealthy, còn ALB chỉ route sau khi health check pass. Vì
+desired/max capacity là một, quá trình thay task gây gián đoạn ngắn và kết thúc
+WebSocket active. Muốn tăng trên một task phải chuyển registry sang DynamoDB
+hoặc Redis trước.
 
-## Bước 3: Test backend thủ công
+## Trạng thái hiện tại đã xác minh
 
-Chạy API thủ công trước:
+| Hạng mục | Giá trị đã xác minh |
+| --- | --- |
+| Region | `ap-southeast-1` |
+| ALB | Public, trải trên `1a` và `1b` |
+| ECS desired/running | `1/1` |
+| Network của task | Public subnet trong VPC hiện hữu, có public IP |
+| Task definition | `livecap-backend-dev:5` |
+| Container image | `1ef4250-amd64` |
 
-```bash
-uvicorn app.main:app --host 127.0.0.1 --port 8000
-```
-
-Gọi health endpoint từ instance:
-
-```bash
-curl http://127.0.0.1:8000/api/health
-```
-
-Kết quả mong đợi:
-
-- API trả về healthy response.
-- Không lưu AWS credential trong `.env`.
-- Nếu CloudWatch chưa dùng được khi test local, logging fallback về stdout.
-
-## Bước 4: Chạy bằng systemd
-
-Copy systemd unit có sẵn và enable service:
-
-```bash
-sudo cp deploy/livecap.service /etc/systemd/system/livecap.service
-sudo systemctl daemon-reload
-sudo systemctl enable livecap
-sudo systemctl start livecap
-sudo systemctl status livecap
-```
-
-Xem service logs:
-
-```bash
-sudo journalctl -u livecap -f
-```
-
-## Bước 5: Cấu hình Nginx cho HTTPS/WSS
-
-Nginx terminate TLS và forward traffic đến Uvicorn.
-
-```bash
-sudo cp deploy/nginx.conf /etc/nginx/conf.d/livecap.conf
-sudo nginx -t
-sudo systemctl reload nginx
-```
-
-Sau khi TLS được cấu hình, WebSocket endpoint sẽ có dạng:
-
-```text
-wss://your-ec2-domain/ws/transcribe
-```
-
+Task private và wake/idle `0 <-> 1` là thay đổi target, không phải mô tả môi
+trường public hiện tại.

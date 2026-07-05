@@ -1,20 +1,21 @@
 ---
-title: "Nền tảng backend trên EC2"
-date: 2026-05-12
+title: "Backend dạng container trên ECS Fargate"
+date: 2026-07-05
 weight: 3
 chapter: false
 pre: " <b> 5.3. </b> "
 ---
 
-# Nền tảng backend trên EC2
+# Backend dạng container trên ECS Fargate
 
-Phần này chuẩn bị nền tảng backend cho LiveCap:
+Backend EC2 đơn lẻ ban đầu đã được thay bằng dịch vụ FastAPI đóng gói Docker và
+chạy trên Amazon ECS Fargate. Amazon ECR lưu image immutable, ECS duy trì task
+mong muốn, còn ALB health check và forward HTTP/WebSocket đến port 8000 của container.
 
-- EC2 instance cho FastAPI backend.
-- IAM role để gọi AWS services.
-- S3 bucket để lưu transcript.
-- Backend dependencies và biến môi trường.
-- systemd service và Nginx reverse proxy cho HTTPS/WSS.
+Demo đã xác minh hiện chạy một task trong VPC hiện hữu với public IP. ALB trải
+trên hai public subnet. Hệ thống có thể tự thay task lỗi nhưng không phải
+active-active HA vì service được giới hạn một task khi session state còn nằm
+trong memory của process.
 
-Mục tiêu là giữ MVP đơn giản khi vận hành nhưng vẫn dùng dịch vụ AWS thật. Một EC2 instance là đủ cho đồ án bootcamp vì hỗ trợ WebSocket connection dài và dễ debug qua SSH, `systemctl` và logs.
-
+Kiến trúc target giữ luồng ALB -> ECS, nhưng chuyển task vào hai private subnet,
+tắt public IP và dùng một NAT Gateway cho outbound đến AWS API và ECR.

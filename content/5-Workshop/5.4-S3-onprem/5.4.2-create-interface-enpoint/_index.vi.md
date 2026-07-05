@@ -1,47 +1,46 @@
 ---
-title : "Stream audio đến Amazon Transcribe"
-date : 2026-05-12
-weight : 2
-chapter : false
-pre : " <b> 5.4.2. </b> "
+title: "Stream audio và tạo live caption"
+date: 2026-07-05
+weight: 2
+chapter: false
+pre: " <b> 5.4.2. </b> "
 ---
 
-# Stream audio đến Amazon Transcribe
+# Stream audio và tạo live caption
 
-## Audio pipeline
+## Pipeline audio và WebSocket
 
-Browser thu microphone audio và gửi PCM audio chunk đến backend qua WSS. Backend chuyển các chunk này đến Amazon Transcribe Streaming.
+```text
+Microphone
+  -> Web Audio worklet
+  -> PCM mono 16 kHz, 16-bit
+  -> CloudFront WSS /ws/transcribe
+  -> ALB
+  -> FastAPI trên Fargate
+  -> Amazon Transcribe Streaming
+```
 
-Audio format mong đợi:
+Microphone chỉ bắt đầu khi backend ready và WebSocket đã mở. Chunk sinh ra lúc
+socket unavailable sẽ bị drop, tránh buffer phía client tăng không giới hạn.
 
-| Thuộc tính | Giá trị |
-| --- | --- |
-| Encoding | PCM |
-| Sample rate | 16 kHz |
-| Channels | Mono |
-| Bit depth | 16-bit |
+## Xử lý song ngữ
 
-## Trách nhiệm backend
+Khi `BILINGUAL_DUAL_STREAM=true`, backend fan-out cùng PCM input vào Transcribe
+stream tiếng Việt và tiếng Anh, chọn kết quả phù hợp rồi dịch finalized segment
+sang ngôn ngữ còn lại. Partial result có thể là state tạm thời, nhưng chỉ
+finalized segment trở thành row cố định.
 
-FastAPI WebSocket handler nên:
+## Khả năng phục hồi kết nối
 
-1. Nhận WebSocket connection mới.
-2. Gán session ID duy nhất.
-3. Start một hoặc nhiều Transcribe Streaming session.
-4. Forward binary audio frame đến Transcribe.
-5. Chuyển partial và finalized Transcribe event thành LiveCap segment message.
-6. Map raw speaker label như `spk_0` thành nhãn dễ đọc như `Speaker 1`.
-7. Gửi partial và finalized caption về browser.
-8. Ghi lỗi Transcribe thông qua logging service.
+- Frontend gửi `ping` mỗi 30 giây; backend trả `pong`.
+- Disconnect bất ngờ khi recording được retry tối đa ba lần với backoff 1, 2, 4 giây.
+- Reconnect tạo backend session mới nhưng giữ các finalized row cũ.
+- Nếu retry thất bại, audio capture dừng và người dùng phải restart session.
+- Stop, disconnect, timeout, lỗi Transcribe và exception đều cleanup queue,
+  worker, stream và registry.
 
-## Kiểm tra
+## Guardrail cho session
 
-Test bằng câu ngắn tiếng Việt và tiếng Anh:
-
-- Browser hiển thị trạng thái microphone đang capture.
-- Backend ghi session start event.
-- Partial caption xuất hiện khi người dùng đang nói.
-- Finalized caption thay thế partial text.
-- Speaker label hiển thị nhất quán trong một session.
-- Lỗi tích hợp Transcribe được gửi về frontend và ghi log.
-
+UI và backend cùng giới hạn session 30 phút. Backend còn reject khi vượt giới
+hạn global/per-IP trước khi mở managed AI work. Các giới hạn này kiểm soát việc
+dùng Transcribe và Translate ngoài ý muốn trong MVP.

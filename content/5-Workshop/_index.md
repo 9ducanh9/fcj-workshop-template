@@ -1,6 +1,6 @@
 ---
 title: "Technical Workshop"
-date: 2026-05-12
+date: 2026-07-05
 weight: 5
 chapter: false
 pre: " <b> 5. </b> "
@@ -8,18 +8,29 @@ pre: " <b> 5. </b> "
 
 # Technical Workshop
 
-## LiveCap: Real-Time Bilingual Caption and Translation on AWS
+## LiveCap: Real-Time Bilingual Captions on AWS
 
-LiveCap is a real-time speech caption and translation web application. It captures microphone audio in the browser, streams the audio to a FastAPI backend over WebSocket, uses Amazon Transcribe Streaming to generate captions, uses Amazon Translate for Vietnamese-English translation, and displays bilingual captions side by side.
+This workshop documents the LiveCap implementation completed for the final
+project. LiveCap captures microphone audio in a React web application, streams
+16 kHz PCM over WebSocket to a FastAPI backend on Amazon ECS Fargate, creates
+captions with Amazon Transcribe, translates finalized text with Amazon
+Translate, and displays Vietnamese and English captions side by side.
 
-The project is practical for workshops, classroom sessions, community events, and meetings where participants may speak Vietnamese or English. The system also supports exporting session transcripts as TXT files, storing them in Amazon S3, and returning time-limited download links.
+The public demo uses CloudFront, private S3 frontend hosting, an Application
+Load Balancer, one ECS Fargate task, ECR, a private transcript bucket, and
+CloudWatch. Export stores finalized TXT transcripts only; raw audio is not
+stored.
+
+This chapter distinguishes the verified live environment from the reviewed
+Terraform target. Private Fargate networking, NAT, WAF, wake-on-demand,
+scale-to-zero, the dashboard, and the budget are target controls and are not
+presented as already deployed.
 
 ## Workshop Sections
 
-1. Workshop overview and architecture.
-2. Prerequisites.
-3. Backend foundation on Amazon EC2.
-4. Frontend deployment and AWS service integration.
-5. Security, monitoring, testing, and cost optimization.
-6. Cleanup.
-
+1. Product, architecture, and runtime flows.
+2. Development and AWS prerequisites.
+3. Containerized FastAPI backend on ECS Fargate.
+4. Frontend delivery and real-time AWS integrations.
+5. Security, observability, testing, and cost controls.
+6. Release safety, verified results, and remaining work.

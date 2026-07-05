@@ -1,6 +1,6 @@
 ---
 title: "Tổng quan workshop"
-date: 2026-05-12
+date: 2026-07-05
 weight: 1
 chapter: false
 pre: " <b> 5.1. </b> "
@@ -8,62 +8,70 @@ pre: " <b> 5.1. </b> "
 
 # Tổng quan workshop
 
-## Vấn đề
+## Vấn đề và mục tiêu
 
-Trong workshop và cuộc họp song ngữ, người tham gia có thể bỏ lỡ nội dung vì diễn giả dùng ngôn ngữ họ chưa thật sự quen, nói nhanh, hoặc chuyển đổi giữa tiếng Việt và tiếng Anh. Ghi chú thủ công chậm và không hỗ trợ theo thời gian thực.
+Rào cản ngôn ngữ và tốc độ nói nhanh khiến người tham gia khó theo dõi cuộc họp
+song ngữ. LiveCap cung cấp phụ đề gần thời gian thực mà không cần tích hợp trực
+tiếp với nền tảng họp và không lưu bản ghi microphone.
 
-LiveCap giải quyết vấn đề này bằng một công cụ caption trên trình duyệt: chuyển lời nói thành văn bản, dịch Việt-Anh, hiển thị caption trực tiếp và lưu transcript export trên AWS.
+MVP đã triển khai có thể:
 
-## Mục tiêu
+- thu âm từ trình duyệt dưới dạng PCM mono 16 kHz, 16-bit;
+- stream audio qua WebSocket bảo mật;
+- nhận dạng tiếng Việt và tiếng Anh bằng hai Transcribe stream song song;
+- chỉ dịch segment đã finalized và chỉ thêm caption finalized vào giao diện;
+- giữ caption finalized khi WebSocket reconnect có giới hạn;
+- giới hạn session 30 phút và giới hạn abuse theo process; và
+- export transcript song ngữ dạng TXT qua presigned URL của S3.
 
-- Thu âm trực tiếp từ microphone trong trình duyệt.
-- Stream audio đến backend bằng WebSocket.
-- Tạo caption gần thời gian thực với Amazon Transcribe Streaming.
-- Dịch finalized segment bằng Amazon Translate.
-- Hiển thị caption tiếng Việt ở cột trái và tiếng Anh ở cột phải.
-- Export transcript TXT lên Amazon S3 và trả về pre-signed download link.
-- Ghi operational event và lỗi tích hợp bằng CloudWatch logging.
-
-## Kiến trúc tổng quan
+## Kiến trúc đang chạy đã xác minh
 
 ```mermaid
 flowchart LR
-  Browser["Browser: React frontend"] -->|HTTPS| CloudFront["Amazon CloudFront"]
-  CloudFront --> S3Frontend["Amazon S3: static frontend"]
-  Browser -->|WSS audio stream| Nginx["Nginx trên EC2"]
-  Nginx --> FastAPI["FastAPI backend trên EC2"]
-  FastAPI --> Transcribe["Amazon Transcribe Streaming"]
-  FastAPI --> Translate["Amazon Translate"]
-  FastAPI --> S3Transcripts["Amazon S3: transcript storage"]
-  FastAPI --> CloudWatch["Amazon CloudWatch Logs"]
+  Browser["Trình duyệt"] -->|HTTPS và WSS| CF["Amazon CloudFront"]
+  CF -->|OAC origin fetch| Frontend["S3 frontend private"]
+  CF -->|/api/* và /ws/*| ALB["ALB public multi-AZ"]
+  ALB -->|HTTP 8000| Task["Một ECS Fargate task"]
+  ECR["Amazon ECR - image immutable"] -.-> Task
+  Task -->|PCM stream| Transcribe["Amazon Transcribe Streaming"]
+  Task -->|finalized text| Translate["Amazon Translate"]
+  Task -->|chỉ TXT export| Transcript["S3 transcript private"]
+  Task -.->|log| CW["Amazon CloudWatch"]
 ```
 
-## Dịch vụ AWS sử dụng
+Backend thật chạy tại `ap-southeast-1`. ALB trải trên public subnet thuộc
+`ap-southeast-1a` và `ap-southeast-1b`. ECS service duy trì một Fargate task có
+public IP trong VPC hiện hữu. ECS có thể thay task lỗi, nhưng đây không phải
+active-active; WebSocket đang chạy sẽ mất khi task bị thay thế.
 
-| Dịch vụ | Vai trò trong LiveCap | Lý do chọn |
-| --- | --- | --- |
-| Amazon EC2 | Chạy FastAPI backend và WebSocket process | Server persistent phù hợp với WebSocket audio stream dài |
-| Amazon S3 | Host frontend file và lưu TXT transcript export | Object storage bền vững, chi phí thấp |
-| Amazon CloudFront | Phân phối frontend qua HTTPS | Tăng hiệu năng và cung cấp HTTPS cho static asset |
-| Amazon Transcribe Streaming | Chuyển audio live thành văn bản | Dịch vụ speech-to-text managed, hỗ trợ real-time và diarization |
-| Amazon Translate | Dịch caption finalized giữa tiếng Việt và tiếng Anh | Dịch vụ managed, dễ tích hợp qua API |
-| Amazon CloudWatch | Lưu structured log và lỗi tích hợp | Cần cho monitoring và troubleshooting |
-| IAM | Kiểm soát quyền EC2 gọi AWS services | Tránh hard-code credential và hỗ trợ least privilege |
+## Dịch vụ và trách nhiệm
 
-## Luồng dữ liệu
+| Dịch vụ | Vai trò trong LiveCap |
+| --- | --- |
+| CloudFront | Entry point HTTPS/WSS công khai và định tuyến theo path |
+| Amazon S3 | Origin frontend private và nơi lưu transcript TXT private |
+| ALB | Health check và forward API/WebSocket đến port 8000 |
+| ECS Fargate | Chạy backend FastAPI dạng container |
+| Amazon ECR | Lưu backend image bằng tag immutable từ Git SHA |
+| Amazon Transcribe | Chuyển PCM stream thành partial/final text |
+| Amazon Translate | Dịch finalized text giữa tiếng Anh và tiếng Việt |
+| CloudWatch | Nhận application log và metric dịch vụ AWS |
+| GitHub Actions | Chạy CI kiểm tra, không tự deploy |
 
-1. Người dùng mở frontend qua CloudFront.
-2. Browser xin quyền microphone.
-3. Frontend mở kết nối WSS đến backend.
-4. Audio chunk được gửi từ browser đến FastAPI.
-5. FastAPI chuyển audio đến Amazon Transcribe Streaming.
-6. Finalized transcript segment được dịch bằng Amazon Translate.
-7. Caption được gửi về browser và hiển thị theo hai cột.
-8. Người dùng export transcript của session.
-9. Backend upload TXT output lên S3 và trả về pre-signed download URL.
-10. Log được ghi vào CloudWatch cho session event và lỗi tích hợp AWS.
+## Luồng runtime chính
 
-## Phạm vi MVP
+1. CloudFront phục vụ frontend React/Vite từ S3 private qua OAC.
+2. Người dùng bấm Start và cấp quyền microphone.
+3. Frontend mở `/ws/transcribe` qua CloudFront và ALB.
+4. FastAPI kiểm tra giới hạn session toàn hệ thống và theo IP trước khi mở AWS stream.
+5. PCM chunk chỉ được gửi khi WebSocket đang mở.
+6. Transcribe trả partial/final text; chỉ finalized segment được dịch và thêm vào transcript.
+7. Caption song ngữ trả về theo Fargate -> ALB -> CloudFront -> browser.
+8. Export ghi object TXT vào S3 private và trả URL tải có thời hạn.
 
-MVP không bao gồm xác thực người dùng, tích hợp meeting platform, nhận diện danh tính speaker, multi-room, chọn ngôn ngữ ngoài Việt-Anh, hoặc AI summarization. Các tính năng này hữu ích nhưng sẽ vượt quá phạm vi đồ án bootcamp của một học viên.
+## Hiện tại và target
 
+Repository còn có kiến trúc target đã review trong Terraform: VPC riêng hai AZ,
+task private, một NAT Gateway, WAF ở COUNT mode, wake Lambda, ECS scale
+`0 <-> 1`, CloudWatch dashboard và AWS Budget. Các phần này vẫn cần reconcile
+state, review plan và blue/green cutover trước khi được xem là đã deploy.

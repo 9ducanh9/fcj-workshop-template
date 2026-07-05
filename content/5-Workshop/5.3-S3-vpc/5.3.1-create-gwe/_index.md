@@ -1,79 +1,53 @@
 ---
-title : "Create EC2, IAM Role, and S3 Storage"
-date : 2026-05-12
-weight : 1
-chapter : false
-pre : " <b> 5.3.1. </b> "
+title: "Build and Publish the Backend Container"
+date: 2026-07-05
+weight: 1
+chapter: false
+pre: " <b> 5.3.1. </b> "
 ---
 
-# Create EC2, IAM Role, and S3 Storage
+# Build and Publish the Backend Container
 
-## Step 1: Launch an EC2 Instance
+## Step 1: Verify the Backend
 
-Create one EC2 instance for the backend.
+The FastAPI application exposes `/api/health`, REST export routes, and
+`/ws/transcribe`. Before building an image, run:
 
-Recommended MVP configuration:
-
-| Setting | Value |
-| --- | --- |
-| AMI | Amazon Linux 2023 or Ubuntu 22.04 LTS |
-| Instance type | `t3.small` or larger |
-| Storage | 8 GB gp3 minimum |
-| Inbound SSH | Port `22` from your IP only |
-| Inbound HTTPS/WSS | Port `443` from `0.0.0.0/0` |
-
-Do not expose Uvicorn directly to the internet. Uvicorn should listen on `127.0.0.1:8000`, and Nginx should be the public entry point.
-
-## Step 2: Create the Transcript S3 Bucket
-
-Create an S3 bucket for exported TXT transcript files:
-
-```bash
-aws s3 mb s3://livecap-transcripts --region us-east-1
+```powershell
+cd backend
+python -m pip install -r requirements-dev.txt
+python -m compileall app
+python -m pytest
 ```
 
-Recommended bucket settings:
+The verified submission baseline contains 204 passing backend tests.
 
-- Block all public access: enabled.
-- Server-side encryption: enabled.
-- Object prefix for transcript exports: `transcripts/`.
+## Step 2: Build for Fargate
 
-## Step 3: Create the EC2 IAM Role
+The repository Dockerfile installs pinned Python dependencies, copies the
+application, exposes port 8000, and includes a container health check. Build
+for the ECS runtime architecture and smoke-test `/api/health` locally.
 
-Create an IAM role such as `livecap-ec2-role` and attach it to the EC2 instance.
+Do not bake `.env` or AWS credentials into the image. Local execution uses an
+AWS profile; ECS injects settings and uses IAM roles at runtime.
 
-Required permissions:
+## Step 3: Push an Immutable Image
 
-| Permission area | Purpose |
-| --- | --- |
-| Amazon Transcribe Streaming | Stream microphone audio for speech-to-text |
-| Amazon Translate | Translate finalized segments between Vietnamese and English |
-| Amazon S3 | Upload transcript TXT files and generate pre-signed URLs |
-| Amazon CloudWatch Logs | Write structured backend logs |
+ECR stores the backend image. The deployment tag is derived from the Git commit
+instead of `latest`, so a task definition points to a reproducible artifact.
+The verified public demo uses image tag `1ef4250-amd64`.
 
-Use scoped inline policies where possible. For S3, the backend only needs object access under the transcript prefix:
-
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "s3:PutObject",
-        "s3:GetObject"
-      ],
-      "Resource": "arn:aws:s3:::livecap-transcripts/transcripts/*"
-    }
-  ]
-}
+```text
+source commit -> Docker image -> immutable ECR tag -> ECS task definition
 ```
 
-## Validation
+## IAM Separation
 
-- EC2 is running.
-- Security group allows SSH only from your IP.
-- Security group allows HTTPS/WSS on port `443`.
-- S3 bucket is private.
-- EC2 has the `livecap-ec2-role` attached.
+- **Task execution role:** pull from ECR and write container logs.
+- **Task role:** call Transcribe, Translate, transcript S3, CloudWatch, and the
+  optional least-privilege ECS scale-down action.
+- **Wake Lambda role:** only describe/update the selected ECS service in the
+  reviewed target.
 
+This separation prevents the application from inheriting broad deployment
+permissions.

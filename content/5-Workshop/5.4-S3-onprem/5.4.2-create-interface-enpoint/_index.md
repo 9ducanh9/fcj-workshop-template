@@ -1,47 +1,48 @@
 ---
-title : "Stream Audio to Amazon Transcribe"
-date : 2026-05-12
-weight : 2
-chapter : false
-pre : " <b> 5.4.2. </b> "
+title: "Stream Audio and Produce Live Captions"
+date: 2026-07-05
+weight: 2
+chapter: false
+pre: " <b> 5.4.2. </b> "
 ---
 
-# Stream Audio to Amazon Transcribe
+# Stream Audio and Produce Live Captions
 
-## Audio Pipeline
+## Audio and WebSocket Pipeline
 
-The browser captures microphone audio and sends PCM audio chunks to the backend over WSS. The backend forwards those chunks to Amazon Transcribe Streaming.
+```text
+Microphone
+  -> Web Audio worklet
+  -> 16 kHz, 16-bit, mono PCM chunks
+  -> CloudFront WSS /ws/transcribe
+  -> ALB
+  -> FastAPI on Fargate
+  -> Amazon Transcribe Streaming
+```
 
-Expected audio format:
+The microphone starts only after the backend is ready and the WebSocket is
+open. Chunks produced while the socket is unavailable are dropped, preventing
+unbounded client buffering.
 
-| Property | Value |
-| --- | --- |
-| Encoding | PCM |
-| Sample rate | 16 kHz |
-| Channels | Mono |
-| Bit depth | 16-bit |
+## Bilingual Processing
 
-## Backend Responsibilities
+With `BILINGUAL_DUAL_STREAM=true`, the backend fans the same PCM input into
+Vietnamese and English Transcribe streams, arbitrates results, and translates
+the selected finalized segment into the other language. Partial results may be
+shown as transient state, but only finalized segments become permanent rows.
 
-The FastAPI WebSocket handler should:
+## Connection Resilience
 
-1. Accept a new WebSocket connection.
-2. Assign a unique session ID.
-3. Start one or more Transcribe Streaming sessions.
-4. Forward binary audio frames to Transcribe.
-5. Convert partial and finalized Transcribe events into LiveCap segment messages.
-6. Map raw speaker labels such as `spk_0` to user-friendly labels such as `Speaker 1`.
-7. Send partial and finalized captions back to the browser.
-8. Log Transcribe errors through the logging service.
+- The frontend sends `ping` every 30 seconds; the backend returns `pong`.
+- An unexpected recording-time disconnect retries at most three times with
+  1, 2, and 4 second backoff.
+- A reconnect creates a new backend session while preserving finalized rows.
+- If retries fail, audio capture stops and the user must restart the session.
+- Stop, disconnect, timeout, Transcribe error, and internal exceptions all run
+  queue, worker, stream, and registry cleanup.
 
-## Validation
+## Session Guardrails
 
-Test with short Vietnamese and English phrases:
-
-- Browser shows active microphone capture.
-- Backend logs a session start event.
-- Partial captions appear while the user is speaking.
-- Finalized captions replace partial text.
-- Speaker labels are displayed consistently within one session.
-- Transcribe integration errors are surfaced to the frontend and logged.
-
+The UI and backend share a 30-minute maximum duration. The backend also rejects
+excess global/per-IP sessions before starting managed AI service work. These
+limits bound accidental Transcribe and Translate usage for the MVP.

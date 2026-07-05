@@ -1,79 +1,51 @@
 ---
-title : "Tạo EC2, IAM role và S3 storage"
-date : 2026-05-12
-weight : 1
-chapter : false
-pre : " <b> 5.3.1. </b> "
+title: "Build và publish backend container"
+date: 2026-07-05
+weight: 1
+chapter: false
+pre: " <b> 5.3.1. </b> "
 ---
 
-# Tạo EC2, IAM role và S3 storage
+# Build và publish backend container
 
-## Bước 1: Launch EC2 instance
+## Bước 1: Kiểm tra backend
 
-Tạo một EC2 instance cho backend.
+FastAPI cung cấp `/api/health`, REST route export và `/ws/transcribe`. Trước khi
+build image, chạy:
 
-Cấu hình MVP khuyến nghị:
-
-| Cấu hình | Giá trị |
-| --- | --- |
-| AMI | Amazon Linux 2023 hoặc Ubuntu 22.04 LTS |
-| Instance type | `t3.small` hoặc lớn hơn |
-| Storage | Tối thiểu 8 GB gp3 |
-| Inbound SSH | Port `22` chỉ từ IP của bạn |
-| Inbound HTTPS/WSS | Port `443` từ `0.0.0.0/0` |
-
-Không public Uvicorn trực tiếp ra internet. Uvicorn nên listen ở `127.0.0.1:8000`, còn Nginx là public entry point.
-
-## Bước 2: Tạo S3 bucket lưu transcript
-
-Tạo S3 bucket để lưu file TXT transcript export:
-
-```bash
-aws s3 mb s3://livecap-transcripts --region us-east-1
+```powershell
+cd backend
+python -m pip install -r requirements-dev.txt
+python -m compileall app
+python -m pytest
 ```
 
-Cấu hình bucket khuyến nghị:
+Baseline đồ án đã xác minh có 204 backend test pass.
 
-- Block all public access: bật.
-- Server-side encryption: bật.
-- Object prefix cho transcript export: `transcripts/`.
+## Bước 2: Build cho Fargate
 
-## Bước 3: Tạo IAM role cho EC2
+Dockerfile cài dependency Python đã pin version, copy application, expose port
+8000 và có container health check. Image được build theo kiến trúc runtime của
+ECS và smoke test `/api/health` trước khi publish.
 
-Tạo IAM role như `livecap-ec2-role` và gắn vào EC2 instance.
+Không đưa `.env` hoặc AWS credential vào image. Local dùng AWS profile; ECS
+inject setting và dùng IAM role khi chạy.
 
-Các quyền cần có:
+## Bước 3: Push image immutable
 
-| Nhóm quyền | Mục đích |
-| --- | --- |
-| Amazon Transcribe Streaming | Stream microphone audio để speech-to-text |
-| Amazon Translate | Dịch finalized segment giữa tiếng Việt và tiếng Anh |
-| Amazon S3 | Upload TXT transcript và tạo pre-signed URL |
-| Amazon CloudWatch Logs | Ghi structured backend logs |
+ECR lưu backend image. Deployment tag được tạo từ Git commit thay vì `latest`,
+nhờ đó task definition luôn trỏ đến artifact có thể truy vết. Demo công khai đã
+xác minh dùng tag `1ef4250-amd64`.
 
-Nên dùng scoped inline policy nếu có thể. Với S3, backend chỉ cần object access dưới transcript prefix:
-
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "s3:PutObject",
-        "s3:GetObject"
-      ],
-      "Resource": "arn:aws:s3:::livecap-transcripts/transcripts/*"
-    }
-  ]
-}
+```text
+source commit -> Docker image -> ECR tag immutable -> ECS task definition
 ```
 
-## Kiểm tra
+## Tách IAM role
 
-- EC2 đang chạy.
-- Security group chỉ cho SSH từ IP của bạn.
-- Security group cho HTTPS/WSS ở port `443`.
-- S3 bucket private.
-- EC2 đã gắn `livecap-ec2-role`.
+- **Task execution role:** pull image từ ECR và ghi container log.
+- **Task role:** gọi Transcribe, Translate, transcript S3, CloudWatch và action
+  ECS scale-down tối thiểu nếu bật.
+- **Wake Lambda role:** chỉ describe/update ECS service được chọn trong target.
 
+Cách tách này ngăn application kế thừa quyền deployment quá rộng.

@@ -1,46 +1,49 @@
 ---
-title : "Validate the End-to-End Workflow"
-date : 2026-05-12
-weight : 4
-chapter : false
-pre : " <b> 5.4.4. </b> "
+title: "Verify the End-to-End Workflow"
+date: 2026-07-05
+weight: 4
+chapter: false
+pre: " <b> 5.4.4. </b> "
 ---
 
-# Validate the End-to-End Workflow
+# Verify the End-to-End Workflow
 
-## End-to-End Test Path
+## Reviewer Walkthrough
 
-Use this workflow after EC2, Nginx, CloudFront, S3, and environment variables are configured:
+1. Open the CloudFront landing page and `/api/health`.
+2. Enter `/app`, select **Start**, and allow microphone access.
+3. Confirm the UI reaches Recording and the WebSocket session starts.
+4. Speak a short English or Vietnamese sentence.
+5. Confirm one finalized bilingual row appears in both columns.
+6. Verify heartbeat keeps the socket healthy and **Stop** ends cleanly.
+7. Select **Export TXT** and open the temporary download link.
 
-```text
-Open frontend -> allow microphone -> start capture -> speak Vietnamese/English
--> receive live captions -> stop capture -> export transcript
--> upload TXT to S3 -> download with pre-signed URL
-```
+## Automated Gates
 
-## Test Cases
-
-| Test case | Expected result |
+| Area | Gate |
 | --- | --- |
-| Health check | `GET /api/health` returns success |
-| Microphone denied | Frontend shows microphone permission error |
-| WebSocket connection | Browser connects to `wss://.../ws/transcribe` |
-| Vietnamese speech | Vietnamese and English columns are populated |
-| English speech | English source and Vietnamese translation are populated |
-| Speaker label | Captions include `Speaker 1`, `Speaker 2`, etc. |
-| Export transcript | S3 stores TXT output and returns a pre-signed URL |
-| Transcribe failure | Frontend receives an error and CloudWatch records the failure |
-| S3 upload failure | Backend returns an export error and logs the affected service |
+| Backend | `python -m compileall app` and 204 tests |
+| Frontend | 11 tests and production build |
+| Terraform | format, `init -backend=false`, and validate |
+| Secrets | Gitleaks full-history scan |
+| Container | health check and local smoke test |
+| Dependencies | production npm audit and ECR scan review |
 
-## Evidence to Capture
+GitHub Actions runs Backend, Frontend, Terraform, and Secret scan jobs on pull
+requests and main pushes. It does not deploy, apply Terraform, or migrate state.
 
-For the final report, capture screenshots of:
+## Verified Production Evidence
 
-- CloudFront distribution status.
-- S3 frontend bucket and transcript bucket.
-- EC2 instance running.
-- `systemctl status livecap`.
-- Browser showing bilingual captions.
-- S3 object created after export.
-- CloudWatch log stream with session events.
+On 2026-07-04, the production path passed CloudFront `/`, `/app`, health,
+WebSocket start, ping/pong, real 16 kHz PCM transcription,
+English-to-Vietnamese translation, clean stop, S3 export, and presigned TXT
+download. A browser UI test with a controlled microphone WAV appended three
+finalized bilingual rows and stopped cleanly.
 
+## Expected Failure Cases
+
+- Denied microphone permission produces a user-visible error.
+- Session-limit rejection returns `TOO_MANY_SESSIONS` before AWS streaming work.
+- Unexpected disconnect retries only three times, then stops capture.
+- Timeout automatically ends the session at 30 minutes.
+- Unhealthy ECS targets receive no ALB traffic until health checks pass.

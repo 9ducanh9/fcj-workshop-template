@@ -1,63 +1,49 @@
 ---
-title : "Build và deploy frontend"
-date : 2026-05-12
-weight : 1
-chapter : false
-pre : " <b> 5.4.1. </b> "
+title: "Build và phân phối React frontend"
+date: 2026-07-05
+weight: 1
+chapter: false
+pre: " <b> 5.4.1. </b> "
 ---
 
-# Build và deploy frontend
+# Build và phân phối React frontend
 
-## Bước 1: Build React app
+## Bước 1: Test và build
 
-Từ thư mục frontend:
-
-```bash
-cd livecap/frontend
-npm install
-
-VITE_WS_URL=wss://your-ec2-domain/ws/transcribe \
-VITE_API_BASE_URL=https://your-ec2-domain \
+```powershell
+cd frontend
+npm ci
+npm test
 npm run build
 ```
 
-Output được tạo trong `frontend/dist/`.
+Build chạy TypeScript checking và tạo output Vite `dist`. Baseline đã xác minh
+có 11 frontend test pass và không có production npm vulnerability đã biết tại
+thời điểm release.
 
-## Bước 2: Tạo S3 bucket cho frontend
+## Bước 2: Lưu static asset ở S3 private
 
-```bash
-aws s3 mb s3://livecap-frontend --region us-east-1
-```
+Frontend bucket chặn public access, bật encryption và versioning. Browser truy
+cập qua CloudFront Origin Access Control thay vì S3 website endpoint hoặc
+bucket policy public.
 
-Giữ public access ở trạng thái blocked. CloudFront nên truy cập bucket qua Origin Access Control.
+## Bước 3: Cấu hình route CloudFront
 
-## Bước 3: Upload static build
+| Path | Origin |
+| --- | --- |
+| `/` và static asset | S3 frontend private |
+| `/api/*` | Application Load Balancer |
+| `/ws/*` | ALB với WebSocket upgrade |
+| `/api/wake` | Lambda origin có IAM trong target đã review |
 
-Upload asset dài hạn với immutable cache headers:
+CloudFront terminate HTTPS/WSS phía viewer. Kết nối CloudFront-to-ALB hiện dùng
+HTTP; đây là security gap còn lại, cần ACM/custom origin domain trong bước sau.
 
-```bash
-aws s3 sync frontend/dist/ s3://livecap-frontend/ \
-  --delete \
-  --cache-control "max-age=31536000,immutable" \
-  --exclude "index.html"
-```
+## Bước 4: Tách runtime configuration
 
-Upload `index.html` riêng với no-cache:
+Local dùng `frontend/.env`. Giá trị production được inject lúc build thay vì
+hard-code trong component. Nếu không cấu hình wake URL, frontend bỏ qua wake
+flow tùy chọn và kết nối theo luồng bình thường.
 
-```bash
-aws s3 cp frontend/dist/index.html s3://livecap-frontend/index.html \
-  --cache-control "no-cache,no-store,must-revalidate"
-```
-
-## Bước 4: Tạo CloudFront distribution
-
-Cấu hình khuyến nghị:
-
-- Origin: frontend S3 bucket.
-- Origin access: Origin Access Control.
-- Viewer protocol policy: Redirect HTTP to HTTPS.
-- Default root object: `index.html`.
-- Custom error response: `403` đến `/index.html` với response code `200` cho client-side routing.
-
-Sau khi distribution chuyển sang `Deployed`, ghi lại CloudFront domain và set backend `ALLOWED_ORIGIN` bằng URL đó.
-
+Landing page và dashboard `/app` đã được xác minh trên desktop và viewport
+mobile rộng 390 px.

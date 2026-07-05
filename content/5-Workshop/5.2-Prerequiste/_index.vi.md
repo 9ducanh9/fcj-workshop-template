@@ -1,6 +1,6 @@
 ---
 title: "Điều kiện tiên quyết"
-date: 2026-05-12
+date: 2026-07-05
 weight: 2
 chapter: false
 pre: " <b> 5.2. </b> "
@@ -8,62 +8,64 @@ pre: " <b> 5.2. </b> "
 
 # Điều kiện tiên quyết
 
-## Công cụ cần có
+## Bộ công cụ local
 
-| Công cụ | Phiên bản khuyến nghị | Mục đích |
+| Công cụ | Phiên bản tham chiếu | Mục đích |
 | --- | --- | --- |
-| Python | 3.11 trở lên | Chạy FastAPI backend |
-| Node.js | 18 LTS trở lên | Build React + Vite frontend |
-| npm | 9 trở lên | Cài frontend dependencies |
-| AWS CLI | v2 | Tạo và kiểm tra AWS resources |
-| Git | Bản ổn định mới | Clone và cập nhật source code |
-| Nginx | Theo package của OS | Reverse proxy và forward WSS trên EC2 |
+| Python | 3.11+ | Backend FastAPI và test |
+| Node.js | 20 | Build React/Vite và chạy Vitest |
+| Docker | Bản stable hiện tại | Build và smoke test backend image |
+| AWS CLI | v2 | Đọc/vận hành đúng AWS account và region |
+| Terraform | 1.10.5 | Format và validate hạ tầng |
+| Git và Gitleaks | Bản stable hiện tại | Quản lý source và quét secret |
 
-## Yêu cầu tài khoản AWS
+Các tài nguyên regional của LiveCap dùng `ap-southeast-1`. CloudFront là dịch
+vụ global; WAF scope CloudFront chỉ được Terraform quản lý qua `us-east-1` vì
+đây là yêu cầu của AWS đối với global Web ACL.
 
-Tài khoản AWS cần quyền sử dụng:
+## Mô hình truy cập AWS
 
-- Amazon EC2
-- Amazon S3
-- Amazon CloudFront
-- AWS IAM
-- Amazon Transcribe Streaming
-- Amazon Translate
-- Amazon CloudWatch Logs
+Môi trường local dùng AWS profile. Fargate task dùng ECS task role; credential
+không được chép vào `.env`, Docker image hoặc Git. Quyền runtime chỉ cấp cho
+Transcribe, Translate, transcript S3, CloudWatch và action ECS idle-scaling tùy chọn.
 
-Dùng nhất quán một AWS Region cho các tích hợp backend. Cấu hình tham chiếu của LiveCap dùng `us-east-1` cho Transcribe, Translate, S3 và CloudWatch.
+## Cấu hình backend
 
-## Biến môi trường backend
+Copy `backend/.env.example` thành file `.env` local đã được ignore:
 
-Copy `backend/.env.example` thành `backend/.env` và cấu hình các giá trị:
-
-| Biến | Ví dụ | Mục đích |
+| Biến | Giá trị tham chiếu | Trách nhiệm |
 | --- | --- | --- |
-| `AWS_REGION` | `us-east-1` | Region cho AWS service call |
-| `S3_BUCKET` | `livecap-transcripts` | Bucket lưu TXT transcript export |
-| `DOWNLOAD_LINK_EXPIRATION` | `86400` | Thời hạn pre-signed URL theo giây |
-| `SESSION_TIMEOUT` | `1800` | Thời lượng tối đa của streaming session |
-| `MAX_SPEAKERS` | `5` | Giới hạn speaker diarization |
-| `TRANSCRIBE_LANGUAGE_CODE` | `vi-VN` | Ngôn ngữ fallback cho Transcribe |
-| `BILINGUAL_DUAL_STREAM` | `true` | Bật chế độ song ngữ Việt-Anh |
-| `ALLOWED_ORIGIN` | CloudFront URL | Frontend origin được CORS cho phép |
-| `CLOUDWATCH_LOG_GROUP` | `livecap` | Log group cho structured backend logs |
+| `AWS_REGION` | `ap-southeast-1` | Region cho Transcribe, Translate và S3 |
+| `S3_BUCKET` | theo môi trường | Bucket private để export transcript |
+| `SESSION_TIMEOUT` | `1800` | Thời lượng session tối đa theo giây |
+| `MAX_CONCURRENT_SESSIONS` | `4` | Giới hạn session active toàn process |
+| `MAX_SESSIONS_PER_IP` | `1` | Giới hạn session active trên mỗi IP |
+| `BILINGUAL_DUAL_STREAM` | `true` | Chạy stream tiếng Việt và Anh song song |
+| `ALLOWED_ORIGIN` | frontend origin | CORS allowlist |
+| `CLOUDWATCH_LOG_GROUP` | `livecap` | Đích structured logging |
 
-Không lưu `AWS_ACCESS_KEY_ID` hoặc `AWS_SECRET_ACCESS_KEY` trong `.env` trên EC2. Hãy dùng IAM role gắn với EC2.
+Idle scaling mặc định an toàn với `ENABLE_IDLE_SCALE_DOWN=false`.
+`ECS_CLUSTER_NAME` và `ECS_SERVICE_NAME` có thể để trống khi chạy local. Biến
+`MAX_SPEAKERS` cũ đã bị loại khỏi cấu hình active.
 
-## Biến môi trường frontend
+## Cấu hình frontend
 
-Set các giá trị này trước khi build frontend:
-
-| Biến | Ví dụ | Mục đích |
+| Biến | Giá trị local | Trách nhiệm |
 | --- | --- | --- |
-| `VITE_WS_URL` | `wss://your-ec2-domain/ws/transcribe` | Secure WebSocket endpoint |
-| `VITE_API_BASE_URL` | `https://your-ec2-domain` | REST API base URL |
+| `VITE_API_BASE_URL` | `http://127.0.0.1:8000` | REST API base URL |
+| `VITE_WS_URL` | `ws://127.0.0.1:8000/ws/transcribe` | WebSocket endpoint |
+| `VITE_WAKE_BACKEND_URL` | để trống | Wake path tùy chọn của target |
+| `VITE_BACKEND_HEALTH_URL` | local `/api/health` | Poll trạng thái backend |
+| `VITE_BACKEND_WAKE_TIMEOUT_SECONDS` | `120` | Thời gian chờ startup tối đa |
+| `VITE_MAX_SESSION_SECONDS` | `1800` | Countdown session trên UI |
 
-## Giả định triển khai
+Microphone chỉ bắt đầu sau khi backend ready. Audio sinh ra lúc socket chưa mở
+sẽ bị drop thay vì buffer không giới hạn.
 
-- Backend chạy trên một EC2 instance trong MVP.
-- Frontend được host dạng static files trên S3 và phân phối qua CloudFront.
-- Production cần TLS vì microphone trên browser và WSS yêu cầu secure context.
-- Người dùng có quyền xử lý audio được dùng khi kiểm thử.
+## Điều kiện an toàn
 
+- Không commit `.env`, `terraform.tfvars`, backend config, state hoặc plan thật.
+- Chạy Gitleaks trước khi publish thay đổi.
+- CI dùng `terraform init -backend=false` và không tự apply hạ tầng.
+- Import/reconcile tài nguyên AWS hiện hữu và review plan trước mọi apply.
+- Chỉ xử lý audio khi người vận hành có quyền sử dụng nội dung đó.
