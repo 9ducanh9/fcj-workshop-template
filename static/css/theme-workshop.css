@@ -226,3 +226,9 @@ div.notices.info p {
   border-top: 30px solid #fd9827;
   background: #fff2db;
 }
+
+/* Center standalone italic captions placed directly below event images. */
+#body-inner p > em:only-child {
+  display: block;
+  text-align: center;
+}

@@ -8,7 +8,7 @@ pre: " <b> 4. </b> "
 
 # Sự kiện đã tham gia
 
-Phần này ghi lại các sự kiện học tập và hoạt động cộng đồng FCAJ đã hỗ trợ quá trình học AWS Bootcamp của tôi. Mỗi sự kiện giúp tôi kết nối kiến thức cloud với việc lập kế hoạch dự án, thiết kế kiến trúc, ứng dụng AI và kỹ năng trình bày chuyên nghiệp.
+Phần này ghi lại các sự kiện học tập và hoạt động cộng đồng FCAJ đã hỗ trợ quá trình học AWS Bootcamp của em. Mỗi sự kiện giúp em kết nối kiến thức cloud với việc lập kế hoạch dự án, thiết kế kiến trúc, ứng dụng AI và kỹ năng trình bày chuyên nghiệp.
 
 | Sự kiện | Vai trò | Đóng góp chính |
 | --- | --- | --- |
@@ -20,5 +20,5 @@ Phần này ghi lại các sự kiện học tập và hoạt động cộng đ�
 ## Các sự kiện hỗ trợ đồ án như thế nào
 
 - Cải thiện khả năng giải thích kiến trúc AWS một cách rõ ràng.
-- Giúp tôi tinh chỉnh ý tưởng từ trợ lý AI thời gian thực quá rộng thành hệ thống phản tư sau hội thoại thực tế hơn.
+- Giúp em tinh chỉnh ý tưởng từ trợ lý AI thời gian thực quá rộng thành hệ thống phản tư sau hội thoại thực tế hơn.
 - Tăng nhận thức về bảo mật, giám sát, kiểm soát chi phí và cleanup trong một dự án AWS ở mức bootcamp.
