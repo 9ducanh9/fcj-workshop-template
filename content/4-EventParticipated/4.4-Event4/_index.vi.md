@@ -23,6 +23,10 @@ Bốn phần chia sẻ đề cập đến thị trường cloud và career visib
 
 ## Chủ đề 1 – Nguyễn Gia Hưng: Thị trường cloud, khoảng cách kỹ năng và career visibility
 
+![Nguyễn Gia Hưng chia sẻ về thị trường việc làm và xu hướng nghề nghiệp](/images/4-EventParticipated/Event4/nguyen-gia-hung.png)
+
+*Nguyễn Gia Hưng chia sẻ về thị trường việc làm, xu hướng nghề nghiệp và định hướng phát triển năng lực trong lĩnh vực cloud.*
+
 Anh Nguyễn Gia Hưng chia sẻ rằng **cloud-first đang dần trở thành định hướng mặc định của doanh nghiệp hiện đại**. Cloud Computing không còn chỉ là một xu hướng kỹ thuật, mà là chiến lược dài hạn liên quan đến hạ tầng và hoạt động kinh doanh. Theo phần trình bày, AWS không vào Việt Nam chỉ để bán giấy phép rồi rời đi. Chiến lược đầu tư có thể nhìn qua ba trụ cột: nhân lực địa phương, hạ tầng và thế hệ nhân tài tương lai.
 
 Phần lớn nhân sự Amazon/AWS tại Việt Nam là người Việt, cho thấy sự đầu tư vào năng lực bản địa. Các hạng mục như CDN, caching, Local Zone và nền tảng độ trễ thấp thể hiện cam kết hạ tầng dài hạn. Trụ cột còn lại là phát triển thế hệ builder tiếp theo: thị trường cần người có thể xây dựng hệ thống chứ không chỉ nắm lý thuyết.
@@ -39,6 +43,10 @@ Từ phần này, tôi nhận ra học dịch vụ AWS là chưa đủ. Tôi ph�
 
 ## Chủ đề 2 – Bình Cẩm Vĩnh: Khoảng cách thực tế trong Data Architecture
 
+![Bình Cẩm Vĩnh chia sẻ về nền tảng cần thiết cho Data Architecture](/images/4-EventParticipated/Event4/binh-cam-vinh.png)
+
+*Bình Cẩm Vĩnh trình bày các nền tảng kỹ thuật và tư duy hệ thống cần thiết khi phát triển trong lĩnh vực dữ liệu.*
+
 Anh Bình Cẩm Vĩnh phân tích sự khác biệt giữa bài tập ở trường và hệ thống dữ liệu doanh nghiệp. Ở trường, dữ liệu thường sạch, nhỏ và yêu cầu rõ; làm sai thường chỉ mất điểm. Trong doanh nghiệp, dữ liệu đến từ nhiều nguồn, thay đổi liên tục và có định nghĩa khác nhau giữa các bộ phận. Yêu cầu có thể đổi nhanh, còn sai sót có thể làm gián đoạn production, ảnh hưởng doanh thu và niềm tin.
 
 Thông điệp “**One framework for every platform**” cho thấy sinh viên không nên chỉ học thuộc công cụ. Điều quan trọng là hiểu “DNA” kiến trúc. Với Data Engineering, khung cốt lõi có thể gồm thu thập, xử lý, lưu trữ, quản trị và phân phối dữ liệu. Khi hiểu luồng này, mỗi công cụ hoặc dịch vụ cloud mới được đặt đúng vai trò.
@@ -51,6 +59,10 @@ Với LiveCap, tôi cần mô tả rõ transcript bắt đầu từ đâu, dữ 
 
 ## Chủ đề 3 – Như Trần: Vượt qua nỗi sợ, giao tiếp và chiến lược Blue Ocean
 
+![Như Trần tại sự kiện Enterprise Cloud Architectures and Industry Applications](/images/4-EventParticipated/Event4/nhu-tran.png)
+
+*Như Trần giao lưu cùng người tham dự tại sự kiện Enterprise Cloud Architectures and Industry Applications.*
+
 Chị Như Trần phân tích rằng chúng ta thường sợ hậu quả của lỗi sai như điểm thấp, bị đánh giá hoặc làm gia đình thất vọng. Nỗi sợ nói trước đám đông cũng đến từ việc sợ bị phán xét. Một cách cải thiện là giao tiếp cởi mở và xem việc trình bày như một dạng thực tập, giảm sợ hãi qua trải nghiệm lặp lại.
 
 Hiểu lầm thường đến từ góc nhìn khác nhau: kỹ thuật tập trung tạo giá trị, còn sales tập trung truyền đạt giá trị. Giao tiếp tốt đòi hỏi hiểu ý định phía sau yêu cầu. Small talk cũng giúp giảm khoảng cách với quản lý và tạo visibility về thái độ, giao tiếp, độ tin cậy mà không phải khoe bản thân.
@@ -62,6 +74,10 @@ Tôi nhận ra giao tiếp không phải “kỹ năng mềm” tách rời chuy
 LiveCap liên hệ trực tiếp với bài học này vì dự án giải quyết một vấn đề giao tiếp: giúp người dùng theo dõi workshop, cuộc họp và thảo luận song ngữ rõ ràng hơn. Tôi cần trình bày dự án từ nỗi đau và giá trị người dùng nhận được, không chỉ từ danh sách dịch vụ kỹ thuật.
 
 ## Chủ đề 4 – Khang Nguyễn: Tư duy AI và hướng đi dài hạn cho fresher
+
+![Khang Nguyễn chia sẻ về kỹ năng và tư duy cho fresher trong kỷ nguyên AI](/images/4-EventParticipated/Event4/khang-nguyen.png)
+
+*Khang Nguyễn trình bày chủ đề AI-Ready Freshers và cách xây dựng nền tảng trong bối cảnh AI phát triển nhanh.*
 
 Anh Khang Nguyễn đưa ra nguyên tắc: **“You can outsource thinking, but you cannot outsource understanding.”** AI có thể tăng tốc công việc nhưng không thể thay thế sự hiểu biết của người dùng. AI là một bộ khuếch đại: nền tảng tốt giúp làm nhanh hơn; nền tảng yếu có thể khiến người dùng chấp nhận kết quả sai mà không nhận ra. Sinh viên vẫn cần kiến thức vững về lập trình, system design, cloud, data và nghiệp vụ.
 

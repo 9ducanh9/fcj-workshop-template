@@ -23,6 +23,10 @@ The most valuable outcome was not a list of isolated ideas. It was a set of stan
 
 ## Topic 1 – Nguyen Gia Hung: Cloud market, skill gaps, and career visibility
 
+![Nguyen Gia Hung speaking about the job market and career trends](/images/4-EventParticipated/Event4/nguyen-gia-hung.png)
+
+*Nguyen Gia Hung discusses the job market, career trends, and capability development in cloud computing.*
+
 Nguyen Gia Hung explained that **cloud-first is becoming a default direction for modern enterprises**. Cloud Computing is therefore not only a technical trend but a long-term infrastructure and business strategy. AWS's investment in Vietnam can be viewed through three pillars: local talent, infrastructure, and the next generation of builders.
 
 The fact that most Amazon/AWS employees in Vietnam are Vietnamese demonstrates investment in local capability. Infrastructure such as CDN, caching, Local Zones, and low-latency platforms also reflects a long-term commitment. The third pillar matters directly to students: the market needs people who can build systems, not only remember theory.
@@ -39,6 +43,10 @@ My lesson is that learning AWS services is not enough. I need to prove that I ca
 
 ## Topic 2 – Binh Cam Vinh: The practical gap in Data Architecture
 
+![Binh Cam Vinh speaking about the foundations required for Data Architecture](/images/4-EventParticipated/Event4/binh-cam-vinh.png)
+
+*Binh Cam Vinh presents the technical foundations and system thinking required for a career in data.*
+
 Binh Cam Vinh contrasted classroom data projects with enterprise systems. At school, data is usually clean, small, and paired with clear requirements; mistakes mainly affect grades. In a company, data arrives from multiple sources, changes continuously, and may be defined differently by different departments. Requirements can change quickly, while an error may interrupt production, affect revenue, and damage trust.
 
 The principle **“One framework for every platform”** means that students should not memorize tools in isolation. They need to understand the architecture or “DNA” of the field. In Data Engineering, the core framework may include collection, processing, storage, governance, and delivery. Once this flow is clear, tools and cloud services can be placed in the correct roles.
@@ -51,6 +59,10 @@ For LiveCap, I need to explain where transcript data originates, how transcripti
 
 ## Topic 3 – Nhu Tran: Overcoming fear, communication, and Blue Ocean strategy
 
+![Nhu Tran at the Enterprise Cloud Architectures and Industry Applications event](/images/4-EventParticipated/Event4/nhu-tran.png)
+
+*Nhu Tran engages with attendees at the Enterprise Cloud Architectures and Industry Applications event.*
+
 Nhu Tran explained that people often fear the consequences of mistakes—poor grades, judgment, or disappointing their families—more than the mistakes themselves. Fear of public speaking can similarly come from fear of evaluation. Open communication and repeated presentation practice can reduce that fear through real exposure.
 
 Miscommunication often comes from different perspectives. A technical person may focus on creating value, while a salesperson focuses on communicating that value to customers. Effective communication requires understanding the intention behind a request. Small talk can also reduce distance from managers and create visibility around a person's attitude, communication, and reliability without becoming self-promotion.
@@ -62,6 +74,10 @@ I learned that communication is not a soft skill separated from technical work. 
 LiveCap connects directly to this lesson because it addresses a communication problem: helping users follow workshops, meetings, and bilingual discussions more clearly. I need to present the project through user pain and value, not only through a list of AWS services.
 
 ## Topic 4 – Khang Nguyen: AI mindset and long-term direction for freshers
+
+![Khang Nguyen speaking about skills and mindset for freshers in the AI era](/images/4-EventParticipated/Event4/khang-nguyen.png)
+
+*Khang Nguyen presents AI-Ready Freshers and the foundations students need in a fast-changing AI era.*
 
 Khang Nguyen shared the principle: **“You can outsource thinking, but you cannot outsource understanding.”** AI can accelerate work, but it cannot replace the user's understanding. It acts as an amplifier: strong foundations help a person work faster, while weak foundations can make incorrect output difficult to detect. Students must continue building skills in programming, system design, cloud, data, and business.
 
