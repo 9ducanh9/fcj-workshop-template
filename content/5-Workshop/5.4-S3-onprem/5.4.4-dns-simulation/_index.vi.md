@@ -32,6 +32,8 @@ pre: " <b> 5.4.4. </b> "
 GitHub Actions chạy Backend, Frontend, Terraform và Secret scan trên pull
 request và push vào main. CI không deploy, apply Terraform hoặc migrate state.
 
+![Các verification job đã pass trên GitHub Actions](/images/3-Project/github-actions-ci.png)
+
 ## Bằng chứng production đã xác minh
 
 Ngày 2026-07-04, luồng production đã pass CloudFront `/`, `/app`, health,

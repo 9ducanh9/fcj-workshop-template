@@ -77,3 +77,5 @@ The repository also contains a reviewed Terraform target with a dedicated
 two-AZ VPC, private tasks, one NAT Gateway, WAF in COUNT mode, a wake Lambda,
 ECS `0 <-> 1` scaling, a CloudWatch dashboard, and an AWS Budget. Those changes
 still require state reconciliation, plan review, and blue/green cutover.
+
+![Reviewed target architecture used for the implementation plan](/images/3-Project/livecap-target-architecture.png)

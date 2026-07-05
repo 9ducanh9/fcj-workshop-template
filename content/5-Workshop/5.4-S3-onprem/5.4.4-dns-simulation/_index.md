@@ -32,6 +32,8 @@ pre: " <b> 5.4.4. </b> "
 GitHub Actions runs Backend, Frontend, Terraform, and Secret scan jobs on pull
 requests and main pushes. It does not deploy, apply Terraform, or migrate state.
 
+![Successful verification jobs on GitHub Actions](/images/3-Project/github-actions-ci.png)
+
 ## Verified Production Evidence
 
 On 2026-07-04, the production path passed CloudFront `/`, `/app`, health,

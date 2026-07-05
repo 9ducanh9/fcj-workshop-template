@@ -46,3 +46,5 @@ hoặc Redis trước.
 
 Task private và wake/idle `0 <-> 1` là thay đổi target, không phải mô tả môi
 trường public hiện tại.
+
+![Network và service placement trong target đã review](/images/3-Project/livecap-target-architecture.png)

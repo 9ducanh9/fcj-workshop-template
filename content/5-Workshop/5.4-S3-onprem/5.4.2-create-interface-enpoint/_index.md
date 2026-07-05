@@ -46,3 +46,5 @@ shown as transient state, but only finalized segments become permanent rows.
 The UI and backend share a 30-minute maximum duration. The backend also rejects
 excess global/per-IP sessions before starting managed AI service work. These
 limits bound accidental Transcribe and Translate usage for the MVP.
+
+![Step result: finalized captions returned to the live dashboard](/images/3-Project/livecap-dashboard.png)

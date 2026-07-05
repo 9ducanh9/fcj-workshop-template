@@ -75,3 +75,5 @@ Repository còn có kiến trúc target đã review trong Terraform: VPC riêng 
 task private, một NAT Gateway, WAF ở COUNT mode, wake Lambda, ECS scale
 `0 <-> 1`, CloudWatch dashboard và AWS Budget. Các phần này vẫn cần reconcile
 state, review plan và blue/green cutover trước khi được xem là đã deploy.
+
+![Kiến trúc target dùng trong kế hoạch triển khai](/images/3-Project/livecap-target-architecture.png)

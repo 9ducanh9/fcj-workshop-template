@@ -1,17 +1,24 @@
 ---
-title: "Bài viết kỹ thuật"
-date: 2026-05-12
+title: "Dự án đã triển khai"
+date: 2026-07-05
 weight: 3
 chapter: false
 pre: " <b> 3. </b> "
 ---
 
-# Bài viết kỹ thuật
+# Dự án đã triển khai
 
-Phần này gồm ba bài viết kỹ thuật liên quan đến quá trình học AWS và đồ án cuối khóa.
+## LiveCap chạy công khai trên AWS
 
-| Bài viết | Chủ đề | Liên hệ với đồ án |
-| --- | --- | --- |
-| Blog 1 | Sắp xếp ưu tiên kiến trúc với Tech Roadmap Prioritization (TRP) | Tư duy kiến trúc và framework ưu tiên hóa |
-| Blog 2 | Thiết kế workflow AI serverless bằng AWS Step Functions | Giải thích kiến trúc backend |
-| Blog 3 | Bảo mật, quyền riêng tư và chi phí cho dữ liệu hội thoại AI | Giải thích thiết kế AI workload có trách nhiệm |
+LiveCap đã được triển khai thành công thành một ứng dụng web công khai trên AWS.
+
+- **Ứng dụng:** [https://dpeohr327wt9l.cloudfront.net](https://dpeohr327wt9l.cloudfront.net)
+- **Caption dashboard:** [https://dpeohr327wt9l.cloudfront.net/app](https://dpeohr327wt9l.cloudfront.net/app)
+- **Health endpoint:** [https://dpeohr327wt9l.cloudfront.net/api/health](https://dpeohr327wt9l.cloudfront.net/api/health)
+- **Source repository:** [https://github.com/9ducanh9/livecap](https://github.com/9ducanh9/livecap)
+
+Luồng production đã được xác minh từ browser qua CloudFront, ALB, ECS Fargate,
+Amazon Transcribe, Amazon Translate và export transcript vào S3 private. Các
+trang sau mô tả sản phẩm, kiến trúc AWS đang deploy và bằng chứng verification.
+
+![Landing page LiveCap](/images/3-Project/livecap-landing.png)

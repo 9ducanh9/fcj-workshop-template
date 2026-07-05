@@ -1,47 +1,50 @@
 ---
-title: "Blog 3: Bảo mật, quyền riêng tư và chi phí cho dữ liệu hội thoại AI"
-date: 2026-05-12
+title: "Bằng chứng xác minh production"
+date: 2026-07-05
 weight: 3
 chapter: false
 pre: " <b> 3.3. </b> "
 ---
 
-# Blog 3: Bảo mật, quyền riêng tư và chi phí cho dữ liệu hội thoại AI
+# Bằng chứng xác minh production
 
-## Vì sao quan trọng
+## Quality gate tự động
 
-Dữ liệu hội thoại có thể chứa quan điểm cá nhân, tên người, kế hoạch, thông tin kinh doanh hoặc phản hồi nhạy cảm. Một hệ thống AI coach giao tiếp cần được thiết kế cẩn thận ngay cả khi chỉ là dự án bootcamp.
+GitHub Actions trên main đã hoàn tất thành công với bốn job độc lập:
 
-## Ranh giới quyền riêng tư
+- Secret scan bằng Gitleaks;
+- compile backend và 204 pytest test;
+- frontend test và production build; và
+- Terraform format, init không dùng backend thật và validate.
 
-Hệ thống nên tuân theo các nguyên tắc:
+![GitHub Actions LiveCap đã chạy thành công](/images/3-Project/github-actions-ci.png)
 
-- Chỉ upload hội thoại mà người dùng có quyền xử lý.
-- Giữ S3 bucket ở trạng thái private.
-- Dùng pre-signed URL thay vì public upload.
-- Xóa audio và report test sau demo.
-- Không dùng hội thoại bí mật thật trong quá trình test.
+CI chỉ làm nhiệm vụ validation. CI không deploy, chạy `terraform apply`, destroy
+tài nguyên hoặc migrate state.
 
-## Ranh giới bảo mật
+## Production smoke test
 
-IAM policy nên theo nguyên tắc least privilege:
+Baseline production đã được xác minh ngày 2026-07-04:
 
-- Lambda chỉ được ghi vào các S3 prefix cần thiết.
-- Step Functions chỉ được invoke các Lambda cần thiết.
-- Quyền Bedrock nên giới hạn theo model đã chọn nếu có thể.
-- DynamoDB access chỉ giới hạn ở table của dự án.
-- CloudWatch access dùng cho log, không cấp quyền quản trị rộng.
+1. CloudFront `/` và `/app` trả response thành công.
+2. `/api/health` trả trạng thái healthy.
+3. WebSocket session start và ping/pong pass.
+4. PCM 16 kHz thật tạo finalized English text.
+5. Amazon Translate trả Vietnamese text.
+6. Session stop cleanup worker và registry state.
+7. Export lưu TXT trong S3 private và trả presigned link hoạt động.
+8. Layout desktop và mobile 390 px đã được kiểm tra.
 
-## Ranh giới chi phí
+## Bằng chứng UI
 
-Dịch vụ AI và transcription có thể phát sinh chi phí nếu dùng không kiểm soát. Dự án kiểm soát chi phí bằng cách:
+Dashboard dưới đây chứa finalized bilingual row tạo qua luồng AWS đã deploy,
+không phải sample text hard-code.
 
-- Giới hạn audio 3-5 phút.
-- Test bằng file mẫu nhỏ.
-- Viết prompt ngắn gọn.
-- Xóa object S3 sau khi test.
-- Xóa API, Lambda, Step Functions, DynamoDB và log không còn dùng trong bước cleanup.
+![Bằng chứng caption dashboard production](/images/3-Project/livecap-dashboard.png)
 
-## Bài học chính
+## Giới hạn đã biết
 
-Kiến trúc AI có trách nhiệm không chỉ nằm ở output của model. Nó còn bao gồm consent, bảo vệ dữ liệu, giới hạn quyền, monitoring và cleanup.
+- WAF, Fargate private, wake Lambda và scale-to-zero nằm trong Terraform target
+  đã review nhưng chưa deploy.
+- Live service có một task nên quá trình thay task làm gián đoạn session active.
+- CloudFront hiện dùng HTTP đến ALB origin; viewer traffic vẫn là HTTPS/WSS.

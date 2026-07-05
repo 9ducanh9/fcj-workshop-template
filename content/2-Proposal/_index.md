@@ -1,6 +1,6 @@
 ---
 title: "Project Proposal"
-date: 2026-05-12
+date: 2026-07-05
 weight: 2
 chapter: false
 pre: " <b> 2. </b> "
@@ -10,105 +10,126 @@ pre: " <b> 2. </b> "
 
 ## Project Title
 
-**Cognitive Communication Coach: AI-Powered Conversation Reflection System on AWS**
+**LiveCap: Real-Time Vietnamese-English Meeting Captions on AWS**
 
-## 1. Project Overview
+## 1. Problem
 
-The project is a bilingual AI coaching system that analyzes a short conversation recording or transcript after the conversation ends. It produces a structured report with a summary, topic intent, weak reasoning points, improved response suggestions, and practice questions.
+Bilingual meetings, workshops, and classrooms are difficult to follow when a
+speaker talks quickly, changes between Vietnamese and English, or uses a
+language that some participants are less comfortable with. Manual note-taking
+is slow, interrupts attention, and does not provide immediate translation.
 
-The system is not designed to secretly answer for users during a live conversation. Instead, it helps users review their own communication, understand where their reasoning was unclear, and practice better responses for future situations.
+Existing meeting platforms may provide captions, but they can require paid
+plans, platform-specific integration, or storage of full recordings. The
+project needs a browser-based solution that works independently, displays
+captions in real time, and minimizes retained conversation data.
 
-## 2. Problem Being Solved
+## 2. Proposed Solution
 
-Students, interns, and junior professionals often struggle in conversations even when they understand part of the topic. Common issues include:
+LiveCap is a web application that:
 
-- Not organizing thoughts quickly under pressure.
-- Freezing when challenged with repeated "why" questions.
-- Giving answers without evidence or examples.
-- Realizing better responses only after the conversation ends.
-- Having no structured way to review and improve communication.
+1. captures microphone audio directly in the browser;
+2. converts it to 16 kHz, 16-bit, mono PCM;
+3. streams chunks over WebSocket to a FastAPI backend;
+4. uses Amazon Transcribe Streaming for Vietnamese/English recognition;
+5. sends finalized text to Amazon Translate;
+6. displays original and translated captions side by side; and
+7. exports finalized captions as a TXT file through a temporary S3 download URL.
 
-The problem is not only language fluency. It is also reasoning structure, confidence, and reflection.
+Raw audio is not stored. Only finalized transcript text is eligible for export.
 
-## 3. Goals
+## 3. User Benefits
 
-- Build a practical AWS-based system using at least three AWS services.
-- Allow users to upload a short audio file or transcript for analysis.
-- Convert speech to text using Amazon Transcribe when audio is provided.
-- Use Amazon Bedrock to generate a coaching report.
-- Store job status and results in a structured way.
-- Provide reproducible implementation steps, testing, monitoring, security, cost, and cleanup documentation.
-- Keep the project realistic for one student and suitable for a bootcamp final project.
+- **Immediate understanding:** participants can read the original and translated
+  captions while the speaker is talking.
+- **Platform independence:** the browser application does not depend on Zoom,
+  Teams, or another meeting provider.
+- **Accessible review:** finalized captions can be exported as a simple TXT file.
+- **Privacy-conscious MVP:** microphone audio is streamed, not retained.
+- **Operational transparency:** connection state, timer, errors, and export state
+  are visible in the dashboard.
 
-## 4. Solution Architecture
+## 4. Project Scope
+
+### Included
+
+- English and Vietnamese bilingual captioning.
+- Browser microphone capture and secure WebSocket streaming.
+- Finalized caption rows with timestamp and speaker label.
+- Heartbeat, bounded reconnect, session timeout, and abuse limits.
+- TXT transcript export to private S3 with 14-day retention.
+- AWS infrastructure code, CI checks, monitoring, and cost documentation.
+
+### Not Included
+
+- Login, meeting rooms, or transcript history.
+- Direct meeting-platform integration.
+- Raw audio recording or long-term conversation storage.
+- AI summarization or speaker identity recognition.
+- Active-active multi-task backend while session state remains in memory.
+
+## 5. Solution Architecture
 
 {{< mermaid align="left" >}}
 flowchart LR
-  User["User browser"] --> APIGW["Amazon API Gateway"]
-  APIGW --> UploadLambda["Lambda: create upload URL"]
-  UploadLambda --> S3["Amazon S3 private bucket"]
-  S3 --> SFN["AWS Step Functions workflow"]
-  SFN --> Transcribe["Amazon Transcribe"]
-  SFN --> Bedrock["Amazon Bedrock"]
-  SFN --> DDB["Amazon DynamoDB"]
-  APIGW --> ResultLambda["Lambda: get job result"]
-  ResultLambda --> DDB
-  SFN --> CW["Amazon CloudWatch"]
+  User["Browser"] -->|HTTPS/WSS| CF["Amazon CloudFront"]
+  CF -->|OAC| Frontend["Private S3 frontend"]
+  CF -->|/api/* and /ws/*| ALB["Application Load Balancer"]
+  ALB --> ECS["ECS Fargate - FastAPI"]
+  ECR["Amazon ECR"] -.-> ECS
+  ECS --> Transcribe["Amazon Transcribe Streaming"]
+  ECS --> Translate["Amazon Translate"]
+  ECS --> Transcript["Private S3 transcripts"]
+  ECS -.-> CW["Amazon CloudWatch"]
 {{< /mermaid >}}
 
-## 5. AWS Services Used
+The regional deployment uses `ap-southeast-1`. CloudFront is the global public
+entrypoint. The verified live environment uses one Fargate task behind a
+multi-AZ ALB; the reviewed target later moves tasks to private subnets and adds
+WAF, wake-on-demand, and `0 <-> 1` scaling.
 
-| Service | Role | Reason for Selection |
+## 6. AWS Services
+
+| Service | Role | Reason |
 | --- | --- | --- |
-| Amazon S3 | Stores uploaded audio, transcripts, and generated reports | Durable, low-cost object storage with private access controls |
-| AWS Lambda | Handles upload URL creation, job creation, and result retrieval | Serverless compute suitable for short backend tasks |
-| Amazon API Gateway | Exposes REST API endpoints for the frontend or test client | Managed API layer with authentication and throttling options |
-| AWS Step Functions | Orchestrates transcription and AI analysis workflow | Makes async processing visible, retryable, and easier to debug |
-| Amazon Transcribe | Converts audio conversation files into text | Managed speech-to-text service, avoids building custom ASR |
-| Amazon Bedrock | Generates structured coaching feedback | Managed foundation model access without managing model infrastructure |
-| Amazon DynamoDB | Stores job metadata, status, and report references | Serverless NoSQL database with simple key-value access pattern |
-| Amazon CloudWatch | Stores logs and operational metrics | Required for debugging, monitoring, and validation |
-| AWS IAM | Controls service permissions | Supports least-privilege security design |
+| CloudFront | HTTPS/WSS entrypoint and path routing | Global delivery and one stable public endpoint |
+| Amazon S3 | Private frontend origin and transcript storage | Durable, encrypted object storage |
+| Application Load Balancer | Health checks and WebSocket/API forwarding | Managed routing to healthy Fargate targets |
+| Amazon ECS Fargate | Runs the FastAPI container | Managed containers without server administration |
+| Amazon ECR | Stores immutable backend images | Reproducible SHA-tagged deployments |
+| Amazon Transcribe | Streaming speech-to-text | Managed real-time transcription |
+| Amazon Translate | Vietnamese-English translation | Managed translation for finalized text |
+| CloudWatch | Logs and operational metrics | Monitoring and troubleshooting |
+| IAM | Runtime and deployment permissions | Least-privilege access without embedded keys |
 
-## 6. Timeline
+## 7. Delivery Plan
 
-| Phase | Duration | Deliverables |
-| --- | --- | --- |
-| Requirement analysis | Week 1 | Problem statement, user journey, project scope |
-| AWS foundation | Weeks 2-3 | IAM review, S3 bucket, DynamoDB table, basic Lambda |
-| AI workflow | Weeks 4-6 | Transcribe flow, Bedrock prompt, Step Functions workflow |
-| API and validation | Weeks 7-8 | API Gateway endpoints, sample input testing |
-| Documentation | Weeks 9-10 | Workshop steps, diagrams, screenshots, bilingual content |
-| Optimization and defense | Weeks 11-12 | Security review, cost cleanup, final rehearsal |
+| Phase | Result |
+| --- | --- |
+| Requirements and prototype | User flow, WebSocket contract, initial React/FastAPI application |
+| Realtime processing | PCM worklet, Transcribe streams, Translate, finalized captions |
+| AWS deployment | S3/CloudFront frontend, ECR image, ALB and ECS Fargate backend |
+| Hardening | Session guard, reconnect, heartbeat, retention, secret hygiene |
+| Infrastructure | Terraform validation, remote-state bootstrap, reviewed target VPC/WAF/cost controls |
+| Submission | CI gates, production smoke test, screenshots, bilingual documentation |
 
-## 7. Budget Awareness
+## 8. Risks and Mitigations
 
-This project is designed for low bootcamp-scale usage:
-
-- Audio files should be limited to 3-5 minutes during testing.
-- S3 storage should remain small because only sample files are used.
-- Lambda and Step Functions usage should stay within low-volume testing.
-- Bedrock cost depends on model choice and token usage, so prompts should be concise.
-- All resources must be cleaned up after the demo to avoid unnecessary charges.
-
-The final report should include a screenshot or exported estimate from AWS Pricing Calculator after the student's actual region and model choice are confirmed.
-
-## 8. Risks
-
-| Risk | Impact | Mitigation |
-| --- | --- | --- |
-| Audio transcription is inaccurate | AI report quality decreases | Use clear sample audio, allow transcript upload fallback |
-| Bedrock output is too vague | Weak demo value | Use a structured prompt and fixed evaluation rubric |
-| Cost grows from repeated AI calls | Unexpected charges | Limit file duration, delete test files, monitor usage |
-| Privacy concerns | Sensitive conversation data exposure | Private S3, least-privilege IAM, retention cleanup, consent notice |
-| Workflow errors are hard to debug | Implementation delays | Use Step Functions execution history and CloudWatch logs |
-| Scope creep into real-time assistant | Project becomes unrealistic | Keep MVP async and post-conversation only |
+| Risk | Mitigation |
+| --- | --- |
+| Transcription accuracy varies with noise/accent | Use short clear demos and expose finalized results only |
+| WebSocket disconnect interrupts captions | Ping/pong and three retries with 1/2/4-second backoff |
+| Managed AI usage causes unexpected cost | 30-minute timeout, global/per-IP limits, no idle AI processing |
+| Sensitive conversation data is retained | Do not store raw audio; delete transcript objects after 14 days |
+| Single task fails | ALB health checks and ECS replacement; document session interruption |
+| Infrastructure drift damages the live demo | Import/reconcile state, review plans, and use blue/green cutover |
 
 ## 9. Success Criteria
 
-- A sample audio or transcript can be uploaded.
-- The system creates a job record and stores processing status.
-- Audio input is converted into text, or a text transcript is accepted directly.
-- Bedrock produces a structured coaching report.
-- Results can be retrieved and reviewed.
-- Logs, errors, permissions, cost controls, and cleanup steps are documented.
+- The public CloudFront site and `/app` dashboard load successfully.
+- The health endpoint reports a healthy backend.
+- A microphone session produces finalized bilingual caption rows.
+- Stop and reconnect paths do not leak active sessions or workers.
+- Export creates a downloadable TXT transcript without storing raw audio.
+- Backend, frontend, Terraform, and secret CI gates pass.
+- The live architecture and the reviewed target are documented separately.

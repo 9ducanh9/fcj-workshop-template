@@ -47,3 +47,5 @@ the registry to DynamoDB or Redis first.
 
 Private task networking and `0 <-> 1` wake/idle behavior are target changes,
 not claims about the current public environment.
+
+![Network and service placement planned for the reviewed target](/images/3-Project/livecap-target-architecture.png)

@@ -1,43 +1,53 @@
 ---
-title: "Blog 2: Thiết kế workflow AI serverless với Step Functions"
-date: 2026-05-12
+title: "Kiến trúc AWS đã triển khai"
+date: 2026-07-05
 weight: 2
 chapter: false
 pre: " <b> 3.2. </b> "
 ---
 
-# Blog 2: Thiết kế workflow AI serverless với Step Functions
+# Kiến trúc AWS đã triển khai
 
-## Vì sao cần điều phối workflow
+## Topology runtime đã xác minh
 
-Cognitive Communication Coach có nhiều bước xử lý. Người dùng upload file, hệ thống có thể transcribe audio, sau đó Bedrock phân tích transcript, cuối cùng kết quả được lưu để truy xuất.
+{{< mermaid align="left" >}}
+flowchart LR
+  Browser["Trình duyệt"] -->|HTTPS/WSS| CF["CloudFront"]
+  CF -->|OAC| FE["S3 frontend private"]
+  CF -->|HTTP origin| ALB["ALB public multi-AZ"]
+  ALB -->|port 8000| Task["Một ECS Fargate task"]
+  ECR["ECR image immutable"] -.-> Task
+  Task --> Transcribe["Transcribe Streaming"]
+  Task --> Translate["Translate"]
+  Task --> S3["S3 transcript private"]
+  Task -.-> CW["CloudWatch"]
+{{< /mermaid >}}
 
-Nếu toàn bộ logic nằm trong một Lambda lớn, việc debug sẽ khó. AWS Step Functions giúp workflow hiển thị rõ và dễ giải thích hơn.
+| Khu vực | Deployment đã xác minh |
+| --- | --- |
+| Region | `ap-southeast-1` |
+| Frontend | S3 origin private phục vụ qua CloudFront OAC |
+| Backend entry | CloudFront `/api/*`, `/ws/*` đến ALB public |
+| Availability | ALB trải trên `ap-southeast-1a` và `1b` |
+| Compute | ECS service có một Fargate task |
+| Image | ECR tag immutable `1ef4250-amd64` |
+| Transcript | S3 private, chỉ TXT, retention 14 ngày |
+| Log | CloudWatch retention 14 ngày |
 
-## Các bước workflow
+## Luồng request và response
 
-1. Kiểm tra file hoặc transcript đầu vào.
-2. Bắt đầu transcription nếu đầu vào là audio.
-3. Chờ kết quả transcription.
-4. Gửi transcript đến Bedrock.
-5. Lưu báo cáo coaching có cấu trúc.
-6. Cập nhật trạng thái job trong DynamoDB.
+1. Browser kết nối HTTPS/WSS đến CloudFront.
+2. CloudFront lấy frontend asset từ S3 private qua OAC.
+3. API/WebSocket request được route đến ALB.
+4. ALB chỉ gửi traffic đến Fargate target healthy.
+5. FastAPI stream PCM đến Transcribe và finalized text đến Translate.
+6. Caption trả về qua Fargate -> ALB -> CloudFront -> browser.
+7. TXT export được lưu trong transcript bucket private.
 
-## Vì sao không dùng một Lambda duy nhất?
+## Kiến trúc target đã review
 
-Một Lambda duy nhất ban đầu có vẻ đơn giản, nhưng có nhiều vấn đề:
+Hình sau là target đã review, không phải claim tài nguyên đã deploy. Target bổ
+sung VPC riêng hai AZ, task private, một NAT Gateway, WAF COUNT, wake Lambda,
+scale-to-zero, dashboard và budget.
 
-- Khó biết bước nào bị lỗi.
-- Khó retry riêng một bước.
-- Khó giải thích trạng thái xử lý cho người dùng.
-- Có nguy cơ timeout nếu transcription và AI analysis mất nhiều thời gian.
-
-Step Functions tách workflow thành các state rõ ràng và có execution history.
-
-## Thiết kế AWS thực tế
-
-Dự án dùng Lambda cho tác vụ nhỏ và Step Functions để điều phối. Đây là cách thiết kế serverless hợp lý: function ngắn xử lý từng đơn vị công việc, còn dịch vụ workflow managed điều phối toàn bộ tiến trình.
-
-## Bài học chính
-
-Kiến trúc cloud tốt không chỉ làm cho dịch vụ chạy được. Nó còn giúp hệ thống dễ hiểu, dễ quan sát và có khả năng phục hồi khi lỗi xảy ra.
+![Kiến trúc target LiveCap đã review](/images/3-Project/livecap-target-architecture.png)
