@@ -1,6 +1,6 @@
 ---
 title: "Nhật ký tuần 2"
-date: 2026-05-12
+date: 2026-04-24
 weight: 2
 chapter: false
 pre: " <b> 1.2. </b> "
@@ -8,290 +8,112 @@ pre: " <b> 1.2. </b> "
 
 # Nhật ký tuần 2
 
-<style>
-.worklog-timeline {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  margin: 30px 0;
-}
+## 24/04/2026
 
-.day-card {
-  background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-  border: 1px solid #eef2f5;
-  transition: all 0.3s ease;
-  overflow: hidden;
-}
+### Công việc đã thực hiện
 
-.day-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-  border-color: #4881cd;
-}
+- Tham gia họp nhóm đầu tiên để trao đổi về định hướng project Bootcamp.
+- Thảo luận mục tiêu dự án, yêu cầu chương trình và tiêu chí đánh giá.
+- Trao đổi về định hướng chuyên môn của từng thành viên (AI, Web, Security, System).
 
-.day-header {
-  background: linear-gradient(135deg, #283e5b 0%, #1c222a 100%);
-  color: #ffffff;
-  padding: 14px 20px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
+### Kết quả đạt được
 
-.day-icon {
-  background: rgba(255, 255, 255, 0.2);
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.95rem;
-}
+- Các thành viên hiểu rõ vai trò và định hướng cá nhân.
+- Thống nhất bắt đầu giai đoạn khảo sát và lựa chọn ý tưởng dự án.
 
-.day-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  color: #ffffff !important;
-  margin: 0 !important;
-}
+---
 
-.day-body {
-  padding: 20px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
+## 25/04/2026
 
-@media (max-width: 768px) {
-  .day-body {
-    grid-template-columns: 1fr;
-    gap: 15px;
-  }
-}
+### Công việc đã thực hiện
 
-.section-work, .section-result {
-  background: #f8fafc;
-  padding: 16px;
-  border-radius: 8px;
-  border-left: 4px solid #4881cd;
-  height: 100%;
-}
+- Đọc và nghiên cứu tài liệu FCAJ Project Guidelines.
+- Tìm hiểu AWS Well-Architected Framework.
+- Xem xét các yêu cầu về kiến trúc, bảo mật, hiệu năng và khả năng mở rộng của hệ thống cloud.
 
-.section-result {
-  border-left-color: #fd9827;
-  background: #fffcf8;
-}
+### Kết quả đạt được
 
-.section-work h5, .section-result h5 {
-  margin-top: 0 !important;
-  margin-bottom: 12px !important;
-  font-size: 0.95rem !important;
-  font-weight: bold !important;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
+- Nắm được các tiêu chí đánh giá dự án.
+- Hiểu các nguyên tắc thiết kế hệ thống trên AWS.
 
-.section-work h5 {
-  color: #283e5b !important;
-}
+---
 
-.section-result h5 {
-  color: #d97706 !important;
-}
+## 26/04/2026
 
-.day-body ul {
-  margin: 0 !important;
-  padding-left: 20px !important;
-}
+### Công việc đã thực hiện
 
-.day-body li {
-  margin-bottom: 8px !important;
-  font-size: 0.9rem !important;
-  line-height: 1.6 !important;
-  color: #4a5568 !important;
-  list-style-type: disc !important;
-}
+- Brainstorm các ý tưởng dự án tiềm năng.
+- Đề xuất ý tưởng ứng dụng liên quan đến Crypto và dữ liệu thời gian thực.
+- Thảo luận khả năng xây dựng hệ thống automation và nền tảng trung gian.
+- Trao đổi về việc kết hợp AI vào web application.
 
-.day-body li:last-child {
-  margin-bottom: 0 !important;
-}
-</style>
+### Kết quả đạt được
 
-<div class="worklog-timeline">
+- Hình thành nhiều hướng triển khai khác nhau.
+- Xác định các nhóm ý tưởng có tiềm năng phát triển thành project chính.
 
-  <!-- 24/04/2026 -->
-  <div class="day-card">
-    <div class="day-header">
-      <div class="day-icon"><i class="fas fa-calendar-day"></i></div>
-      <h4 class="day-title">24/04/2026 (Thứ Sáu)</h4>
-    </div>
-    <div class="day-body">
-      <div class="section-work">
-        <h5><i class="fas fa-tasks"></i> Công việc đã làm</h5>
-        <ul>
-          <li>Tham gia họp nhóm đầu tiên để trao đổi về định hướng project Bootcamp.</li>
-          <li>Thảo luận mục tiêu dự án, yêu cầu chương trình và tiêu chí đánh giá.</li>
-          <li>Trao đổi về định hướng chuyên môn của từng thành viên (AI, Web, Security, System).</li>
-        </ul>
-      </div>
-      <div class="section-result">
-        <h5><i class="fas fa-trophy"></i> Kết quả đạt được</h5>
-        <ul>
-          <li>Các thành viên hiểu rõ vai trò và định hướng cá nhân.</li>
-          <li>Thống nhất bắt đầu giai đoạn khảo sát và lựa chọn ý tưởng dự án.</li>
-        </ul>
-      </div>
-    </div>
-  </div>
+---
 
-  <!-- 25/04/2026 -->
-  <div class="day-card">
-    <div class="day-header">
-      <div class="day-icon"><i class="fas fa-calendar-day"></i></div>
-      <h4 class="day-title">25/04/2026 (Thứ Bảy)</h4>
-    </div>
-    <div class="day-body">
-      <div class="section-work">
-        <h5><i class="fas fa-tasks"></i> Công việc đã làm</h5>
-        <ul>
-          <li>Đọc và nghiên cứu tài liệu FCAJ Project Guidelines.</li>
-          <li>Tìm hiểu AWS Well-Architected Framework.</li>
-          <li>Xem xét các yêu cầu về kiến trúc, bảo mật, hiệu năng và khả năng mở rộng của hệ thống cloud.</li>
-        </ul>
-      </div>
-      <div class="section-result">
-        <h5><i class="fas fa-trophy"></i> Kết quả đạt được</h5>
-        <ul>
-          <li>Nắm được các tiêu chí đánh giá dự án.</li>
-          <li>Hiểu các nguyên tắc thiết kế hệ thống trên AWS.</li>
-        </ul>
-      </div>
-    </div>
-  </div>
+## 27/04/2026
 
-  <!-- 26/04/2026 -->
-  <div class="day-card">
-    <div class="day-header">
-      <div class="day-icon"><i class="fas fa-calendar-day"></i></div>
-      <h4 class="day-title">26/04/2026 (Chủ Nhật)</h4>
-    </div>
-    <div class="day-body">
-      <div class="section-work">
-        <h5><i class="fas fa-tasks"></i> Công việc đã làm</h5>
-        <ul>
-          <li>Brainstorm các ý tưởng dự án tiềm năng.</li>
-          <li>Đề xuất ý tưởng ứng dụng liên quan đến Crypto và dữ liệu thời gian thực.</li>
-          <li>Thảo luận khả năng xây dựng hệ thống automation và nền tảng trung gian.</li>
-          <li>Trao đổi về việc kết hợp AI vào web application.</li>
-        </ul>
-      </div>
-      <div class="section-result">
-        <h5><i class="fas fa-trophy"></i> Kết quả đạt được</h5>
-        <ul>
-          <li>Hình thành nhiều hướng triển khai khác nhau.</li>
-          <li>Xác định các nhóm ý tưởng có tiềm năng phát triển thành project chính.</li>
-        </ul>
-      </div>
-    </div>
-  </div>
+### Công việc đã thực hiện
 
-  <!-- 27/04/2026 -->
-  <div class="day-card">
-    <div class="day-header">
-      <div class="day-icon"><i class="fas fa-calendar-day"></i></div>
-      <h4 class="day-title">27/04/2026 (Thứ Hai)</h4>
-    </div>
-    <div class="day-body">
-      <div class="section-work">
-        <h5><i class="fas fa-tasks"></i> Công việc đã làm</h5>
-        <ul>
-          <li>Thảo luận các yêu cầu kỹ thuật cho dự án.</li>
-          <li>Tìm hiểu khả năng áp dụng Real-time Data Processing.</li>
-          <li>Trao đổi về cơ chế phân quyền, bảo mật hệ thống.</li>
-          <li>Thảo luận các giải pháp hạn chế bot và DDoS.</li>
-        </ul>
-      </div>
-      <div class="section-result">
-        <h5><i class="fas fa-trophy"></i> Kết quả đạt được</h5>
-        <ul>
-          <li>Xác định các yêu cầu phi chức năng quan trọng cho hệ thống.</li>
-          <li>Bắt đầu hình thành tư duy kiến trúc thay vì chỉ tập trung vào tính năng.</li>
-        </ul>
-      </div>
-    </div>
-  </div>
+- Thảo luận các yêu cầu kỹ thuật cho dự án.
+- Tìm hiểu khả năng áp dụng Real-time Data Processing.
+- Trao đổi về cơ chế phân quyền, bảo mật hệ thống.
+- Thảo luận các giải pháp hạn chế bot và DDoS.
 
-  <!-- 28/04/2026 -->
-  <div class="day-card">
-    <div class="day-header">
-      <div class="day-icon"><i class="fas fa-calendar-day"></i></div>
-      <h4 class="day-title">28/04/2026 (Thứ Ba)</h4>
-    </div>
-    <div class="day-body">
-      <div class="section-work">
-        <h5><i class="fas fa-tasks"></i> Công việc đã làm</h5>
-        <ul>
-          <li>Hoàn thành AWS Lab 1.</li>
-          <li>Tìm hiểu chương trình AWS Free Tier 2025 và cơ chế cấp AWS Credit.</li>
-          <li>Nghiên cứu sự khác biệt giữa Free Plan và Paid Plan trên AWS.</li>
-          <li>Nghiên cứu các dịch vụ có nguy cơ phát sinh chi phí và các biện pháp kiểm soát ngân sách.</li>
-          <li>Tìm hiểu các phương pháp monitoring và cost optimization trên AWS.</li>
-        </ul>
-      </div>
-      <div class="section-result">
-        <h5><i class="fas fa-trophy"></i> Kết quả đạt được</h5>
-        <ul>
-          <li>Hiểu cách sử dụng AWS Free Tier và AWS Credit hiệu quả.</li>
-          <li>Nắm được các nguyên tắc cơ bản về quản lý chi phí trên nền tảng AWS.</li>
-          <li>Nhận thức được các rủi ro thường gặp dẫn đến phát sinh chi phí ngoài ý muốn.</li>
-        </ul>
-      </div>
-    </div>
-  </div>
+### Kết quả đạt được
 
-  <!-- 29/04/2026 -->
-  <div class="day-card">
-    <div class="day-header">
-      <div class="day-icon"><i class="fas fa-calendar-day"></i></div>
-      <h4 class="day-title">29/04/2026 (Thứ Tư)</h4>
-    </div>
-    <div class="day-body">
-      <div class="section-work">
-        <h5><i class="fas fa-tasks"></i> Công việc đã làm</h5>
-        <ul>
-          <li>Tìm hiểu quy trình Spec Driven Development.</li>
-          <li>Làm quen với Kiro IDE và Kiro CI.</li>
-          <li>Thực hành xây dựng prototype ứng dụng theo hướng tiếp cận của Kiro.</li>
-          <li>Nghiên cứu cách AI hỗ trợ DevOps, Monitoring và Automation.</li>
-        </ul>
-      </div>
-      <div class="section-result">
-        <h5><i class="fas fa-trophy"></i> Kết quả đạt được</h5>
-        <ul>
-          <li>Hiểu quy trình xây dựng sản phẩm theo Spec Driven Development.</li>
-          <li>Nắm được vai trò của Kiro trong phát triển và quản lý dự án.</li>
-        </ul>
-      </div>
-    </div>
-  </div>
+- Xác định các yêu cầu phi chức năng quan trọng cho hệ thống.
+- Bắt đầu hình thành tư duy kiến trúc thay vì chỉ tập trung vào tính năng.
 
-  <!-- 30/04/2026 -->
-  <div class="day-card" style="border-left: 4px solid #e2e8f0;">
-    <div class="day-header" style="background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);">
-      <div class="day-icon"><i class="fas fa-umbrella-beach"></i></div>
-      <h4 class="day-title">30/04/2026 (Thứ Năm)</h4>
-    </div>
-    <div class="day-body" style="grid-template-columns: 1fr; padding: 25px;">
-      <div style="background: #f7fafc; padding: 20px; border-radius: 8px; text-align: center; border: 1px dashed #cbd5e0;">
-        <h5 style="color: #4a5568 !important; margin: 0 0 8px 0 !important; font-weight: bold;"><i class="fas fa-glass-cheers"></i> Nghỉ Lễ Giải Phóng Miền Nam, Thống Nhất Đất Nước (30/04)</h5>
-        <p style="margin: 0; color: #718096; font-size: 0.95rem;">Không phát sinh hoạt động học tập và dự án trong ngày nghỉ lễ.</p>
-      </div>
-    </div>
-  </div>
+---
 
-</div>
+## 28/04/2026
+
+### Công việc đã thực hiện
+
+- Hoàn thành AWS Lab 1.
+- Tìm hiểu chương trình AWS Free Tier 2025 và cơ chế cấp AWS Credit.
+- Nghiên cứu sự khác biệt giữa Free Plan và Paid Plan trên AWS.
+- Nghiên cứu các dịch vụ có nguy cơ phát sinh chi phí và các biện pháp kiểm soát ngân sách.
+- Tìm hiểu các phương pháp monitoring và cost optimization trên AWS.
+
+### Kết quả đạt được
+
+- Hiểu cách sử dụng AWS Free Tier và AWS Credit hiệu quả.
+- Nắm được các nguyên tắc cơ bản về quản lý chi phí trên nền tảng AWS.
+- Nhận thức được các rủi ro thường gặp dẫn đến phát sinh chi phí ngoài ý muốn.
+
+---
+
+## 29/04/2026
+
+### Công việc đã thực hiện
+
+- Tìm hiểu quy trình Spec Driven Development.
+- Làm quen với Kiro IDE và Kiro CI.
+- Thực hành xây dựng prototype ứng dụng theo hướng tiếp cận của Kiro.
+- Nghiên cứu cách AI hỗ trợ DevOps, Monitoring và Automation.
+
+### Kết quả đạt được
+
+- Hiểu quy trình xây dựng sản phẩm theo Spec Driven Development.
+- Nắm được vai trò của Kiro trong phát triển và quản lý dự án.
+
+---
+
+## 30/04/2026
+
+### Công việc đã thực hiện
+
+
+### Kết quả đạt được
+
+
+---
+
+## Tổng kết tuần
+
+Trong tuần này, em tập trung vào kiến thức nền tảng về networking trên AWS thông qua các bài thực hành với Amazon VPC. Em thực hành tạo các thành phần mạng, cấu hình routing và security, triển khai EC2 và kiểm tra kết nối giữa các tài nguyên. Qua đó, em hiểu rõ hơn cách các thành phần networking trên AWS phối hợp với nhau trong môi trường thực tế.
