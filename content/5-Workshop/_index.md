@@ -19,6 +19,13 @@ The live deployment uses CloudFront, private S3, an Application Load Balancer,
 ECS Fargate, ECR, AWS WAF, a Wake Lambda, and CloudWatch. Transcript export
 writes only finalized TXT files to a private S3 bucket; raw audio is never stored.
 
+## Live Demo and Source
+
+- **Application:** [https://dpeohr327wt9l.cloudfront.net](https://dpeohr327wt9l.cloudfront.net)
+- **Caption dashboard:** [https://dpeohr327wt9l.cloudfront.net/app](https://dpeohr327wt9l.cloudfront.net/app)
+- **Health endpoint:** [https://dpeohr327wt9l.cloudfront.net/api/health](https://dpeohr327wt9l.cloudfront.net/api/health)
+- **Source repository:** [https://github.com/9ducanh9/livecap](https://github.com/9ducanh9/livecap)
+
 ## Workshop Sections
 
 | Section | Topic |

@@ -117,3 +117,8 @@ https://dpeohr327wt9l.cloudfront.net
 Landing page sẽ load với animation và nút "Start captioning":
 
 ![LiveCap landing page phục vụ qua CloudFront](/images/3-Project/livecap-landing.png)
+
+Route `/` dùng giao diện dark SaaS và GSAP ScrollTrigger để trình bày product
+story, caption sequence và kiến trúc tổng quan. Các animation nặng chỉ nằm ở
+landing page; route `/app` được giữ gọn để ưu tiên độ ổn định khi chạy phiên
+phụ đề thời gian thực.

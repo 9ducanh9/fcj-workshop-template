@@ -117,3 +117,8 @@ https://dpeohr327wt9l.cloudfront.net
 The landing page should load with animations and the "Start captioning" button:
 
 ![LiveCap landing page served through CloudFront](/images/3-Project/livecap-landing.png)
+
+The `/` route uses a dark SaaS presentation and GSAP ScrollTrigger to explain
+the product story, caption sequence, and high-level architecture. Heavy visual
+effects are isolated to the landing page; `/app` remains focused on stable
+real-time caption operation.

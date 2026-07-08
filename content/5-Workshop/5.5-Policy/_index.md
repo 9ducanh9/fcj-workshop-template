@@ -8,6 +8,21 @@ pre: " <b> 5.5. </b> "
 
 # Testing, Security & Cost Controls
 
+## GitHub Actions Quality Gates
+
+The `main` branch workflow runs four independent jobs before a change is
+considered to have passed the quality gate:
+
+- Scan the full Git history for secrets with Gitleaks.
+- Compile the backend and run 204 pytest tests.
+- Run frontend tests and create the production build.
+- Check Terraform formatting, `init -backend=false`, and `validate`.
+
+![Successful LiveCap GitHub Actions run](/images/3-Project/github-actions-ci.png)
+
+CI is validation-only. The workflow does not deploy, run `terraform apply`,
+destroy resources, or migrate Terraform state.
+
 ## Functional Testing
 
 ### Backend – 204 Unit Tests

@@ -19,6 +19,13 @@ Triển khai live dùng CloudFront, S3 private, Application Load Balancer, ECS
 Fargate, ECR, AWS WAF, Wake Lambda và CloudWatch. Export transcript chỉ ghi
 file TXT finalized vào S3 private; raw audio không bao giờ được lưu.
 
+## Demo và mã nguồn
+
+- **Ứng dụng:** [https://dpeohr327wt9l.cloudfront.net](https://dpeohr327wt9l.cloudfront.net)
+- **Caption dashboard:** [https://dpeohr327wt9l.cloudfront.net/app](https://dpeohr327wt9l.cloudfront.net/app)
+- **Health endpoint:** [https://dpeohr327wt9l.cloudfront.net/api/health](https://dpeohr327wt9l.cloudfront.net/api/health)
+- **Source repository:** [https://github.com/9ducanh9/livecap](https://github.com/9ducanh9/livecap)
+
 ## Các phần trong workshop
 
 | Phần | Nội dung |

@@ -85,6 +85,11 @@ Dashboard production sẵn sàng bắt đầu phiên:
 
 ![Dashboard production – điều khiển phiên và trạng thái trước khi bắt đầu](/images/5-Workshop/livecap-production-dashboard-ready.png)
 
+Dashboard cung cấp Start, Stop, Export TXT và Clear; bộ đếm phiên 30 phút;
+chọn microphone; trạng thái kết nối; speaker label và timestamp; hai cột văn
+bản gốc/bản dịch; cùng trạng thái reconnect và error trên cả desktop lẫn mobile.
+Chỉ finalized segment được thêm vào transcript lâu dài và được phép export.
+
 ## Nếu microphone bị chặn?
 
 Nếu trình duyệt chặn truy cập microphone, LiveCap dừng trước khi mở bất kỳ

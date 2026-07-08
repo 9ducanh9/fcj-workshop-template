@@ -85,6 +85,12 @@ The production dashboard ready to start a session:
 
 ![Production dashboard showing session controls and status before start](/images/5-Workshop/livecap-production-dashboard-ready.png)
 
+The dashboard provides Start, Stop, Export TXT, and Clear controls; a 30-minute
+session timer; microphone selection; connection state; speaker labels and
+timestamps; side-by-side original/translated text; and reconnect/error states
+across desktop and mobile layouts. Only finalized segments are retained in the
+session transcript and made available for export.
+
 ## What If Microphone Access Is Denied?
 
 If the browser blocks microphone access, LiveCap stops before opening any
