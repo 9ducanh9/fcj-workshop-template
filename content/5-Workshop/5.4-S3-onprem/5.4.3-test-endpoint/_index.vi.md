@@ -45,18 +45,26 @@ POST https://dpeohr327wt9l.cloudfront.net/api/sessions/{session_id}/export
 Content-Type: application/json
 
 {
-  "rows": [
-    {"vi": "Chào buổi sáng", "en": "Good morning", "timestamp": "00:00:03"},
-    {"vi": "...", "en": "...", "timestamp": "..."}
+  "segments": [
+    {
+      "segment_id": "seg-001",
+      "speaker_label": null,
+      "text_vi": "Chào buổi sáng",
+      "text_en": "Good morning",
+      "spoken_language": "vi",
+      "timestamp_start": 0.0,
+      "timestamp_end": 2.1
+    }
   ]
 }
 ```
 
-Backend phản hồi với presigned URL:
+Backend phản hồi với presigned URL và thời điểm hết hạn:
 
 ```json
 {
-  "download_url": "https://livecap-transcripts-dev-720459752315.s3.ap-southeast-1.amazonaws.com/transcripts/session-abc123.txt?X-Amz-..."
+  "download_url": "https://livecap-transcripts-dev-720459752315.s3.ap-southeast-1.amazonaws.com/transcripts/session-abc123.txt?X-Amz-...",
+  "expires_at": "2026-07-09T12:00:00Z"
 }
 ```
 
@@ -87,7 +95,7 @@ Kết quả mong đợi:
 ```json
 {
   "Rules": [{
-    "ID": "expire-transcripts",
+    "ID": "delete-old-transcripts",
     "Status": "Enabled",
     "Filter": {"Prefix": "transcripts/"},
     "Expiration": {"Days": 14}

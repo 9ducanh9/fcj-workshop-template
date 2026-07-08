@@ -17,25 +17,29 @@ through.
 You need an AWS account and an IAM identity that has the permissions below.
 **Do not use the root account** for any deployment step.
 
-Create a dedicated IAM user (e.g. `Codex` as used in this project) and attach
-a custom policy that allows only the actions LiveCap actually uses:
+Create a dedicated IAM user (e.g. `camgiacntn` as used in this project) and
+attach a custom policy that grants the actions below:
 
 | Permission area | Actions needed |
 |---|---|
 | ECR | `ecr:GetAuthorizationToken`, `ecr:BatchCheckLayerAvailability`, `ecr:PutImage`, `ecr:InitiateLayerUpload`, `ecr:UploadLayerPart`, `ecr:CompleteLayerUpload`, `ecr:DescribeRepositories`, `ecr:ListImages` |
 | ECS | `ecs:RegisterTaskDefinition`, `ecs:UpdateService`, `ecs:DescribeServices`, `ecs:DescribeClusters`, `ecs:ListTasks`, `ecs:DescribeTasks` |
-| S3 | `s3:ListBucket`, `s3:PutObject`, `s3:GetObject`, `s3:DeleteObject`, `s3:GetBucketLocation`, `s3:PutObjectAcl` |
+| S3 | `s3:ListBucket`, `s3:PutObject`, `s3:GetObject`, `s3:DeleteObject`, `s3:GetBucketLocation` |
 | CloudFront | `cloudfront:CreateInvalidation`, `cloudfront:ListDistributions`, `cloudfront:GetDistribution` |
+| VPC & Networking | `ec2:Describe*`, `ec2:CreateVpc`, `ec2:CreateSubnet`, `ec2:CreateInternetGateway`, `ec2:CreateNatGateway`, `ec2:CreateRouteTable`, `ec2:CreateSecurityGroup`, and paired `Delete*`/`Attach*`/`Detach*` actions |
+| ELB | `elasticloadbalancing:*` (required for ALB, listener, and target group) |
+| Lambda | `lambda:CreateFunction`, `lambda:UpdateFunctionCode`, `lambda:UpdateFunctionConfiguration`, `lambda:AddPermission`, `lambda:GetFunction`, `lambda:DeleteFunction` |
+| WAF | `wafv2:CreateWebACL`, `wafv2:AssociateWebACL`, `wafv2:GetWebACL`, `wafv2:UpdateWebACL`, `wafv2:DeleteWebACL` |
+| CloudWatch Logs | `logs:CreateLogGroup`, `logs:PutRetentionPolicy`, `logs:DescribeLogGroups`, `logs:DeleteLogGroup` |
+| Budgets | `budgets:ModifyBudget`, `budgets:ViewBudget` |
 | STS | `sts:GetCallerIdentity` |
-| IAM | Read-only for verifying roles |
+| IAM | `iam:PassRole` (required by Terraform to attach roles to ECS/Lambda), plus read-only actions to verify roles |
 
-The live deployment uses IAM user `Codex` (account `720459752315`). The ECS
+The live deployment uses IAM user `camgiacntn` (account `720459752315`). The ECS
 Fargate task uses a **task role** so it can call Transcribe, Translate, and S3
 at runtime without any credentials in the container image.
 
-![IAM users list showing the Codex deployment user](/images/5-Workshop/5.2-Prerequisite/iam_users.png)
-
-![Codex IAM user detail page with attached policies](/images/5-Workshop/5.2-Prerequisite/iam_codex_user.png)
+![IAM users list](/images/5-Workshop/5.2-Prerequisite/iam_users.png)
 
 ![IAM roles filtered for livecap – showing task role and execution role](/images/5-Workshop/5.2-Prerequisite/iam_livecap_roles.png)
 

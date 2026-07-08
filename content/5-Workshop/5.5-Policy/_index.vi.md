@@ -62,19 +62,20 @@ mỗi lần `git push`.
 
 ### Application Log trên CloudWatch
 
-Backend FastAPI emit structured JSON log vào log group `livecap` của CloudWatch.
-Retention log là 14 ngày.
+Backend FastAPI emit structured JSON log vào log group `/ecs/livecap-backend-dev`
+của CloudWatch. Retention log là 14 ngày.
 
 ```powershell
 # Stream log trực tiếp
-aws logs tail livecap --follow --region ap-southeast-1 --profile livecap-codex
+aws logs tail /ecs/livecap-backend-dev --follow --region ap-southeast-1 --profile livecap-codex
 ```
 
-Các sự kiện log bạn sẽ thấy trong một phiên:
-- `session_opened` kèm session ID và IP hash của client
-- `transcribe_result` kèm ngôn ngữ, text segment và cờ is_final
-- `translate_called` kèm ngôn ngữ nguồn/đích và số ký tự
-- `session_closed` kèm thời lượng và lý do
+Các sự kiện log chính bạn sẽ thấy trong một phiên:
+- `session_start` – mở phiên mới, kèm session ID và client IP hash
+- `websocket_connect` – kết nối WebSocket được thiết lập
+- `websocket_disconnect` – client ngắt kết nối hoặc timeout
+- `session_end` – phiên đóng, kèm thời lượng và lý do
+- `integration_error` – lỗi từ Transcribe, Translate hoặc S3
 
 ![CloudWatch log group – log group livecap](/images/5-Workshop/5.5-Policy/cloudwatch_log_groups.png)
 
@@ -148,7 +149,7 @@ Cả hai Web ACL đều ở chế độ BLOCK. Probe production đã xác nhận
 | Tài nguyên | Cơ sở tính phí | Tối ưu |
 |---|---|---|
 | ECS Fargate | Theo vCPU-giây + GB-giây | Scale về 0 khi không dùng (tính năng target) |
-| ALB | Cố định theo giờ + LCU | Không thể tắt nếu ECS còn chạy |
+| ALB | Cố định theo giờ + LCU | Phát sinh phí kể cả khi ECS = 0; chỉ xóa khi destroy toàn bộ stack |
 | NAT Gateway | Theo giờ + theo GB data | Một NAT ở một AZ (trade-off chi phí) |
 | Amazon Transcribe | Theo phút audio | Giới hạn session giới hạn mức sử dụng |
 | Amazon Translate | Theo triệu ký tự | Chỉ dịch finalized segment |
@@ -166,7 +167,8 @@ Cả hai Web ACL đều ở chế độ BLOCK. Probe production đã xác nhận
 ### AWS Budget (Terraform target)
 
 Một AWS Budget alert được định nghĩa trong Terraform target ở mức **$50/tháng**.
-Nó gửi thông báo SNS khi chi tiêu thực tế hoặc dự báo gần đến ngưỡng.
+Nó gửi thông báo trực tiếp đến **email subscriber** khi chi tiêu thực tế hoặc
+dự báo gần đến ngưỡng (không qua SNS).
 
 > **Lưu ý:** Budget alert là tín hiệu billing bị trễ, không phải enforcement
 > thời gian thực. Nó giúp bạn phát hiện chi phí ngoài kiểm soát trong vài giờ,

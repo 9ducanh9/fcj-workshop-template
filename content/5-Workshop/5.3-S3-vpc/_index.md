@@ -20,7 +20,7 @@ Application Load Balancer.
 | Container image | Docker / FastAPI | Amazon ECR |
 | Container runtime | ECS Fargate | Private subnet, no public IP |
 | Load balancer | Application Load Balancer | Public subnets, two AZs |
-| Service registry | ECS Service | Maintains desired count = 1 |
+| Service registry | ECS Service `livecap-target-service-dev` | Scale-to-zero: 0 ↔ 1, Lambda wake, idle scale-down after 300 s |
 | Network | Custom VPC `10.20.0.0/16` | ap-southeast-1 |
 
 The current live cluster is `livecap-cluster-dev`:

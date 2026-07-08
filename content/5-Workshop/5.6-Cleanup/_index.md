@@ -11,197 +11,126 @@ pre: " <b> 5.6. </b> "
 ## Clean-up
 
 After completing the workshop, delete all resources to avoid ongoing charges.
-Work through the list in order – some resources depend on others being removed
-first (e.g., you cannot delete a VPC while resources inside it still exist).
 
-> [!WARNING]
-> Do **not** run `terraform destroy` on the full LiveCap environment without
-> first reviewing the current Terraform state and having explicit approval.
-> The commands below are a **manual, step-by-step clean-up** that lets you
-> verify each deletion.
+> [!CAUTION]
+> **The full LiveCap stack is managed by Terraform.** Deleting resources
+> manually with the CLI can cause **Terraform state drift** – leading to errors
+> on the next `apply` or duplicate resource creation. Always prefer
+> `terraform destroy` after carefully reviewing the plan.
 
-### 1. Stop and Delete the ECS Service
+### Step 1 – Review the Terraform destroy plan
 
 ```powershell
-# Scale down to 0 first to stop running tasks
-aws ecs update-service `
-  --cluster livecap-cluster-dev `
-  --service livecap-service-dev `
-  --desired-count 0 `
-  --region ap-southeast-1 --profile livecap-codex
+cd infrastructure/terraform   # or the directory that holds your Terraform state
 
-# Wait for tasks to stop
-Start-Sleep 30
+# Preview everything that will be deleted
+terraform plan -destroy -out=destroy.tfplan
 
-# Delete the service
-aws ecs delete-service `
-  --cluster livecap-cluster-dev `
-  --service livecap-service-dev `
-  --region ap-southeast-1 --profile livecap-codex
+# Read the output carefully, paying attention to:
+# - WAF association must be detached before ALB/CloudFront
+# - Listeners and Target Groups must be removed before the ALB
+# - S3 objects (including versioned objects) must be emptied before bucket deletion
+# - NAT Gateway takes a few minutes to delete; EIP must be released after
 ```
 
-### 2. Delete the ECS Cluster
+Only proceed when you have confirmed the resource list is correct.
+
+### Step 2 – Empty S3 buckets (required before destroy)
+
+Terraform does not remove S3 objects or versioned objects automatically.
+Empty them manually first:
 
 ```powershell
-aws ecs delete-cluster `
-  --cluster livecap-cluster-dev `
+# Empty the frontend bucket (no versioning)
+aws s3 rm s3://livecap-frontend-dev-720459752315 --recursive `
   --region ap-southeast-1 --profile livecap-codex
+
+# Empty the transcript bucket (including delete markers and versions)
+aws s3api list-object-versions `
+  --bucket livecap-transcripts-dev-720459752315 `
+  --region ap-southeast-1 `
+  --query "Versions[].{Key:Key,VersionId:VersionId}" `
+  --output json | ConvertFrom-Json | ForEach-Object {
+    aws s3api delete-object `
+      --bucket livecap-transcripts-dev-720459752315 `
+      --key $_.Key `
+      --version-id $_.VersionId `
+      --region ap-southeast-1 --profile livecap-codex
+  }
 ```
 
-### 3. Delete ECR Repository and Images
+### Step 3 – Terraform destroy
 
 ```powershell
-# This deletes all images in the repository
+# Apply the plan reviewed in Step 1
+terraform apply destroy.tfplan
+```
+
+Terraform handles the correct dependency order:
+WAF disassociation → Listeners/Target Groups → ALB → ECS Service → ECS Cluster
+→ Lambda → ECR → NAT Gateway → Subnets → VPC → IAM Roles → CloudWatch Log Groups
+→ S3 Buckets → CloudFront Distribution → Budget Alert.
+
+### Step 4 – Verify no resources remain
+
+After `terraform destroy` completes, spot-check manually:
+
+```powershell
+# ECS cluster
+aws ecs list-clusters --region ap-southeast-1 --profile livecap-codex
+
+# ECR repositories
+aws ecr describe-repositories --region ap-southeast-1 --profile livecap-codex `
+  --query "repositories[?contains(repositoryName, 'livecap')].repositoryName"
+
+# S3 buckets
+aws s3 ls --profile livecap-codex | Select-String "livecap"
+
+# ALB
+aws elbv2 describe-load-balancers --region ap-southeast-1 --profile livecap-codex `
+  --query "LoadBalancers[?contains(LoadBalancerName, 'livecap')].LoadBalancerName"
+
+# Lambda
+aws lambda list-functions --region ap-southeast-1 --profile livecap-codex `
+  --query "Functions[?contains(FunctionName, 'livecap')].FunctionName"
+
+# CloudWatch log groups
+aws logs describe-log-groups --region ap-southeast-1 --profile livecap-codex `
+  --query "logGroups[?contains(logGroupName, 'livecap')].logGroupName"
+
+# Unassociated Elastic IPs left over from NAT Gateway
+aws ec2 describe-addresses --region ap-southeast-1 --profile livecap-codex `
+  --query "Addresses[?AssociationId==null].PublicIp"
+```
+
+If any unassociated Elastic IPs remain, release them via EC2 Console →
+Elastic IPs → Actions → Release Elastic IP address.
+
+### Step 5 – Force-delete ECR repository (if Terraform cannot remove it)
+
+```powershell
 aws ecr delete-repository `
   --repository-name livecap-backend `
   --force `
   --region ap-southeast-1 --profile livecap-codex
 ```
 
-### 4. Empty and Delete the S3 Frontend Bucket
+### Step 6 – Delete the AWS Budget (if not managed by Terraform)
 
 ```powershell
-# Empty the bucket first (delete objects and versions)
-aws s3 rm s3://livecap-frontend-dev-720459752315 --recursive `
-  --region ap-southeast-1 --profile livecap-codex
-
-# Delete the bucket
-aws s3api delete-bucket `
-  --bucket livecap-frontend-dev-720459752315 `
-  --region ap-southeast-1 --profile livecap-codex
-```
-
-### 5. Empty and Delete the S3 Transcript Bucket
-
-```powershell
-aws s3 rm s3://livecap-transcripts-dev-720459752315 --recursive `
-  --region ap-southeast-1 --profile livecap-codex
-
-aws s3api delete-bucket `
-  --bucket livecap-transcripts-dev-720459752315 `
-  --region ap-southeast-1 --profile livecap-codex
-```
-
-### 6. Delete the Application Load Balancer
-
-```powershell
-# Get ALB ARN
-$albArn = aws elbv2 describe-load-balancers `
-  --names livecap-alb-dev `
-  --region ap-southeast-1 --profile livecap-codex `
-  --query "LoadBalancers[0].LoadBalancerArn" --output text
-
-# Delete listeners and target groups first, then the ALB
-aws elbv2 delete-load-balancer --load-balancer-arn $albArn `
-  --region ap-southeast-1 --profile livecap-codex
-```
-
-### 7. Delete CloudFront Distribution
-
-Disabling a CloudFront distribution takes 5–15 minutes before it can be deleted:
-
-```powershell
-# Disable first, then delete (requires ETag)
-# It is easier to do this from the AWS Console:
-# CloudFront → Distributions → select distribution → Disable → wait → Delete
-```
-
-### 8. Delete NAT Gateway (if deployed)
-
-```powershell
-# Find NAT Gateway ID
-$natId = aws ec2 describe-nat-gateways `
-  --filter "Name=tag:Name,Values=livecap-nat-*" `
-  --region ap-southeast-1 --profile livecap-codex `
-  --query "NatGateways[0].NatGatewayId" --output text
-
-aws ec2 delete-nat-gateway --nat-gateway-id $natId `
-  --region ap-southeast-1 --profile livecap-codex
-
-# NAT Gateway takes a few minutes to delete; also release the associated
-# Elastic IP:
-# EC2 Console → Elastic IPs → Actions → Release
-```
-
-### 9. Delete VPC and Network Resources
-
-Delete in this order: Security Groups → Subnets → Internet Gateway (detach
-first) → VPC.
-
-```powershell
-# It is easiest to do this from the VPC Console after deleting dependent resources
-# VPC Console → Your VPCs → select livecap VPC → Actions → Delete VPC
-```
-
-### 10. Delete WAF Web ACLs
-
-```powershell
-# Delete from WAF Console or CLI (requires GetWebACL to get the LockToken first)
-# WAF & Shield Console → Web ACLs → select → Delete
-```
-
-### 11. Delete CloudWatch Log Groups
-
-```powershell
-aws logs delete-log-group --log-group-name livecap `
-  --region ap-southeast-1 --profile livecap-codex
-
-# Delete ALB access log group if created
-aws logs delete-log-group --log-group-name livecap-alb `
-  --region ap-southeast-1 --profile livecap-codex
-```
-
-### 12. Delete CloudWatch Alarms (if created)
-
-```powershell
-aws cloudwatch delete-alarms `
-  --alarm-names livecap-alb-5xx `
-  --region ap-southeast-1 --profile livecap-codex
-```
-
-### 13. Delete IAM Roles and Policies
-
-```powershell
-# Detach policies before deleting roles
-aws iam detach-role-policy `
-  --role-name livecap-task-role `
-  --policy-arn <policy-arn>
-
-aws iam delete-role --role-name livecap-task-role
-aws iam delete-role --role-name livecap-execution-role
-aws iam delete-role --role-name livecap-wake-lambda-role
-
-# Delete the IAM user if created only for this workshop
-aws iam delete-user --user-name Codex
-```
-
-### 14. Delete Lambda Function (if deployed)
-
-```powershell
-aws lambda delete-function --function-name livecap-wake `
-  --region ap-southeast-1 --profile livecap-codex
-```
-
-### 15. Delete AWS Budget
-
-```powershell
-# AWS Budgets Console → select budget → Actions → Delete
-```
-
-### Final Verification
-
-After completing all steps, check that no billable resources remain:
-
-```powershell
-# Check for any remaining ECS resources
-aws ecs list-clusters --region ap-southeast-1 --profile livecap-codex
-
-# Check for running EC2/NAT/ALB resources
-aws ec2 describe-nat-gateways --region ap-southeast-1 --profile livecap-codex `
-  --filter "Name=state,Values=available"
+aws budgets delete-budget `
+  --account-id 720459752315 `
+  --budget-name livecap-monthly-budget `
+  --profile livecap-codex
 ```
 
 ---
+
+
+
+
+---
+
 
 ## Learning Outcomes
 

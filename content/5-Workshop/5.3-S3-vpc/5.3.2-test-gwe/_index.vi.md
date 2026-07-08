@@ -8,26 +8,18 @@ pre: " <b> 5.3.2. </b> "
 
 # Deploy & Xác minh ECS Fargate Service
 
-## Bước 1 – Tạo hoặc cập nhật ECS Task Definition
+## Bước 1 – Task Definition do Terraform quản lý
 
-Task definition nói cho ECS biết cách chạy container của bạn: image nào, bao
-nhiêu CPU/memory, port nào, IAM role nào và biến môi trường gì.
+Task definition của LiveCap được quản lý hoàn toàn bởi Terraform –
+**không deploy bằng file JSON thủ công**. Mỗi khi bạn cập nhật image tag
+trong biến Terraform và chạy `terraform apply`, Terraform sẽ tự đăng ký
+revision task definition mới và trigger rolling update cho ECS service.
 
-Cập nhật URI image trong task definition sang SHA tag vừa push, rồi đăng ký
-revision mới:
-
-```powershell
-# Đăng ký task definition revision mới
-aws ecs register-task-definition `
-  --cli-input-json file://infrastructure/task-definition.json `
-  --region ap-southeast-1 --profile livecap-codex
-```
-
-Các trường quan trọng trong task definition:
+Các trường quan trọng trong task definition thực tế:
 
 | Trường | Giá trị |
 |---|---|
-| Family | `livecap-backend-dev` |
+| Family | `livecap-target-backend-dev` |
 | Container name | `livecap-backend` |
 | Image | `<account>.dkr.ecr.ap-southeast-1.amazonaws.com/livecap-backend:<sha>-amd64` |
 | Port mapping | Container 8000 → Host 8000 |
@@ -37,23 +29,46 @@ Các trường quan trọng trong task definition:
 | Task role | `livecap-task-role` (gọi Transcribe, Translate, S3) |
 | Network mode | `awsvpc` |
 
-## Bước 2 – Cập nhật ECS Service
+Để xem revision hiện tại đang chạy:
 
-Yêu cầu ECS service deploy revision task definition mới:
+```powershell
+aws ecs describe-task-definition `
+  --task-definition livecap-target-backend-dev `
+  --region ap-southeast-1 --profile livecap-codex `
+  --query "taskDefinition.{Family:family, Revision:revision, Image:containerDefinitions[0].image}"
+```
+
+## Bước 2 – Cập nhật ECS Service qua Terraform
+
+Service đúng trong cluster là `livecap-target-service-dev`.
+Terraform là cách được khuyến nghị để cập nhật service – nó xử lý đúng thứ tự
+dependency và tránh drift:
+
+```powershell
+# Xem trạng thái service hiện tại
+aws ecs describe-services `
+  --cluster livecap-cluster-dev `
+  --services livecap-target-service-dev `
+  --region ap-southeast-1 --profile livecap-codex `
+  --query "services[0].{Status:status, Running:runningCount, Desired:desiredCount}"
+```
+
+Nếu cần force deploy revision mới (chỉ dùng trong môi trường dev, ngoài Terraform):
 
 ```powershell
 $cluster = "livecap-cluster-dev"
-$service = "livecap-service-dev"
-$taskDef = "livecap-backend-dev:<revision>"  # thay bằng số revision thực tế
+$service = "livecap-target-service-dev"
+$taskDef = "livecap-target-backend-dev:<revision>"  # thay bằng số revision thực tế
 
 aws ecs update-service `
   --cluster $cluster `
   --service $service `
   --task-definition $taskDef `
+  --force-new-deployment `
   --region ap-southeast-1 `
   --profile livecap-codex
 
-# Chờ service ổn định (task mới healthy, task cũ đã stop)
+# Chờ service ổn định
 aws ecs wait services-stable `
   --cluster $cluster `
   --services $service `
@@ -68,7 +83,7 @@ Kiểm tra trạng thái service từ console hoặc CLI:
 ```powershell
 aws ecs describe-services `
   --cluster livecap-cluster-dev `
-  --services livecap-service-dev `
+  --services livecap-target-service-dev `
   --region ap-southeast-1 --profile livecap-codex `
   --query "services[0].{Status:status,Running:runningCount,Desired:desiredCount}"
 ```

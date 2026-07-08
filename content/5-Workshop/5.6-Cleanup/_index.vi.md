@@ -11,193 +11,123 @@ pre: " <b> 5.6. </b> "
 ## Clean-up
 
 Sau khi hoàn thành workshop, hãy xóa tất cả tài nguyên để tránh phát sinh chi
-phí liên tục. Thực hiện theo thứ tự – một số tài nguyên phụ thuộc vào việc
-xóa tài nguyên khác trước (ví dụ: không thể xóa VPC khi các tài nguyên bên
-trong vẫn còn).
+phí liên tục.
 
-> [!WARNING]
-> **Không** chạy `terraform destroy` trên môi trường LiveCap đầy đủ mà không
-> review Terraform state hiện tại và có sự chấp thuận rõ ràng. Các lệnh dưới
-> đây là quy trình **clean-up thủ công từng bước** để bạn xác minh từng thao
-> tác xóa.
+> [!CAUTION]
+> **Toàn bộ stack LiveCap được quản lý bởi Terraform.** Xóa thủ công bằng CLI
+> có thể gây **Terraform state drift** – khiến lần `apply` tiếp theo bị lỗi hoặc
+> tạo ra tài nguyên trùng lặp. Luôn ưu tiên dùng `terraform destroy` sau khi
+> đã review plan cẩn thận.
 
-### 1. Dừng và xóa ECS Service
+### Bước 1 – Review Terraform plan trước khi destroy
 
 ```powershell
-# Scale về 0 để dừng task đang chạy
-aws ecs update-service `
-  --cluster livecap-cluster-dev `
-  --service livecap-service-dev `
-  --desired-count 0 `
-  --region ap-southeast-1 --profile livecap-codex
+cd infrastructure/terraform   # hoặc thư mục chứa Terraform state của bạn
 
-# Chờ task dừng
-Start-Sleep 30
+# Xem toàn bộ tài nguyên sẽ bị xóa
+terraform plan -destroy -out=destroy.tfplan
 
-# Xóa service
-aws ecs delete-service `
-  --cluster livecap-cluster-dev `
-  --service livecap-service-dev `
-  --region ap-southeast-1 --profile livecap-codex
+# Đọc kỹ output, đặc biệt chú ý:
+# - WAF association phải được detach trước ALB/CloudFront
+# - Listener và Target Group phải xóa trước ALB
+# - S3 object (kể cả versioned objects) phải làm trống trước khi xóa bucket
+# - NAT Gateway cần vài phút để delete; EIP phải release sau
 ```
 
-### 2. Xóa ECS Cluster
+Chỉ tiến hành khi bạn đã xác nhận danh sách tài nguyên là đúng.
+
+### Bước 2 – Làm trống S3 buckets (bắt buộc trước khi destroy)
+
+Terraform không tự xóa S3 object và versioned object. Làm trống thủ công trước:
 
 ```powershell
-aws ecs delete-cluster `
-  --cluster livecap-cluster-dev `
+# Làm trống frontend bucket (không có versioning)
+aws s3 rm s3://livecap-frontend-dev-720459752315 --recursive `
   --region ap-southeast-1 --profile livecap-codex
+
+# Làm trống transcript bucket (bao gồm delete markers và versions)
+aws s3api list-object-versions `
+  --bucket livecap-transcripts-dev-720459752315 `
+  --region ap-southeast-1 `
+  --query "Versions[].{Key:Key,VersionId:VersionId}" `
+  --output json | ConvertFrom-Json | ForEach-Object {
+    aws s3api delete-object `
+      --bucket livecap-transcripts-dev-720459752315 `
+      --key $_.Key `
+      --version-id $_.VersionId `
+      --region ap-southeast-1 --profile livecap-codex
+  }
 ```
 
-### 3. Xóa ECR Repository và tất cả image
+### Bước 3 – Terraform destroy
 
 ```powershell
-# Lệnh này xóa tất cả image trong repository
+# Apply plan đã review ở Bước 1
+terraform apply destroy.tfplan
+```
+
+Terraform sẽ xử lý đúng thứ tự dependency:
+WAF disassociation → Listeners/Target Groups → ALB → ECS Service → ECS Cluster
+→ Lambda → ECR → NAT Gateway → Subnets → VPC → IAM Roles → CloudWatch Log Groups
+→ S3 Buckets → CloudFront Distribution → Budget Alert.
+
+### Bước 4 – Xác minh còn tài nguyên nào chưa xóa
+
+Sau khi `terraform destroy` hoàn tất, kiểm tra thủ công:
+
+```powershell
+# Kiểm tra ECS cluster
+aws ecs list-clusters --region ap-southeast-1 --profile livecap-codex
+
+# Kiểm tra ECR repository
+aws ecr describe-repositories --region ap-southeast-1 --profile livecap-codex `
+  --query "repositories[?contains(repositoryName, 'livecap')].repositoryName"
+
+# Kiểm tra S3 buckets
+aws s3 ls --profile livecap-codex | Select-String "livecap"
+
+# Kiểm tra ALB
+aws elbv2 describe-load-balancers --region ap-southeast-1 --profile livecap-codex `
+  --query "LoadBalancers[?contains(LoadBalancerName, 'livecap')].LoadBalancerName"
+
+# Kiểm tra Lambda
+aws lambda list-functions --region ap-southeast-1 --profile livecap-codex `
+  --query "Functions[?contains(FunctionName, 'livecap')].FunctionName"
+
+# Kiểm tra log group
+aws logs describe-log-groups --region ap-southeast-1 --profile livecap-codex `
+  --query "logGroups[?contains(logGroupName, 'livecap')].logGroupName"
+
+# Kiểm tra Elastic IP còn lại (từ NAT Gateway)
+aws ec2 describe-addresses --region ap-southeast-1 --profile livecap-codex `
+  --query "Addresses[?AssociationId==null].PublicIp"
+```
+
+Nếu còn Elastic IP không được liên kết, release thủ công qua EC2 Console →
+Elastic IPs → Actions → Release Elastic IP address.
+
+### Bước 5 – Xóa ECR image trước khi xóa repository (nếu Terraform không xóa được)
+
+```powershell
+# Force xóa repository và tất cả image
 aws ecr delete-repository `
   --repository-name livecap-backend `
   --force `
   --region ap-southeast-1 --profile livecap-codex
 ```
 
-### 4. Làm trống và xóa S3 Frontend Bucket
+### Bước 6 – Hủy AWS Budget (nếu không do Terraform quản lý)
 
 ```powershell
-# Làm trống bucket trước (xóa object và version)
-aws s3 rm s3://livecap-frontend-dev-720459752315 --recursive `
-  --region ap-southeast-1 --profile livecap-codex
-
-# Xóa bucket
-aws s3api delete-bucket `
-  --bucket livecap-frontend-dev-720459752315 `
-  --region ap-southeast-1 --profile livecap-codex
+aws budgets delete-budget `
+  --account-id 720459752315 `
+  --budget-name livecap-monthly-budget `
+  --profile livecap-codex
 ```
 
-### 5. Làm trống và xóa S3 Transcript Bucket
 
-```powershell
-aws s3 rm s3://livecap-transcripts-dev-720459752315 --recursive `
-  --region ap-southeast-1 --profile livecap-codex
+---
 
-aws s3api delete-bucket `
-  --bucket livecap-transcripts-dev-720459752315 `
-  --region ap-southeast-1 --profile livecap-codex
-```
-
-### 6. Xóa Application Load Balancer
-
-```powershell
-# Lấy ALB ARN
-$albArn = aws elbv2 describe-load-balancers `
-  --names livecap-alb-dev `
-  --region ap-southeast-1 --profile livecap-codex `
-  --query "LoadBalancers[0].LoadBalancerArn" --output text
-
-# Xóa listener và target group trước, rồi xóa ALB
-aws elbv2 delete-load-balancer --load-balancer-arn $albArn `
-  --region ap-southeast-1 --profile livecap-codex
-```
-
-### 7. Xóa CloudFront Distribution
-
-Vô hiệu hóa CloudFront distribution cần 5–15 phút trước khi có thể xóa:
-
-```powershell
-# Dễ thực hiện hơn qua AWS Console:
-# CloudFront → Distributions → chọn distribution → Disable → chờ → Delete
-```
-
-### 8. Xóa NAT Gateway (nếu đã deploy)
-
-```powershell
-# Tìm NAT Gateway ID
-$natId = aws ec2 describe-nat-gateways `
-  --filter "Name=tag:Name,Values=livecap-nat-*" `
-  --region ap-southeast-1 --profile livecap-codex `
-  --query "NatGateways[0].NatGatewayId" --output text
-
-aws ec2 delete-nat-gateway --nat-gateway-id $natId `
-  --region ap-southeast-1 --profile livecap-codex
-
-# NAT Gateway cần vài phút để xóa; sau đó release Elastic IP liên kết:
-# EC2 Console → Elastic IPs → Actions → Release
-```
-
-### 9. Xóa VPC và tài nguyên mạng
-
-Xóa theo thứ tự: Security Group → Subnet → Internet Gateway (detach trước) → VPC.
-
-```powershell
-# Dễ thực hiện hơn qua VPC Console sau khi đã xóa tài nguyên phụ thuộc:
-# VPC Console → Your VPCs → chọn livecap VPC → Actions → Delete VPC
-```
-
-### 10. Xóa WAF Web ACL
-
-```powershell
-# Xóa từ WAF Console (cần GetWebACL để lấy LockToken trước)
-# WAF & Shield Console → Web ACLs → chọn → Delete
-```
-
-### 11. Xóa CloudWatch Log Group
-
-```powershell
-aws logs delete-log-group --log-group-name livecap `
-  --region ap-southeast-1 --profile livecap-codex
-
-# Xóa log group ALB nếu đã tạo
-aws logs delete-log-group --log-group-name livecap-alb `
-  --region ap-southeast-1 --profile livecap-codex
-```
-
-### 12. Xóa CloudWatch Alarm (nếu đã tạo)
-
-```powershell
-aws cloudwatch delete-alarms `
-  --alarm-names livecap-alb-5xx `
-  --region ap-southeast-1 --profile livecap-codex
-```
-
-### 13. Xóa IAM Role và Policy
-
-```powershell
-# Detach policy trước khi xóa role
-aws iam detach-role-policy `
-  --role-name livecap-task-role `
-  --policy-arn <policy-arn>
-
-aws iam delete-role --role-name livecap-task-role
-aws iam delete-role --role-name livecap-execution-role
-aws iam delete-role --role-name livecap-wake-lambda-role
-
-# Xóa IAM user nếu chỉ tạo cho workshop này
-aws iam delete-user --user-name Codex
-```
-
-### 14. Xóa Lambda Function (nếu đã deploy)
-
-```powershell
-aws lambda delete-function --function-name livecap-wake `
-  --region ap-southeast-1 --profile livecap-codex
-```
-
-### 15. Xóa AWS Budget
-
-```powershell
-# AWS Budgets Console → chọn budget → Actions → Delete
-```
-
-### Kiểm tra cuối
-
-Sau khi hoàn thành tất cả bước, xác minh không còn tài nguyên tính phí nào:
-
-```powershell
-# Kiểm tra tài nguyên ECS còn lại
-aws ecs list-clusters --region ap-southeast-1 --profile livecap-codex
-
-# Kiểm tra tài nguyên EC2/NAT/ALB đang chạy
-aws ec2 describe-nat-gateways --region ap-southeast-1 --profile livecap-codex `
-  --filter "Name=state,Values=available"
-```
 
 ---
 

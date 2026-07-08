@@ -62,19 +62,20 @@ Gitleaks runs against the full Git history. A clean scan is required before any
 
 ### CloudWatch Application Logs
 
-The FastAPI backend emits structured JSON logs to the `livecap` CloudWatch log
-group. Log retention is 14 days.
+The FastAPI backend emits structured JSON logs to the `/ecs/livecap-backend-dev`
+CloudWatch log group. Log retention is 14 days.
 
 ```powershell
 # Stream live logs
-aws logs tail livecap --follow --region ap-southeast-1 --profile livecap-codex
+aws logs tail /ecs/livecap-backend-dev --follow --region ap-southeast-1 --profile livecap-codex
 ```
 
-Log events you will see during a session:
-- `session_opened` with session ID and client IP hash
-- `transcribe_result` with language, segment text, and is_final flag
-- `translate_called` with source/target language and character count
-- `session_closed` with duration and reason
+Key log events you will see during a session:
+- `session_start` – new session opened, with session ID and client IP hash
+- `websocket_connect` – WebSocket connection established
+- `websocket_disconnect` – client disconnected or timed out
+- `session_end` – session closed, with duration and reason
+- `integration_error` – error from Transcribe, Translate, or S3
 
 ![CloudWatch log groups showing the livecap log group](/images/5-Workshop/5.5-Policy/cloudwatch_log_groups.png)
 
@@ -148,7 +149,7 @@ Both Web ACLs are in BLOCK mode. Production probes confirmed:
 | Resource | Cost basis | Optimization |
 |---|---|---|
 | ECS Fargate | Per vCPU-second + GB-second | Scale to 0 when idle (target feature) |
-| ALB | Fixed hourly + LCU | Cannot eliminate if ECS is running |
+| ALB | Fixed hourly + LCU | Incurs cost even when ECS is at 0; only removed by destroying the full stack |
 | NAT Gateway | Hourly + per-GB data | Single NAT in one AZ (cost trade-off) |
 | Amazon Transcribe | Per minute of audio | Session limits cap usage |
 | Amazon Translate | Per million characters | Only finalized segments are translated |
@@ -168,7 +169,8 @@ Both Web ACLs are in BLOCK mode. Production probes confirmed:
 ### AWS Budget (Target Terraform)
 
 An AWS Budget alert is defined in the Terraform target at **$50/month**. It sends
-an SNS notification when actual or forecast spend approaches the threshold.
+a notification directly to an **email subscriber** when actual or forecast spend
+approaches the threshold (not via SNS).
 
 > **Note:** Budget alerts are a delayed billing signal, not real-time enforcement.
 > They help you notice runaway costs within hours, not seconds.

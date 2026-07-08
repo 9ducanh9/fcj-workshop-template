@@ -82,7 +82,9 @@ Transcribe, các lần gọi Translate, đóng phiên.
 
 ## Kết quả kiểm thử production đã xác minh
 
-Ngày 2026-07-04, toàn bộ luồng production đã pass tất cả bài test sau:
+Ngày 2026-07-08, sau khi hoàn thành blue/green cutover sang kiến trúc target
+(custom VPC, private subnet, NAT Gateway, WAF, scale-to-zero, budget alert),
+toàn bộ luồng production đã pass tất cả bài test sau:
 
 | Bài test | Kết quả |
 |---|---|
@@ -96,6 +98,8 @@ Ngày 2026-07-04, toàn bộ luồng production đã pass tất cả bài test s
 | Export transcript S3 | TXT object được tạo trong bucket private ✓ |
 | Tải xuống qua presigned URL | File tải thành công ✓ |
 | Kiểm thử WAF blocking | XSS và Log4J probe trả về HTTP 403 ✓ |
+| ECS scale-to-zero (idle 300s) | Service scale về 0 sau 5 phút không dùng ✓ |
+| ECS self-healing (wake Lambda) | Scale từ 0 → 1 và healthy trong ≩60s ✓ |
 
 ![Xác minh end-to-end: phiên âm, dịch và export pass trên production](/images/5-Workshop/livecap-transcribe-translate-export-verification.png)
 

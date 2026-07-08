@@ -17,25 +17,29 @@ hoặc kiểm thử bị lỗi giữa chừng.
 Bạn cần một AWS account và một IAM identity có các quyền phù hợp. **Không dùng
 root account** cho bất kỳ bước triển khai nào.
 
-Tạo một IAM user riêng (ví dụ `Codex` như trong project này) và đính kèm
-policy tùy chỉnh chỉ cấp đúng các action LiveCap thực sự cần:
+Tạo một IAM user riêng (ví dụ `camgiacntn` đang được dùng trong project này) và
+đính kèm policy tùy chỉnh cấp đúng các action cần thiết:
 
 | Nhóm quyền | Action cần thiết |
 |---|---|
 | ECR | `ecr:GetAuthorizationToken`, `ecr:BatchCheckLayerAvailability`, `ecr:PutImage`, `ecr:InitiateLayerUpload`, `ecr:UploadLayerPart`, `ecr:CompleteLayerUpload`, `ecr:DescribeRepositories`, `ecr:ListImages` |
 | ECS | `ecs:RegisterTaskDefinition`, `ecs:UpdateService`, `ecs:DescribeServices`, `ecs:DescribeClusters`, `ecs:ListTasks`, `ecs:DescribeTasks` |
-| S3 | `s3:ListBucket`, `s3:PutObject`, `s3:GetObject`, `s3:DeleteObject`, `s3:GetBucketLocation`, `s3:PutObjectAcl` |
+| S3 | `s3:ListBucket`, `s3:PutObject`, `s3:GetObject`, `s3:DeleteObject`, `s3:GetBucketLocation` |
 | CloudFront | `cloudfront:CreateInvalidation`, `cloudfront:ListDistributions`, `cloudfront:GetDistribution` |
+| VPC & Mạng | `ec2:Describe*`, `ec2:CreateVpc`, `ec2:CreateSubnet`, `ec2:CreateInternetGateway`, `ec2:CreateNatGateway`, `ec2:CreateRouteTable`, `ec2:CreateSecurityGroup` và các action paired `Delete*`/`Attach*`/`Detach*` tương ứng |
+| ELB | `elasticloadbalancing:*` (cần cho ALB, listener, target group) |
+| Lambda | `lambda:CreateFunction`, `lambda:UpdateFunctionCode`, `lambda:UpdateFunctionConfiguration`, `lambda:AddPermission`, `lambda:GetFunction`, `lambda:DeleteFunction` |
+| WAF | `wafv2:CreateWebACL`, `wafv2:AssociateWebACL`, `wafv2:GetWebACL`, `wafv2:UpdateWebACL`, `wafv2:DeleteWebACL` |
+| CloudWatch Logs | `logs:CreateLogGroup`, `logs:PutRetentionPolicy`, `logs:DescribeLogGroups`, `logs:DeleteLogGroup` |
+| Budgets | `budgets:ModifyBudget`, `budgets:ViewBudget` |
 | STS | `sts:GetCallerIdentity` |
-| IAM | Chỉ đọc để xác minh role |
+| IAM | `iam:PassRole` (bắt buộc cho Terraform để gán role cho ECS/Lambda), các action read-only để xác minh role |
 
-Triển khai thực tế dùng IAM user `Codex` (account `720459752315`). ECS Fargate
+Triển khai thực tế dùng IAM user `camgiacntn` (account `720459752315`). ECS Fargate
 task dùng **task role** để có thể gọi Transcribe, Translate và S3 lúc runtime mà
 không cần nhúng credential vào container image.
 
-![Danh sách IAM users – hiển thị user Codex dùng để deploy](/images/5-Workshop/5.2-Prerequisite/iam_users.png)
-
-![Chi tiết IAM user Codex với các policy được đính kèm](/images/5-Workshop/5.2-Prerequisite/iam_codex_user.png)
+![Danh sách IAM users](/images/5-Workshop/5.2-Prerequisite/iam_users.png)
 
 ![IAM roles lọc theo livecap – hiển thị task role và execution role](/images/5-Workshop/5.2-Prerequisite/iam_livecap_roles.png)
 

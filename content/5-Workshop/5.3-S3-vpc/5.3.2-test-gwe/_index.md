@@ -8,26 +8,19 @@ pre: " <b> 5.3.2. </b> "
 
 # Deploy & Verify ECS Fargate Service
 
-## Step 1 – Create or Update the ECS Task Definition
+## Step 1 – Task Definition is Managed by Terraform
 
-A task definition tells ECS how to run your container: which image, how much
-CPU/memory, which ports, which IAM roles, and what environment variables.
+The LiveCap task definition is managed entirely by Terraform –
+**do not register task definitions manually from a JSON file**. When you update
+the image tag in a Terraform variable and run `terraform apply`, Terraform
+automatically registers a new task definition revision and triggers a rolling
+update on the ECS service.
 
-Update the image URI in your task definition to the SHA tag you just pushed,
-then register a new revision:
-
-```powershell
-# Register new task definition revision
-aws ecs register-task-definition `
-  --cli-input-json file://infrastructure/task-definition.json `
-  --region ap-southeast-1 --profile livecap-codex
-```
-
-Key fields in the task definition:
+Key fields in the actual task definition:
 
 | Field | Value |
 |---|---|
-| Family | `livecap-backend-dev` |
+| Family | `livecap-target-backend-dev` |
 | Container name | `livecap-backend` |
 | Image | `<account>.dkr.ecr.ap-southeast-1.amazonaws.com/livecap-backend:<sha>-amd64` |
 | Port mapping | Container 8000 → Host 8000 |
@@ -37,23 +30,46 @@ Key fields in the task definition:
 | Task role | `livecap-task-role` (calls Transcribe, Translate, S3) |
 | Network mode | `awsvpc` |
 
-## Step 2 – Update the ECS Service
+To inspect the currently running revision:
 
-Tell the ECS service to deploy the new task definition revision:
+```powershell
+aws ecs describe-task-definition `
+  --task-definition livecap-target-backend-dev `
+  --region ap-southeast-1 --profile livecap-codex `
+  --query "taskDefinition.{Family:family, Revision:revision, Image:containerDefinitions[0].image}"
+```
+
+## Step 2 – Update the ECS Service via Terraform
+
+The correct service in the cluster is `livecap-target-service-dev`.
+Terraform is the recommended way to update the service – it handles dependency
+ordering correctly and prevents drift:
+
+```powershell
+# Check current service status
+aws ecs describe-services `
+  --cluster livecap-cluster-dev `
+  --services livecap-target-service-dev `
+  --region ap-southeast-1 --profile livecap-codex `
+  --query "services[0].{Status:status, Running:runningCount, Desired:desiredCount}"
+```
+
+If you need to force-deploy a new revision outside Terraform (dev only):
 
 ```powershell
 $cluster = "livecap-cluster-dev"
-$service = "livecap-service-dev"
-$taskDef = "livecap-backend-dev:<revision>"  # replace with actual revision number
+$service = "livecap-target-service-dev"
+$taskDef = "livecap-target-backend-dev:<revision>"  # replace with actual revision number
 
 aws ecs update-service `
   --cluster $cluster `
   --service $service `
   --task-definition $taskDef `
+  --force-new-deployment `
   --region ap-southeast-1 `
   --profile livecap-codex
 
-# Wait until the service is stable (new task healthy, old task stopped)
+# Wait until the service is stable
 aws ecs wait services-stable `
   --cluster $cluster `
   --services $service `
@@ -68,7 +84,7 @@ Check the service status from the console or CLI:
 ```powershell
 aws ecs describe-services `
   --cluster livecap-cluster-dev `
-  --services livecap-service-dev `
+  --services livecap-target-service-dev `
   --region ap-southeast-1 --profile livecap-codex `
   --query "services[0].{Status:status,Running:runningCount,Desired:desiredCount}"
 ```

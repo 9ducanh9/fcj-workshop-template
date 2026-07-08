@@ -82,7 +82,9 @@ results, Translate calls, session close.
 
 ## Verified Production Results
 
-On 2026-07-04, the production flow passed all of the following:
+On 2026-07-08, after the blue/green cutover to the target architecture
+(custom VPC, private subnets, NAT Gateway, WAF, scale-to-zero, budget alert),
+the full production flow passed all of the following:
 
 | Test | Result |
 |---|---|
@@ -96,6 +98,10 @@ On 2026-07-04, the production flow passed all of the following:
 | S3 transcript export | TXT object created in private bucket ✓ |
 | Presigned URL download | File downloaded successfully ✓ |
 | WAF blocking test | XSS and Log4J probes returned HTTP 403 ✓ |
+| ECS scale-to-zero (idle 300 s) | Service scaled to 0 after 5 min idle ✓ |
+| ECS self-healing (wake Lambda) | Scaled 0 → 1 and healthy within ≤60 s ✓ |
+
+
 
 ![End-to-end verification: transcription, translation, and export passing in production](/images/5-Workshop/livecap-transcribe-translate-export-verification.png)
 

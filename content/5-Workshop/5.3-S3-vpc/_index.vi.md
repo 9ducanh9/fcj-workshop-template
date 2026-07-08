@@ -19,7 +19,7 @@ phản hồi health check và có thể truy cập từ Application Load Balance
 | Container image | Docker / FastAPI | Amazon ECR |
 | Container runtime | ECS Fargate | Private subnet, không có public IP |
 | Load balancer | Application Load Balancer | Public subnet, hai AZ |
-| Service registry | ECS Service | Duy trì desired count = 1 |
+| Service registry | ECS Service `livecap-target-service-dev` | Scale-to-zero: 0 ↔1, wake bằng Lambda, idle scale-down sau 300s |
 | Mạng | Custom VPC `10.20.0.0/16` | ap-southeast-1 |
 
 Cluster đang chạy thực tế là `livecap-cluster-dev`:
