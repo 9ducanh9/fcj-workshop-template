@@ -37,3 +37,11 @@ giúp giảm chi phí storage và giới hạn dữ liệu nhạy cảm được
 Lỗi Translate hoặc export được trả về UI dưới dạng có cấu trúc và ghi log mà
 không lộ credential. Session cleanup vẫn chạy khi Transcribe stream hoặc worker
 lỗi để active-session count không bị leak.
+
+## Bằng chứng kiểm thử production
+
+Ngày 2026-07-07, một WAV kiểm soát được chuyển thành PCM 16 kHz mono và stream
+qua production WebSocket. Backend nhận hai finalized segment, dịch Anh-Việt,
+trả `session_end`, export TXT lên S3 và tải lại qua presigned URL với HTTP 200.
+
+![Kết quả Transcribe, Translate và export production](/images/5-Workshop/livecap-transcribe-translate-export-verification.png)

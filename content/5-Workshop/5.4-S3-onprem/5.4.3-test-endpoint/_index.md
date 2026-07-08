@@ -38,3 +38,12 @@ text exports, which reduces storage cost and limits retained sensitive data.
 Translate or export failures return structured errors to the UI and are logged
 without exposing credentials. A session cleanup still runs when a Transcribe
 stream or internal worker fails, preventing leaked active-session counts.
+
+## Production Verification Evidence
+
+On 2026-07-07, a controlled WAV was converted to 16 kHz mono PCM and streamed
+through the production WebSocket. The backend returned two finalized segments,
+translated English to Vietnamese, emitted `session_end`, exported TXT to S3,
+and downloaded it through the presigned URL with HTTP 200.
+
+![Production Transcribe, Translate, and export result](/images/5-Workshop/livecap-transcribe-translate-export-verification.png)

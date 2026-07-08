@@ -38,13 +38,18 @@ hoặc Redis trước.
 | Hạng mục | Giá trị đã xác minh |
 | --- | --- |
 | Region | `ap-southeast-1` |
-| ALB | Public, trải trên `1a` và `1b` |
+| VPC | Custom VPC `10.20.0.0/16` |
+| Subnet | 2 public + 2 private trên `1a` và `1b` |
+| ALB | Public, HTTPS, trải trên `1a` và `1b` |
 | ECS desired/running | `1/1` |
-| Network của task | Public subnet trong VPC hiện hữu, có public IP |
-| Task definition | `livecap-backend-dev:5` |
+| Network của task | Private subnet, `assign_public_ip=false` |
+| Outbound | Một NAT Gateway tại `1a` |
+| Task definition | `livecap-target-backend-dev:1` |
 | Container image | `1ef4250-amd64` |
 
-Task private và wake/idle `0 <-> 1` là thay đổi target, không phải mô tả môi
-trường public hiện tại.
+CloudFront đã cutover `/api/*` và `/ws/*` sang target ALB. Legacy stack vẫn được
+giữ trong rollback window và chưa bị xóa.
 
 ![Network và service placement trong target đã review](/images/3-Project/livecap-target-architecture.png)
+
+![Dashboard production sau khi target Fargate được xác minh](/images/5-Workshop/livecap-production-dashboard-ready.png)

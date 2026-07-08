@@ -36,11 +36,19 @@ requests and main pushes. It does not deploy, apply Terraform, or migrate state.
 
 ## Verified Production Evidence
 
-On 2026-07-04, the production path passed CloudFront `/`, `/app`, health,
-WebSocket start, ping/pong, real 16 kHz PCM transcription,
-English-to-Vietnamese translation, clean stop, S3 export, and presigned TXT
-download. A browser UI test with a controlled microphone WAV appended three
-finalized bilingual rows and stopped cleanly.
+On 2026-07-07, the target custom VPC path passed CloudFront health, WebSocket
+`session_start`/`pong`, 16 kHz PCM transcription, English-to-Vietnamese
+translation, clean stop, S3 export, and presigned TXT download. WAF blocked XSS
+and Log4J probes with HTTP 403.
+
+![Production health, WebSocket, and WAF verification](/images/5-Workshop/livecap-runtime-security-verification.png)
+
+A controlled scale test moved target ECS from `1 -> 0`, called `/api/wake`,
+received `202 waking`, then observed the task at `1/1` with health 200. Automatic
+idle scale-down remains disabled, so this proves the controlled `0 -> 1` wake
+flow only.
+
+![Verified scale-to-zero and wake flow](/images/5-Workshop/livecap-scale-zero-wake-verification.png)
 
 ## Expected Failure Cases
 

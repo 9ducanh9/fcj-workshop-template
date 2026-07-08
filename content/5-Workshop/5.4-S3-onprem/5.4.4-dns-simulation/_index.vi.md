@@ -36,10 +36,17 @@ request và push vào main. CI không deploy, apply Terraform hoặc migrate sta
 
 ## Bằng chứng production đã xác minh
 
-Ngày 2026-07-04, luồng production đã pass CloudFront `/`, `/app`, health,
-WebSocket start, ping/pong, transcription PCM 16 kHz thật, dịch Anh-Việt, stop
-sạch, S3 export và tải TXT qua presigned URL. Browser UI test với microphone WAV
-kiểm soát được đã append ba finalized bilingual row và dừng sạch.
+Ngày 2026-07-07, target custom VPC đã pass CloudFront health, WebSocket
+`session_start`/`pong`, transcription PCM 16 kHz, dịch Anh-Việt, stop sạch,
+S3 export và presigned TXT download. WAF chặn probe XSS và Log4J với HTTP 403.
+
+![Health, WebSocket và WAF production](/images/5-Workshop/livecap-runtime-security-verification.png)
+
+Controlled scale test đưa ECS target từ `1 -> 0`, gọi `/api/wake`, nhận
+`202 waking`, sau đó task trở lại `1/1` và health 200. Automatic idle scale-down
+vẫn tắt; vì vậy bằng chứng này chỉ xác nhận controlled `0 -> 1` wake flow.
+
+![Scale-to-zero và wake flow đã xác minh](/images/5-Workshop/livecap-scale-zero-wake-verification.png)
 
 ## Trường hợp lỗi mong đợi
 

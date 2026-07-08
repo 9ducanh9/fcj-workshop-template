@@ -29,9 +29,13 @@ MVP đã triển khai có thể:
 ```mermaid
 flowchart LR
   Browser["Trình duyệt"] -->|HTTPS và WSS| CF["Amazon CloudFront"]
+  WAF["CloudFront WAF - BLOCK"] -.-> CF
   CF -->|OAC origin fetch| Frontend["S3 frontend private"]
+  CF -->|/api/wake| Wake["Wake Lambda"]
+  Wake -->|desired_count=1| ECS["Amazon ECS"]
   CF -->|/api/* và /ws/*| ALB["ALB public multi-AZ"]
-  ALB -->|HTTP 8000| Task["Một ECS Fargate task"]
+  ALBWAF["ALB WAF - BLOCK"] -.-> ALB
+  ALB -->|HTTPS origin, HTTP 8000 target| Task["Một ECS Fargate task private"]
   ECR["Amazon ECR - image immutable"] -.-> Task
   Task -->|PCM stream| Transcribe["Amazon Transcribe Streaming"]
   Task -->|finalized text| Translate["Amazon Translate"]
@@ -39,16 +43,19 @@ flowchart LR
   Task -.->|log| CW["Amazon CloudWatch"]
 ```
 
-Backend thật chạy tại `ap-southeast-1`. ALB trải trên public subnet thuộc
-`ap-southeast-1a` và `ap-southeast-1b`. ECS service duy trì một Fargate task có
-public IP trong VPC hiện hữu. ECS có thể thay task lỗi, nhưng đây không phải
-active-active; WebSocket đang chạy sẽ mất khi task bị thay thế.
+Backend chạy tại `ap-southeast-1` trong custom VPC `10.20.0.0/16`. ALB trải
+trên public subnet thuộc `ap-southeast-1a` và `ap-southeast-1b`; ECS task nằm ở
+private subnet, không có public IP, và outbound qua một NAT Gateway tại `1a`.
+ECS có thể thay task lỗi, nhưng đây không phải active-active; WebSocket đang
+chạy sẽ mất khi task bị thay thế.
 
 ## Dịch vụ và trách nhiệm
 
 | Dịch vụ | Vai trò trong LiveCap |
 | --- | --- |
 | CloudFront | Entry point HTTPS/WSS công khai và định tuyến theo path |
+| AWS WAF | Block managed threats và rate abuse ở CloudFront và ALB |
+| Lambda | Wake target ECS service từ 0 lên 1 trước khi capture |
 | Amazon S3 | Origin frontend private và nơi lưu transcript TXT private |
 | ALB | Health check và forward API/WebSocket đến port 8000 |
 | ECS Fargate | Chạy backend FastAPI dạng container |
@@ -61,19 +68,19 @@ active-active; WebSocket đang chạy sẽ mất khi task bị thay thế.
 ## Luồng runtime chính
 
 1. CloudFront phục vụ frontend React/Vite từ S3 private qua OAC.
-2. Người dùng bấm Start và cấp quyền microphone.
-3. Frontend mở `/ws/transcribe` qua CloudFront và ALB.
+2. Người dùng bấm Start; frontend gọi `/api/wake` qua CloudFront OAC đến Lambda.
+3. Frontend poll `/api/health`, rồi cấp quyền microphone và mở `/ws/transcribe`.
 4. FastAPI kiểm tra giới hạn session toàn hệ thống và theo IP trước khi mở AWS stream.
 5. PCM chunk chỉ được gửi khi WebSocket đang mở.
 6. Transcribe trả partial/final text; chỉ finalized segment được dịch và thêm vào transcript.
 7. Caption song ngữ trả về theo Fargate -> ALB -> CloudFront -> browser.
 8. Export ghi object TXT vào S3 private và trả URL tải có thời hạn.
 
-## Hiện tại và target
+## Trạng thái sau cutover
 
-Repository còn có kiến trúc target đã review trong Terraform: VPC riêng hai AZ,
-task private, một NAT Gateway, WAF ở COUNT mode, wake Lambda, ECS scale
-`0 <-> 1`, CloudWatch dashboard và AWS Budget. Các phần này vẫn cần reconcile
-state, review plan và blue/green cutover trước khi được xem là đã deploy.
+Custom VPC, private Fargate, target ALB HTTPS, NAT Gateway, hai WAF BLOCK, wake
+Lambda, CloudWatch dashboard và AWS Budget đã deploy. CloudFront đã route API
+và WebSocket sang target stack. Controlled `0 -> 1` wake test đã pass; automatic
+idle scale-down vẫn tắt trong rollback window. Legacy stack chưa bị xóa.
 
-![Kiến trúc target dùng trong kế hoạch triển khai](/images/3-Project/livecap-target-architecture.png)
+![Kiến trúc target đã dùng cho blue/green cutover](/images/3-Project/livecap-target-architecture.png)

@@ -21,15 +21,15 @@ pre: " <b> 5.5. </b> "
 
 ## WAF and Network Status
 
-The Terraform target defines separate CloudFront (`CLOUDFRONT`) and ALB
-(`REGIONAL`) Web ACLs with managed rules and rate rules in COUNT mode. COUNT
-observes matching traffic without blocking it. These WAF associations are not
-currently deployed, so the live demo must not be described as WAF-protected.
+Two Web ACLs are deployed: CloudFront (`CLOUDFRONT`) and ALB (`REGIONAL`).
+Managed and rate-based rules are in BLOCK mode; production XSS and Log4J probes
+returned HTTP 403. The ALB accepts traffic only from the CloudFront
+origin-facing managed prefix list.
 
-The current task has a public IP in the existing VPC. The reviewed target adds
-two public and two private subnets across two AZs, places the ALB in public
-subnets, moves Fargate to private subnets, and uses one NAT Gateway. One NAT is
-a cost-sensitive single-AZ outbound tradeoff, not full network HA.
+The dedicated VPC `10.20.0.0/16` has two public and two private subnets across
+two AZs. The ALB uses public subnets while Fargate tasks use private subnets
+without public IPs. One NAT Gateway in `1a` is the cost-sensitive, single-AZ
+outbound tradeoff.
 
 ## Observability
 
@@ -40,8 +40,8 @@ a cost-sensitive single-AZ outbound tradeoff, not full network HA.
 - A dashboard for ECS CPU/memory, ALB traffic/health, wake Lambda, and WAF is
   defined in target Terraform without enabling paid Container Insights.
 
-The dashboard and WAF metrics become useful only after the corresponding
-target resources are applied and associated.
+The CloudWatch dashboard, WAF logging, Budget, and 14-day retention are now
+applied. Container Insights remains disabled to avoid extra cost.
 
 ## CI and Verification
 
@@ -62,15 +62,16 @@ or state migration.
 - Transcript and log retention are both 14 days.
 - A configurable `$50/month` AWS Budget exists in target Terraform; alerts are
   delayed billing signals, not real-time enforcement.
-- Reviewed ECS wake/idle logic allows `0 <-> 1` tasks, but the live service
-  currently remains at one task for submission stability.
+- Wake Lambda passed a controlled `0 -> 1` test. Automatic idle scale-down
+  remains disabled until the rollback window and grace-period test complete.
 
 ALB, NAT Gateway, and WAF have fixed or baseline charges while provisioned.
 Scaling ECS to zero does not remove those costs.
 
 ## Residual Risks
 
-- CloudFront currently connects to the ALB over HTTP.
+- One NAT Gateway creates a single-AZ outbound dependency.
 - One in-memory session registry prevents safe multi-task scaling.
 - One active task means replacement interrupts live WebSocket sessions.
+- The legacy stack remains during the rollback window and temporarily adds cost.
 - ECR base-image package findings remain tracked until compatible fixes exist.

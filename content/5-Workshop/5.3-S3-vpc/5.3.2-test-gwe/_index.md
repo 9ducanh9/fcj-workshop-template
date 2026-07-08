@@ -39,13 +39,18 @@ the registry to DynamoDB or Redis first.
 | Item | Verified value |
 | --- | --- |
 | Region | `ap-southeast-1` |
-| ALB | Public, spanning `1a` and `1b` |
+| VPC | Dedicated VPC `10.20.0.0/16` |
+| Subnets | 2 public + 2 private across `1a` and `1b` |
+| ALB | Public, HTTPS, spanning `1a` and `1b` |
 | ECS desired/running | `1/1` |
-| Task networking | Existing VPC public subnet, public IP enabled |
-| Task definition | `livecap-backend-dev:5` |
+| Task networking | Private subnet, `assign_public_ip=false` |
+| Outbound | One NAT Gateway in `1a` |
+| Task definition | `livecap-target-backend-dev:1` |
 | Container image | `1ef4250-amd64` |
 
-Private task networking and `0 <-> 1` wake/idle behavior are target changes,
-not claims about the current public environment.
+CloudFront has cut `/api/*` and `/ws/*` over to the target ALB. The legacy stack
+is retained during the rollback window and has not been deleted.
 
 ![Network and service placement planned for the reviewed target](/images/3-Project/livecap-target-architecture.png)
+
+![Verified production dashboard backed by the target Fargate service](/images/5-Workshop/livecap-production-dashboard-ready.png)

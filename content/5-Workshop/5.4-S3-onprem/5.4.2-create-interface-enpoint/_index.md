@@ -48,3 +48,13 @@ excess global/per-IP sessions before starting managed AI service work. These
 limits bound accidental Transcribe and Translate usage for the MVP.
 
 ![Step result: finalized captions returned to the live dashboard](/images/3-Project/livecap-dashboard.png)
+
+The production UI exposes `AWS_FARGATE_WAKE`, the 30-minute limit, and the
+verified private ECS Fargate compute model.
+
+![Production dashboard ready to open a session](/images/5-Workshop/livecap-production-dashboard-ready.png)
+
+When the browser blocks microphone access, the frontend stops before streaming
+audio and presents an actionable error instead of leaving a broken session.
+
+![Frontend handling denied microphone access](/images/5-Workshop/livecap-microphone-permission-required.png)

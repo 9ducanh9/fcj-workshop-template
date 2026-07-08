@@ -29,9 +29,13 @@ The implemented MVP can:
 ```mermaid
 flowchart LR
   Browser["Browser"] -->|HTTPS and WSS| CF["Amazon CloudFront"]
+  WAF["CloudFront WAF - BLOCK"] -.-> CF
   CF -->|OAC origin fetch| Frontend["Private S3 frontend bucket"]
+  CF -->|/api/wake| Wake["Wake Lambda"]
+  Wake -->|desired_count=1| ECS["Amazon ECS"]
   CF -->|/api/* and /ws/*| ALB["Public multi-AZ ALB"]
-  ALB -->|HTTP 8000| Task["One ECS Fargate task"]
+  ALBWAF["ALB WAF - BLOCK"] -.-> ALB
+  ALB -->|HTTPS origin, HTTP 8000 target| Task["One private ECS Fargate task"]
   ECR["Amazon ECR immutable image"] -.-> Task
   Task -->|PCM stream| Transcribe["Amazon Transcribe Streaming"]
   Task -->|finalized text| Translate["Amazon Translate"]
@@ -39,17 +43,19 @@ flowchart LR
   Task -.->|logs| CW["Amazon CloudWatch"]
 ```
 
-The live backend runs in `ap-southeast-1`. The ALB spans public subnets in
-`ap-southeast-1a` and `ap-southeast-1b`. The ECS service maintains one Fargate
-task with a public IP in the existing VPC. ECS can replace a failed task, but
-there is no active-active backend; an in-flight WebSocket session is lost when
-the task is replaced.
+The backend runs in `ap-southeast-1` inside dedicated VPC `10.20.0.0/16`. The
+ALB spans public subnets in `ap-southeast-1a` and `ap-southeast-1b`; the ECS task
+runs without a public IP in private subnets and uses one NAT Gateway in `1a` for
+outbound traffic. ECS can replace a failed task, but there is no active-active
+backend; an in-flight WebSocket session is lost when the task is replaced.
 
 ## Services and Responsibilities
 
 | Service | Responsibility in LiveCap |
 | --- | --- |
 | CloudFront | Public HTTPS/WSS entrypoint and path routing |
+| AWS WAF | Blocks managed threats and rate abuse at CloudFront and ALB |
+| Lambda | Wakes the target ECS service from zero before capture |
 | Amazon S3 | Private frontend origin and private TXT transcript storage |
 | ALB | Health checks and forwarding API/WebSocket traffic to port 8000 |
 | ECS Fargate | Runs the containerized FastAPI backend |
@@ -62,8 +68,8 @@ the task is replaced.
 ## Main Runtime Flow
 
 1. CloudFront serves the React/Vite frontend from private S3 through OAC.
-2. The user starts capture and grants microphone permission.
-3. The frontend opens `/ws/transcribe` through CloudFront and the ALB.
+2. Start calls `/api/wake` through CloudFront OAC to Lambda.
+3. The frontend polls `/api/health`, requests microphone access, then opens `/ws/transcribe`.
 4. FastAPI checks global and per-IP session limits before starting AWS streams.
 5. PCM chunks are sent only while the socket is open.
 6. Transcribe returns partial and finalized text; only finalized segments are
@@ -71,11 +77,12 @@ the task is replaced.
 7. Bilingual captions return over Fargate -> ALB -> CloudFront -> browser.
 8. Export writes a TXT object to private S3 and returns a temporary URL.
 
-## Current Versus Target
+## Post-Cutover Status
 
-The repository also contains a reviewed Terraform target with a dedicated
-two-AZ VPC, private tasks, one NAT Gateway, WAF in COUNT mode, a wake Lambda,
-ECS `0 <-> 1` scaling, a CloudWatch dashboard, and an AWS Budget. Those changes
-still require state reconciliation, plan review, and blue/green cutover.
+The dedicated VPC, private Fargate service, HTTPS target ALB, NAT Gateway, two
+blocking WAFs, wake Lambda, CloudWatch dashboard, and AWS Budget are deployed.
+CloudFront routes API and WebSocket traffic to the target stack. The controlled
+`0 -> 1` wake test passed; automatic idle scale-down remains disabled during
+the rollback window. The legacy stack has not been deleted.
 
-![Reviewed target architecture used for the implementation plan](/images/3-Project/livecap-target-architecture.png)
+![Target architecture used for the blue/green cutover](/images/3-Project/livecap-target-architecture.png)

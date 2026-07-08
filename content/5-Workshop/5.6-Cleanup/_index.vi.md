@@ -29,16 +29,15 @@ pre: " <b> 5.6. </b> "
 5. Build image bằng immutable SHA tag.
 6. Reconcile Terraform state và review plan trước mọi infrastructure apply.
 
-## Phần target còn lại
+## Phần còn lại sau cutover
 
-1. Import/reconcile môi trường AWS hiện hữu vào remote state đã review.
-2. Tạo song song VPC riêng, private task service, ALB và NAT target.
-3. Xác minh ECR pull, health, WebSocket, AI call, S3, log, WAF metric, wake và
-   idle scaling trên target stack.
-4. Chỉ chuyển CloudFront API/WebSocket route sau khi smoke test pass.
-5. Giữ legacy path trong rollback observation window.
-6. Xác nhận ownership trước khi xóa EC2 stopped, EBS, security group cũ, S3
-   bucket cũ hoặc tài nguyên legacy khác.
+1. Theo dõi target trong rollback window tối thiểu 24 giờ.
+2. Bật automatic idle scale-down và xác minh grace period 300 giây.
+3. Kiểm tra reconnect khi cold start và task replacement đang diễn ra.
+4. Review CloudWatch dashboard, WAF logs, ALB 5XX và chi phí NAT/ALB/WAF.
+5. Chỉ lập destroy plan legacy sau khi xác nhận ownership và rollback window.
+6. Không xóa EC2 stopped, EBS, security group cũ hoặc bucket legacy nếu chưa có
+   approval riêng.
 
 ## Ranh giới kiến trúc
 

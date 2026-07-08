@@ -21,15 +21,14 @@ pre: " <b> 5.5. </b> "
 
 ## Trạng thái WAF và network
 
-Terraform target định nghĩa hai Web ACL riêng: CloudFront (`CLOUDFRONT`) và ALB
-(`REGIONAL`), gồm managed rule và rate rule ở COUNT mode. COUNT chỉ quan sát
-traffic match, chưa block. Các WAF association này chưa deploy nên không được
-mô tả live demo là đã có WAF bảo vệ.
+Hai Web ACL đã deploy: CloudFront (`CLOUDFRONT`) và ALB (`REGIONAL`). Managed
+rules và rate rule đang ở BLOCK; probe XSS và Log4J qua domain production trả
+HTTP 403. ALB chỉ nhận traffic từ CloudFront origin-facing prefix list.
 
-Task hiện tại có public IP trong VPC hiện hữu. Target đã review tạo hai public
-và hai private subnet trên hai AZ, đặt ALB ở public subnet, Fargate ở private
-subnet và dùng một NAT Gateway. Một NAT là tradeoff tiết kiệm chi phí, đồng thời
-là outbound dependency single-AZ chứ không phải network HA đầy đủ.
+Custom VPC `10.20.0.0/16` có hai public và hai private subnet trên hai AZ. ALB
+nằm ở public subnets; Fargate task nằm ở private subnets, không có public IP.
+Một NAT Gateway tại `1a` là tradeoff cost-sensitive và vẫn là outbound
+dependency single-AZ.
 
 ## Quan sát hệ thống
 
@@ -40,8 +39,8 @@ là outbound dependency single-AZ chứ không phải network HA đầy đủ.
 - Terraform target định nghĩa dashboard cho ECS CPU/memory, ALB traffic/health,
   wake Lambda và WAF mà không bật Container Insights tốn thêm phí.
 
-Dashboard và WAF metric chỉ có ý nghĩa sau khi target resource tương ứng được
-apply và associate.
+CloudWatch dashboard, WAF logging, Budget và retention 14 ngày đã được apply.
+Container Insights không bật để tránh chi phí bổ sung.
 
 ## CI và verification
 
@@ -61,15 +60,16 @@ CI chủ ý không deploy production, Terraform apply, destroy hoặc migrate st
 - Transcript và log cùng retention 14 ngày.
 - Terraform target có AWS Budget `$50/month` cấu hình được; alert billing có độ
   trễ, không phải enforcement realtime.
-- Wake/idle target cho phép ECS `0 <-> 1`, nhưng live service hiện giữ một task
-  để demo ổn định.
+- Wake Lambda đã pass controlled `0 -> 1`. Automatic idle scale-down vẫn tắt
+  cho tới khi hoàn tất rollback window và test grace period riêng.
 
 ALB, NAT Gateway và WAF vẫn có fixed/baseline cost khi tồn tại. Scale ECS về 0
 không xóa các khoản phí này.
 
 ## Rủi ro còn lại
 
-- CloudFront hiện kết nối ALB origin qua HTTP.
+- Một NAT Gateway tạo single-AZ outbound dependency.
 - Registry in-memory chưa cho phép scale an toàn nhiều task.
 - Một active task khiến thay task làm gián đoạn WebSocket đang chạy.
+- Legacy stack vẫn tồn tại trong rollback window và làm tăng chi phí tạm thời.
 - Finding package nền trong ECR vẫn được theo dõi đến khi có bản vá tương thích.

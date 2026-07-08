@@ -46,3 +46,13 @@ hạn global/per-IP trước khi mở managed AI work. Các giới hạn này ki
 dùng Transcribe và Translate ngoài ý muốn trong MVP.
 
 ![Kết quả bước stream và trả finalized caption về dashboard](/images/3-Project/livecap-dashboard.png)
+
+UI production hiển thị `AWS_FARGATE_WAKE`, thời lượng tối đa 30 phút và mô tả
+đúng compute target là ECS Fargate private.
+
+![Dashboard production sẵn sàng mở phiên](/images/5-Workshop/livecap-production-dashboard-ready.png)
+
+Khi browser không cấp microphone, frontend dừng trước khi stream audio và hiển
+thị lỗi có thể xử lý thay vì tiếp tục một session lỗi.
+
+![Frontend xử lý trường hợp browser chặn microphone](/images/5-Workshop/livecap-microphone-permission-required.png)

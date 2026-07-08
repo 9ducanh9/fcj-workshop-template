@@ -29,16 +29,15 @@ pre: " <b> 5.6. </b> "
 5. Build images with immutable SHA tags.
 6. Reconcile Terraform state and review the plan before any infrastructure apply.
 
-## Remaining Target Work
+## Remaining Work After Cutover
 
-1. Import/reconcile the existing AWS environment into reviewed remote state.
-2. Create the parallel dedicated VPC, private task service, ALB, and NAT target.
-3. Validate ECR pull, health, WebSocket, AI calls, S3, logs, WAF metrics, wake,
-   and idle scaling on the target stack.
-4. Cut CloudFront API/WebSocket routes over only after smoke tests pass.
-5. Keep the legacy path during a rollback observation window.
-6. Confirm ownership before deleting any stopped EC2, EBS, old security group,
-   old S3 bucket, or other legacy resource.
+1. Observe the target for at least the 24-hour rollback window.
+2. Enable automatic idle scale-down and verify the 300-second grace period.
+3. Test reconnect behavior during cold start and task replacement.
+4. Review the CloudWatch dashboard, WAF logs, ALB 5XX, and NAT/ALB/WAF cost.
+5. Prepare a legacy destroy plan only after ownership and rollback approval.
+6. Do not delete stopped EC2, EBS, old security groups, or legacy buckets
+   without a separate approval.
 
 ## Architecture Boundary
 
