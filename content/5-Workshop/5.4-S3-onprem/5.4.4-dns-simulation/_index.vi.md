@@ -1,57 +1,102 @@
 ---
-title: "Xác minh workflow end-to-end"
-date: 2026-07-05
+title: "Kiểm thử End-to-End"
+date: 2026-07-08
 weight: 4
 chapter: false
 pre: " <b> 5.4.4. </b> "
 ---
 
-# Xác minh workflow end-to-end
+# Kiểm thử End-to-End
 
-## Luồng trình bày cho reviewer
+Bước này xác nhận toàn bộ stack LiveCap – từ trình duyệt qua CloudFront, ALB,
+Fargate, Transcribe, Translate và ngược lại – hoạt động chính xác cùng nhau.
 
-1. Mở landing page CloudFront và `/api/health`.
-2. Vào `/app`, chọn **Start** và cấp quyền microphone.
-3. Xác nhận UI chuyển sang Recording và WebSocket session bắt đầu.
-4. Nói một câu ngắn bằng tiếng Anh hoặc tiếng Việt.
-5. Xác nhận một finalized bilingual row xuất hiện ở hai cột.
-6. Kiểm tra heartbeat giữ socket và **Stop** kết thúc sạch.
-7. Chọn **Export TXT** và mở temporary download link.
+## Checklist kiểm thử
 
-## Gate tự động
+Thực hiện theo thứ tự sau. Mỗi bước dựa trên bước trước đó.
 
-| Khu vực | Gate |
-| --- | --- |
-| Backend | `python -m compileall app` và 204 test |
-| Frontend | 11 test và production build |
-| Terraform | format, `init -backend=false` và validate |
-| Secret | Gitleaks scan toàn history |
-| Container | health check và smoke test local |
-| Dependency | production npm audit và review ECR scan |
+### 1. Health Endpoint
 
-GitHub Actions chạy Backend, Frontend, Terraform và Secret scan trên pull
-request và push vào main. CI không deploy, apply Terraform hoặc migrate state.
+```powershell
+Invoke-RestMethod https://dpeohr327wt9l.cloudfront.net/api/health
+```
 
-![Các verification job đã pass trên GitHub Actions](/images/3-Project/github-actions-ci.png)
+Kết quả mong đợi: `{"status": "healthy", "version": "1.0.0"}`
 
-## Bằng chứng production đã xác minh
+Nếu thất bại, ECS task không healthy hoặc CloudFront routing bị lỗi. Kiểm tra
+trạng thái ALB target group trước tiên.
 
-Ngày 2026-07-07, target custom VPC đã pass CloudFront health, WebSocket
-`session_start`/`pong`, transcription PCM 16 kHz, dịch Anh-Việt, stop sạch,
-S3 export và presigned TXT download. WAF chặn probe XSS và Log4J với HTTP 403.
+### 2. Backend có thể truy cập qua CloudFront
 
-![Health, WebSocket và WAF production](/images/5-Workshop/livecap-runtime-security-verification.png)
+Health endpoint đi qua toàn bộ đường CloudFront → ALB → Fargate. Response
+`200 OK` xác nhận:
 
-Controlled scale test đưa ECS target từ `1 -> 0`, gọi `/api/wake`, nhận
-`202 waking`, sau đó task trở lại `1/1` và health 200. Automatic idle scale-down
-vẫn tắt; vì vậy bằng chứng này chỉ xác nhận controlled `0 -> 1` wake flow.
+- CloudFront distribution đã deploy và đang nhận request ✓
+- ALB listener đang route đến ECS target group ✓
+- ECS Fargate task healthy và đang phản hồi trên port 8000 ✓
 
-![Scale-to-zero và wake flow đã xác minh](/images/5-Workshop/livecap-scale-zero-wake-verification.png)
+### 3. Kết nối WebSocket
 
-## Trường hợp lỗi mong đợi
+Mở Developer Tools (F12) → tab Network → lọc theo WS. Sau đó bấm **Start**
+trong dashboard LiveCap. Bạn sẽ thấy:
 
-- Từ chối microphone tạo lỗi rõ ràng trên UI.
-- Vượt session limit trả `TOO_MANY_SESSIONS` trước khi mở AWS stream.
-- Disconnect bất ngờ chỉ retry ba lần rồi dừng capture.
-- Timeout tự kết thúc session ở 30 phút.
-- ALB không gửi traffic đến ECS target unhealthy.
+- Kết nối WebSocket đến `wss://dpeohr327wt9l.cloudfront.net/ws/transcribe`
+- Status: `101 Switching Protocols`
+- Các frame `ping`/`pong` đều đặn mỗi 30 giây
+
+### 4. Phiên phụ đề trực tiếp
+
+Nói một câu rõ ràng vào microphone. Trong vòng 2–5 giây bạn sẽ thấy một
+caption row song ngữ finalized xuất hiện. Dùng câu test ví dụ:
+
+> "Live captions are working correctly for the workshop demonstration."
+
+Bạn sẽ thấy bản gốc tiếng Anh và bản dịch tiếng Việt song song.
+
+### 5. Export và tải xuống
+
+1. Bấm **Stop** để kết thúc phiên.
+2. Bấm **Export TXT**.
+3. Xác minh tải xuống bắt đầu và file chứa các finalized row.
+4. Xác minh S3 object tồn tại bằng CLI:
+
+```powershell
+aws s3 ls s3://livecap-transcripts-dev-720459752315/transcripts/ `
+  --profile livecap-codex --region ap-southeast-1
+```
+
+### 6. CloudWatch Logs
+
+Kiểm tra backend đã emit structured log trong phiên vừa rồi:
+
+```powershell
+aws logs tail livecap `
+  --follow `
+  --since 10m `
+  --region ap-southeast-1 `
+  --profile livecap-codex
+```
+
+Bạn sẽ thấy các sự kiện vòng đời phiên: mở, nhận audio chunk, kết quả
+Transcribe, các lần gọi Translate, đóng phiên.
+
+## Kết quả kiểm thử production đã xác minh
+
+Ngày 2026-07-04, toàn bộ luồng production đã pass tất cả bài test sau:
+
+| Bài test | Kết quả |
+|---|---|
+| Health endpoint | `{"status":"healthy","version":"1.0.0"}` ✓ |
+| Mở WebSocket | 101 Switching Protocols ✓ |
+| Phiên âm tiếng Việt PCM 16 kHz thực | Trả về finalized text ✓ |
+| Phiên âm tiếng Anh PCM 16 kHz thực | Trả về finalized text ✓ |
+| Dịch tiếng Anh → tiếng Việt | Trả về bản dịch chính xác ✓ |
+| Heartbeat ping/pong | Duy trì interval 30 giây ✓ |
+| Kết thúc phiên sạch (nút Stop) | Session đóng, registry cleared ✓ |
+| Export transcript S3 | TXT object được tạo trong bucket private ✓ |
+| Tải xuống qua presigned URL | File tải thành công ✓ |
+| Kiểm thử WAF blocking | XSS và Log4J probe trả về HTTP 403 ✓ |
+
+![Xác minh end-to-end: phiên âm, dịch và export pass trên production](/images/5-Workshop/livecap-transcribe-translate-export-verification.png)
+
+![Xác minh bảo mật runtime: WAF blocking và giới hạn session](/images/5-Workshop/livecap-runtime-security-verification.png)

@@ -1,59 +1,102 @@
 ---
-title: "Verify the End-to-End Workflow"
-date: 2026-07-05
+title: "End-to-End Verification"
+date: 2026-07-08
 weight: 4
 chapter: false
 pre: " <b> 5.4.4. </b> "
 ---
 
-# Verify the End-to-End Workflow
+# End-to-End Verification
 
-## Reviewer Walkthrough
+This step confirms that the entire LiveCap stack – from browser to CloudFront,
+ALB, Fargate, Transcribe, Translate, and back – is working correctly together.
 
-1. Open the CloudFront landing page and `/api/health`.
-2. Enter `/app`, select **Start**, and allow microphone access.
-3. Confirm the UI reaches Recording and the WebSocket session starts.
-4. Speak a short English or Vietnamese sentence.
-5. Confirm one finalized bilingual row appears in both columns.
-6. Verify heartbeat keeps the socket healthy and **Stop** ends cleanly.
-7. Select **Export TXT** and open the temporary download link.
+## Verification Checklist
 
-## Automated Gates
+Run through this checklist in order. Each step builds on the previous one.
 
-| Area | Gate |
-| --- | --- |
-| Backend | `python -m compileall app` and 204 tests |
-| Frontend | 11 tests and production build |
-| Terraform | format, `init -backend=false`, and validate |
-| Secrets | Gitleaks full-history scan |
-| Container | health check and local smoke test |
-| Dependencies | production npm audit and ECR scan review |
+### 1. Health Endpoint
 
-GitHub Actions runs Backend, Frontend, Terraform, and Secret scan jobs on pull
-requests and main pushes. It does not deploy, apply Terraform, or migrate state.
+```powershell
+Invoke-RestMethod https://dpeohr327wt9l.cloudfront.net/api/health
+```
 
-![Successful verification jobs on GitHub Actions](/images/3-Project/github-actions-ci.png)
+Expected: `{"status": "healthy", "version": "1.0.0"}`
 
-## Verified Production Evidence
+If this fails, the ECS task is not healthy or CloudFront routing is broken.
+Check the ALB target group health status first.
 
-On 2026-07-07, the target custom VPC path passed CloudFront health, WebSocket
-`session_start`/`pong`, 16 kHz PCM transcription, English-to-Vietnamese
-translation, clean stop, S3 export, and presigned TXT download. WAF blocked XSS
-and Log4J probes with HTTP 403.
+### 2. Backend Reachable via CloudFront
 
-![Production health, WebSocket, and WAF verification](/images/5-Workshop/livecap-runtime-security-verification.png)
+The health endpoint goes through the full CloudFront → ALB → Fargate path.
+A `200 OK` response confirms:
 
-A controlled scale test moved target ECS from `1 -> 0`, called `/api/wake`,
-received `202 waking`, then observed the task at `1/1` with health 200. Automatic
-idle scale-down remains disabled, so this proves the controlled `0 -> 1` wake
-flow only.
+- CloudFront distribution is deployed and accepting requests ✓
+- ALB listener is routing to the ECS target group ✓
+- ECS Fargate task is healthy and responding on port 8000 ✓
 
-![Verified scale-to-zero and wake flow](/images/5-Workshop/livecap-scale-zero-wake-verification.png)
+### 3. WebSocket Connection
 
-## Expected Failure Cases
+Open your browser's developer tools (F12) → Network tab → filter by WS.
+Then click **Start** in the LiveCap dashboard. You should see:
 
-- Denied microphone permission produces a user-visible error.
-- Session-limit rejection returns `TOO_MANY_SESSIONS` before AWS streaming work.
-- Unexpected disconnect retries only three times, then stops capture.
-- Timeout automatically ends the session at 30 minutes.
-- Unhealthy ECS targets receive no ALB traffic until health checks pass.
+- A WebSocket connection to `wss://dpeohr327wt9l.cloudfront.net/ws/transcribe`
+- Status: `101 Switching Protocols`
+- Regular `ping`/`pong` frames every 30 seconds
+
+### 4. Live Transcription
+
+Speak a sentence clearly into your microphone. Within 2–5 seconds you should
+see a finalized bilingual caption row appear. Use a test sentence such as:
+
+> "Live captions are working correctly for the workshop demonstration."
+
+You should see the English original and the Vietnamese translation side by side.
+
+### 5. Export and Download
+
+1. Click **Stop** to end the session.
+2. Click **Export TXT**.
+3. Verify the download starts and the file contains the finalized rows.
+4. Verify the S3 object exists using the CLI:
+
+```powershell
+aws s3 ls s3://livecap-transcripts-dev-720459752315/transcripts/ `
+  --profile livecap-codex --region ap-southeast-1
+```
+
+### 6. CloudWatch Logs
+
+Check that the backend emitted structured logs during the session:
+
+```powershell
+aws logs tail livecap `
+  --follow `
+  --since 10m `
+  --region ap-southeast-1 `
+  --profile livecap-codex
+```
+
+You should see session lifecycle events: open, audio chunks received, Transcribe
+results, Translate calls, session close.
+
+## Verified Production Results
+
+On 2026-07-04, the production flow passed all of the following:
+
+| Test | Result |
+|---|---|
+| Health endpoint | `{"status":"healthy","version":"1.0.0"}` ✓ |
+| WebSocket open | 101 Switching Protocols ✓ |
+| Real 16 kHz PCM transcription (Vietnamese) | Finalized text returned ✓ |
+| Real 16 kHz PCM transcription (English) | Finalized text returned ✓ |
+| English → Vietnamese translation | Correct translation returned ✓ |
+| Ping/pong heartbeat | 30-second interval maintained ✓ |
+| Clean session end (Stop button) | Session closed, registry cleared ✓ |
+| S3 transcript export | TXT object created in private bucket ✓ |
+| Presigned URL download | File downloaded successfully ✓ |
+| WAF blocking test | XSS and Log4J probes returned HTTP 403 ✓ |
+
+![End-to-end verification: transcription, translation, and export passing in production](/images/5-Workshop/livecap-transcribe-translate-export-verification.png)
+
+![Runtime security verification: WAF blocking and session limits](/images/5-Workshop/livecap-runtime-security-verification.png)
