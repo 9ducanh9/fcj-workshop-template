@@ -1,4 +1,4 @@
----
+﻿---
 title: "Deploy & Verify ECS Fargate Service"
 date: 2026-07-08
 weight: 2
@@ -35,7 +35,7 @@ To inspect the currently running revision:
 ```powershell
 aws ecs describe-task-definition `
   --task-definition livecap-target-backend-dev `
-  --region ap-southeast-1 --profile livecap-codex `
+  --region ap-southeast-1 --profile livecap-camgiacntn `
   --query "taskDefinition.{Family:family, Revision:revision, Image:containerDefinitions[0].image}"
 ```
 
@@ -50,7 +50,7 @@ ordering correctly and prevents drift:
 aws ecs describe-services `
   --cluster livecap-cluster-dev `
   --services livecap-target-service-dev `
-  --region ap-southeast-1 --profile livecap-codex `
+  --region ap-southeast-1 --profile livecap-camgiacntn `
   --query "services[0].{Status:status, Running:runningCount, Desired:desiredCount}"
 ```
 
@@ -67,14 +67,14 @@ aws ecs update-service `
   --task-definition $taskDef `
   --force-new-deployment `
   --region ap-southeast-1 `
-  --profile livecap-codex
+  --profile livecap-camgiacntn
 
 # Wait until the service is stable
 aws ecs wait services-stable `
   --cluster $cluster `
   --services $service `
   --region ap-southeast-1 `
-  --profile livecap-codex
+  --profile livecap-camgiacntn
 ```
 
 ## Step 3 – Verify the Service is Running
@@ -85,7 +85,7 @@ Check the service status from the console or CLI:
 aws ecs describe-services `
   --cluster livecap-cluster-dev `
   --services livecap-target-service-dev `
-  --region ap-southeast-1 --profile livecap-codex `
+  --region ap-southeast-1 --profile livecap-camgiacntn `
   --query "services[0].{Status:status,Running:runningCount,Desired:desiredCount}"
 ```
 

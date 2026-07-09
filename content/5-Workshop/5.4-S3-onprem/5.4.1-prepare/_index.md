@@ -1,4 +1,4 @@
----
+﻿---
 title: "Build & Deploy React Frontend to S3 + CloudFront"
 date: 2026-07-08
 weight: 1
@@ -62,7 +62,7 @@ Sync the built output to S3:
 aws s3 sync dist "s3://livecap-frontend-dev-720459752315" `
   --delete `
   --region ap-southeast-1 `
-  --profile livecap-codex
+  --profile livecap-camgiacntn
 ```
 
 > **Warning:** `--delete` removes any S3 object not present in `dist/`. Double-
@@ -77,14 +77,14 @@ serve the new files immediately:
 aws cloudfront create-invalidation `
   --distribution-id E39ADG0ES17RP1 `
   --paths "/*" `
-  --profile livecap-codex
+  --profile livecap-camgiacntn
 ```
 
 Wait for the invalidation to complete (usually 30–60 seconds):
 
 ```powershell
 # Check distribution status
-aws cloudfront list-distributions --profile livecap-codex `
+aws cloudfront list-distributions --profile livecap-camgiacntn `
   --query "DistributionList.Items[*].{Id:Id,Domain:DomainName,Status:Status}"
 ```
 

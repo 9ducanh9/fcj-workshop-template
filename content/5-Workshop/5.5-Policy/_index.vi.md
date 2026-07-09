@@ -1,4 +1,4 @@
----
+﻿---
 title: "Kiểm thử, Bảo mật & Kiểm soát chi phí"
 date: 2026-07-08
 weight: 5
@@ -82,7 +82,7 @@ của CloudWatch. Retention log là 14 ngày.
 
 ```powershell
 # Stream log trực tiếp
-aws logs tail /ecs/livecap-backend-dev --follow --region ap-southeast-1 --profile livecap-codex
+aws logs tail /ecs/livecap-backend-dev --follow --region ap-southeast-1 --profile livecap-camgiacntn
 ```
 
 Các sự kiện log chính bạn sẽ thấy trong một phiên:
@@ -126,7 +126,7 @@ aws cloudwatch put-metric-alarm `
   --comparison-operator GreaterThanOrEqualToThreshold `
   --evaluation-periods 1 `
   --alarm-actions "arn:aws:sns:ap-southeast-1:720459752315:livecap-alerts" `
-  --region ap-southeast-1 --profile livecap-codex
+  --region ap-southeast-1 --profile livecap-camgiacntn
 ```
 
 ## Bảo mật
@@ -135,7 +135,7 @@ aws cloudwatch put-metric-alarm `
 
 | Biện pháp | Cách triển khai |
 |---|---|
-| Không dùng root account | Deploy bằng IAM user `Codex` |
+| Không dùng root account | Deploy bằng IAM user `camgiacntn` |
 | IAM least privilege | Tách biệt task execution role và task role |
 | Không hardcode credential | Chỉ dùng IAM role; không có key trong `.env`, image hay Git |
 | S3 frontend private | Block public access + OAC origin |

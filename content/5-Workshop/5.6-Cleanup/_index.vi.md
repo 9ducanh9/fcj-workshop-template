@@ -1,4 +1,4 @@
----
+﻿---
 title: "Clean-up & Kết quả cần đạt"
 date: 2026-07-08
 weight: 6
@@ -43,7 +43,7 @@ Terraform không tự xóa S3 object và versioned object. Làm trống thủ c�
 ```powershell
 # Làm trống frontend bucket (không có versioning)
 aws s3 rm s3://livecap-frontend-dev-720459752315 --recursive `
-  --region ap-southeast-1 --profile livecap-codex
+  --region ap-southeast-1 --profile livecap-camgiacntn
 
 # Làm trống transcript bucket (bao gồm delete markers và versions)
 aws s3api list-object-versions `
@@ -55,7 +55,7 @@ aws s3api list-object-versions `
       --bucket livecap-transcripts-dev-720459752315 `
       --key $_.Key `
       --version-id $_.VersionId `
-      --region ap-southeast-1 --profile livecap-codex
+      --region ap-southeast-1 --profile livecap-camgiacntn
   }
 ```
 
@@ -77,29 +77,29 @@ Sau khi `terraform destroy` hoàn tất, kiểm tra thủ công:
 
 ```powershell
 # Kiểm tra ECS cluster
-aws ecs list-clusters --region ap-southeast-1 --profile livecap-codex
+aws ecs list-clusters --region ap-southeast-1 --profile livecap-camgiacntn
 
 # Kiểm tra ECR repository
-aws ecr describe-repositories --region ap-southeast-1 --profile livecap-codex `
+aws ecr describe-repositories --region ap-southeast-1 --profile livecap-camgiacntn `
   --query "repositories[?contains(repositoryName, 'livecap')].repositoryName"
 
 # Kiểm tra S3 buckets
-aws s3 ls --profile livecap-codex | Select-String "livecap"
+aws s3 ls --profile livecap-camgiacntn | Select-String "livecap"
 
 # Kiểm tra ALB
-aws elbv2 describe-load-balancers --region ap-southeast-1 --profile livecap-codex `
+aws elbv2 describe-load-balancers --region ap-southeast-1 --profile livecap-camgiacntn `
   --query "LoadBalancers[?contains(LoadBalancerName, 'livecap')].LoadBalancerName"
 
 # Kiểm tra Lambda
-aws lambda list-functions --region ap-southeast-1 --profile livecap-codex `
+aws lambda list-functions --region ap-southeast-1 --profile livecap-camgiacntn `
   --query "Functions[?contains(FunctionName, 'livecap')].FunctionName"
 
 # Kiểm tra log group
-aws logs describe-log-groups --region ap-southeast-1 --profile livecap-codex `
+aws logs describe-log-groups --region ap-southeast-1 --profile livecap-camgiacntn `
   --query "logGroups[?contains(logGroupName, 'livecap')].logGroupName"
 
 # Kiểm tra Elastic IP còn lại (từ NAT Gateway)
-aws ec2 describe-addresses --region ap-southeast-1 --profile livecap-codex `
+aws ec2 describe-addresses --region ap-southeast-1 --profile livecap-camgiacntn `
   --query "Addresses[?AssociationId==null].PublicIp"
 ```
 
@@ -113,7 +113,7 @@ Elastic IPs → Actions → Release Elastic IP address.
 aws ecr delete-repository `
   --repository-name livecap-backend `
   --force `
-  --region ap-southeast-1 --profile livecap-codex
+  --region ap-southeast-1 --profile livecap-camgiacntn
 ```
 
 ### Bước 6 – Hủy AWS Budget (nếu không do Terraform quản lý)
@@ -122,7 +122,7 @@ aws ecr delete-repository `
 aws budgets delete-budget `
   --account-id 720459752315 `
   --budget-name livecap-monthly-budget `
-  --profile livecap-codex
+  --profile livecap-camgiacntn
 ```
 
 

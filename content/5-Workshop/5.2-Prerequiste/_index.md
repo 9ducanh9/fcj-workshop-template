@@ -61,7 +61,7 @@ Terraform and Python.
 Configure your AWS profile for the `ap-southeast-1` region:
 
 ```powershell
-aws configure --profile livecap-codex
+aws configure --profile livecap-camgiacntn
 # AWS Access Key ID:     <your key>
 # AWS Secret Access Key: <your secret>
 # Default region:        ap-southeast-1
@@ -71,7 +71,7 @@ aws configure --profile livecap-codex
 Verify access:
 
 ```powershell
-aws sts get-caller-identity --profile livecap-codex
+aws sts get-caller-identity --profile livecap-camgiacntn
 ```
 
 Expected output:
@@ -80,7 +80,7 @@ Expected output:
 {
   "UserId": "AIDA...",
   "Account": "720459752315",
-  "Arn": "arn:aws:iam::720459752315:user/Codex"
+  "Arn": "arn:aws:iam::720459752315:user/camgiacntn"
 }
 ```
 

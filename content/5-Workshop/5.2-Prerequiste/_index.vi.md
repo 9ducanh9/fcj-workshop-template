@@ -61,7 +61,7 @@ với Terraform và Python.
 Cấu hình AWS profile cho region `ap-southeast-1`:
 
 ```powershell
-aws configure --profile livecap-codex
+aws configure --profile livecap-camgiacntn
 # AWS Access Key ID:     <key của bạn>
 # AWS Secret Access Key: <secret của bạn>
 # Default region:        ap-southeast-1
@@ -71,7 +71,7 @@ aws configure --profile livecap-codex
 Xác minh kết nối:
 
 ```powershell
-aws sts get-caller-identity --profile livecap-codex
+aws sts get-caller-identity --profile livecap-camgiacntn
 ```
 
 Kết quả mong đợi:
@@ -80,7 +80,7 @@ Kết quả mong đợi:
 {
   "UserId": "AIDA...",
   "Account": "720459752315",
-  "Arn": "arn:aws:iam::720459752315:user/Codex"
+  "Arn": "arn:aws:iam::720459752315:user/camgiacntn"
 }
 ```
 

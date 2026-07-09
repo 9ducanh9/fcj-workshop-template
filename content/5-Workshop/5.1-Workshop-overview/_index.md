@@ -64,22 +64,7 @@ submission date. The reviewed Terraform target (private subnets, NAT Gateway,
 scale-to-zero, WAF, dashboard, budget) has since been deployed via a blue/green
 cutover.
 
-```mermaid
-flowchart LR
-  Browser["Browser"] -->|HTTPS and WSS| CF["Amazon CloudFront"]
-  WAF["CloudFront WAF - BLOCK"] -.-> CF
-  CF -->|OAC origin fetch| Frontend["Private S3 frontend bucket"]
-  CF -->|/api/wake| Wake["Wake Lambda"]
-  Wake -->|desired_count=1| ECS["Amazon ECS"]
-  CF -->|/api/* and /ws/*| ALB["Public multi-AZ ALB"]
-  ALBWAF["ALB WAF - BLOCK"] -.-> ALB
-  ALB -->|HTTP 8000| Task["One ECS Fargate task (private subnet)"]
-  ECR["Amazon ECR - immutable image"] -.-> Task
-  Task -->|PCM stream| Transcribe["Amazon Transcribe Streaming"]
-  Task -->|finalized text| Translate["Amazon Translate"]
-  Task -->|TXT export only| Transcript["Private S3 transcript bucket"]
-  Task -.->|logs| CW["Amazon CloudWatch"]
-```
+![LiveCap as-deployed architecture diagram](/images/3-Project/livecap-target-architecture.png)
 
 ## Main Runtime Flow
 
@@ -98,5 +83,3 @@ flowchart LR
 8. **Export**: the frontend posts finalized rows to `/api/sessions/{id}/export`,
    which writes a TXT object to the private transcript bucket and returns a
    time-limited presigned URL.
-
-![LiveCap target architecture after blue/green cutover](/images/3-Project/livecap-target-architecture.png)

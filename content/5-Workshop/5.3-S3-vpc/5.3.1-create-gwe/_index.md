@@ -1,4 +1,4 @@
----
+﻿---
 title: "Build & Push Container Image to ECR"
 date: 2026-07-08
 weight: 1
@@ -98,12 +98,12 @@ and push the image:
 ```powershell
 $region    = "ap-southeast-1"
 $accountId = aws sts get-caller-identity --query Account --output text `
-               --profile livecap-codex
+               --profile livecap-camgiacntn
 $registry  = "$accountId.dkr.ecr.$region.amazonaws.com"
 $repository = "$registry/livecap-backend"
 
 # Login
-aws ecr get-login-password --region $region --profile livecap-codex |
+aws ecr get-login-password --region $region --profile livecap-camgiacntn |
   docker login --username AWS --password-stdin $registry
 
 # Tag and push

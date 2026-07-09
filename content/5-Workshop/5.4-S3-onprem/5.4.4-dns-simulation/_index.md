@@ -1,4 +1,4 @@
----
+﻿---
 title: "End-to-End Verification"
 date: 2026-07-08
 weight: 4
@@ -62,7 +62,7 @@ You should see the English original and the Vietnamese translation side by side.
 
 ```powershell
 aws s3 ls s3://livecap-transcripts-dev-720459752315/transcripts/ `
-  --profile livecap-codex --region ap-southeast-1
+  --profile livecap-camgiacntn --region ap-southeast-1
 ```
 
 ### 6. CloudWatch Logs
@@ -74,7 +74,7 @@ aws logs tail livecap `
   --follow `
   --since 10m `
   --region ap-southeast-1 `
-  --profile livecap-codex
+  --profile livecap-camgiacntn
 ```
 
 You should see session lifecycle events: open, audio chunks received, Transcribe

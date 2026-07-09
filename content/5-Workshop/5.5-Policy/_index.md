@@ -1,4 +1,4 @@
----
+﻿---
 title: "Testing, Security & Cost Controls"
 date: 2026-07-08
 weight: 5
@@ -82,7 +82,7 @@ CloudWatch log group. Log retention is 14 days.
 
 ```powershell
 # Stream live logs
-aws logs tail /ecs/livecap-backend-dev --follow --region ap-southeast-1 --profile livecap-codex
+aws logs tail /ecs/livecap-backend-dev --follow --region ap-southeast-1 --profile livecap-camgiacntn
 ```
 
 Key log events you will see during a session:
@@ -126,7 +126,7 @@ aws cloudwatch put-metric-alarm `
   --comparison-operator GreaterThanOrEqualToThreshold `
   --evaluation-periods 1 `
   --alarm-actions "arn:aws:sns:ap-southeast-1:720459752315:livecap-alerts" `
-  --region ap-southeast-1 --profile livecap-codex
+  --region ap-southeast-1 --profile livecap-camgiacntn
 ```
 
 ## Security Controls
@@ -135,7 +135,7 @@ aws cloudwatch put-metric-alarm `
 
 | Control | Implementation |
 |---|---|
-| No root account usage | Deployment uses IAM user `Codex` |
+| No root account usage | Deployment uses IAM user `camgiacntn` |
 | IAM least privilege | Separate task execution role and task role |
 | No hardcoded credentials | IAM roles only; no keys in `.env`, images, or Git |
 | Private S3 frontend | Block public access + OAC origin |

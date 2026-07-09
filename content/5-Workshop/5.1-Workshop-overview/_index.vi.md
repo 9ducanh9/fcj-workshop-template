@@ -63,22 +63,7 @@ Sơ đồ dưới đây thể hiện chính xác các tài nguyên AWS đang liv
 điểm nộp workshop. Target Terraform (private subnet, NAT Gateway, scale-to-zero,
 WAF, dashboard, budget) đã được deploy qua blue/green cutover sau đó.
 
-```mermaid
-flowchart LR
-  Browser["Trình duyệt"] -->|HTTPS và WSS| CF["Amazon CloudFront"]
-  WAF["CloudFront WAF - BLOCK"] -.-> CF
-  CF -->|OAC origin fetch| Frontend["S3 frontend private"]
-  CF -->|/api/wake| Wake["Wake Lambda"]
-  Wake -->|desired_count=1| ECS["Amazon ECS"]
-  CF -->|/api/* và /ws/*| ALB["ALB public multi-AZ"]
-  ALBWAF["ALB WAF - BLOCK"] -.-> ALB
-  ALB -->|HTTP 8000| Task["Một ECS Fargate task (private subnet)"]
-  ECR["Amazon ECR - image immutable"] -.-> Task
-  Task -->|PCM stream| Transcribe["Amazon Transcribe Streaming"]
-  Task -->|finalized text| Translate["Amazon Translate"]
-  Task -->|chỉ TXT export| Transcript["S3 transcript private"]
-  Task -.->|log| CW["Amazon CloudWatch"]
-```
+![Kiến trúc LiveCap đang hoạt động đã xác minh](/images/3-Project/livecap-target-architecture.png)
 
 ## Luồng hoạt động chính
 
@@ -97,5 +82,3 @@ flowchart LR
 7. Phụ đề đi ngược về: Fargate → ALB → CloudFront → trình duyệt.
 8. **Export**: frontend POST finalized rows đến `/api/sessions/{id}/export`, backend
    ghi TXT vào S3 private và trả về presigned URL có thời hạn.
-
-![Kiến trúc target LiveCap sau blue/green cutover](/images/3-Project/livecap-target-architecture.png)
