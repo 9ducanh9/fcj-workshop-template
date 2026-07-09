@@ -8,7 +8,7 @@ pre: " <b> 6. </b> "
 
 # Self-evaluation
 
-## 6.1. Technical knowledge gained
+## Technical knowledge gained
 
 During three months in the FCAJ AWS Bootcamp, I gained substantial new knowledge about AWS, cloud computing, and how to build a technical project with a more practical focus. Before the program, I understood cloud only at a basic conceptual level and could not clearly picture how a system on AWS should be designed, deployed, and operated.
 
@@ -16,7 +16,7 @@ Through the LiveCap project, I explored Amazon S3, Amazon CloudFront, Amazon ECS
 
 The most important lesson was that a technical project should not merely “work.” It also needs a clear architecture, reasons for service choices, basic security, error visibility, cost controls, and documentation that others can understand. I previously evaluated projects mainly by whether their features were complete. After the bootcamp, I understand that a good project must be considered as a complete system.
 
-## 6.2. Learning ability, initiative, discipline, and communication
+## Learning ability, initiative, discipline, and communication
 
 I learn new material reasonably well when I have a clear objective. However, I also recognize that I am not yet consistently proactive. I tend to work better when an environment, team, or mentor provides motivation. Without that momentum or a clear sense of direction, I can fall into working only when I feel inspired or when a deadline is close.
 
@@ -28,7 +28,7 @@ For networking, I can speak with unfamiliar people when they initiate the conver
 
 I am reasonably confident in my English ability. However, I still lack some specialized vocabulary and have not been proactive enough in demonstrating this ability during learning, networking, or technical presentations.
 
-## 6.3. Teamwork and problem solving
+## Teamwork and problem solving
 
 The bootcamp and project taught me that problem solving is not only about fixing an error; it begins with understanding where the problem exists. LiveCap required me to examine several system layers, including the frontend, backend, WebSocket communication, AWS services, IAM permissions, deployment, routing, logs, and operating costs.
 
@@ -38,7 +38,7 @@ I still need to improve my teamwork. I was not consistently proactive in communi
 
 The bootcamp helped me understand that teamwork is not limited to completing an assigned task. It also requires communication, agreement on scope, clarification of requirements, and maintaining a shared working rhythm.
 
-## 6.4. Personal contribution
+## Personal contribution
 
 My largest personal contribution was developing LiveCap from an initial idea into a project with a reasonably clear AWS architecture. The project helps participants in workshops, meetings, or classes follow content through real-time captions, transcripts, and Vietnamese-English translation.
 
@@ -46,7 +46,7 @@ I contributed to use-case definition, AWS service selection, architecture design
 
 Although the project can still be improved, I consider it an important step in my development. It taught me how to turn an idea into a structured technical system with an architecture, documentation, and a story that can be presented to other people.
 
-## 6.5. Areas for improvement
+## Areas for improvement
 
 My most important area for improvement is initiative. I need to be more proactive in learning, asking questions, seeking support, communicating with others, and building professional relationships. I previously worked best when external motivation or an inspiring person was available. After the bootcamp, I understand that technology professionals, especially in cloud, must learn to create their own momentum.
 

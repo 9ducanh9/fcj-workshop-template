@@ -8,7 +8,7 @@ pre: " <b> 7. </b> "
 
 # Chia sẻ và phản hồi
 
-## 7.1. Trải nghiệm FCAJ AWS Bootcamp
+## Trải nghiệm FCAJ AWS Bootcamp
 
 FCAJ AWS Bootcamp là một trải nghiệm có giá trị đối với em. Chương trình giúp em biết thêm nhiều kiến thức về AWS, cloud computing, cách làm project kỹ thuật và cách nhìn nhận một hệ thống thực tế. Trước khi tham gia, em chưa có nhiều kinh nghiệm với AWS và cũng chưa thật sự có định hướng rõ ràng về việc xây dựng hình ảnh cá nhân trong ngành công nghệ.
 
@@ -18,7 +18,7 @@ Các event hằng tuần cũng giúp em mở rộng góc nhìn. Em được nghe
 
 Sau chương trình, em cảm thấy bản thân có thêm kiến thức, connection, định hướng rõ hơn và động lực để xây dựng lại GitHub, portfolio và CV một cách chuẩn chỉnh hơn. Cơ hội công việc của em có thể chưa thay đổi quá lớn ngay lập tức, nhưng em thấy em đã có thêm nền tảng và mối quan hệ để tiếp tục phát triển.
 
-## 7.2. Mức độ hài lòng
+## Mức độ hài lòng
 
 Nếu tự đánh giá, em hài lòng với chương trình ở mức khoảng **7/10**. Về mặt kiến thức và cơ hội học hỏi, em nhận được rất nhiều. Chương trình giúp em tiếp cận AWS thực tế hơn, hiểu thêm về cách làm project, cách tham gia cộng đồng công nghệ và cách xây dựng hình ảnh cá nhân.
 
@@ -26,7 +26,7 @@ Tuy nhiên, về mặt networking và sự kết nối cá nhân, em cảm thấ
 
 Em hiểu rằng bootcamp không phải là nơi cầm tay chỉ việc và không ai có trách nhiệm phải chăm sóc từng học viên quá sát. Tuy vậy, với những bạn còn mới, chưa đủ chủ động hoặc chưa biết mình nên hỏi gì, việc có thêm sự định hướng, check-in hoặc quan tâm định kỳ sẽ giúp trải nghiệm học tập tốt hơn rất nhiều.
 
-## 7.3. Những bài học hữu ích nhất
+## Những bài học hữu ích nhất
 
 Bài học hữu ích nhất đối với em là hiểu được sự khác nhau giữa một project demo và một project có thể trình bày như một hệ thống thực tế. Trước đây, em thường nghĩ project chỉ cần chạy được là đủ. Sau bootcamp, em hiểu rằng một project tốt cần có kiến trúc, có lý do lựa chọn công nghệ, có kiểm thử, có log, có bảo mật cơ bản, có kiểm soát chi phí và có tài liệu rõ ràng.
 
@@ -36,7 +36,7 @@ Bài học thứ ba là tinh thần tự học. Dù em chưa phải là người
 
 Bài học thứ tư là giá trị của cộng đồng. Khi tham gia các event và gặp gỡ nhiều người hơn, em có thêm góc nhìn thực tế về ngành. Điều này giúp em bớt bị giới hạn trong phạm vi học ở trường hoặc tự học một mình.
 
-## 7.4. Gợi ý cải thiện chương trình
+## Gợi ý cải thiện chương trình
 
 Theo em, chương trình có thể cải thiện bằng cách có thêm các hoạt động check-in hoặc định hướng định kỳ cho học viên, đặc biệt là những bạn còn mới, chưa có nhiều kinh nghiệm hoặc chưa biết cách tự định hướng. Không phải bạn nào cũng đủ chủ động ngay từ đầu, nên nếu có thêm sự theo dõi nhẹ nhàng, nhắc nhở hoặc định hướng cá nhân hóa, các bạn sẽ dễ theo kịp chương trình hơn.
 
@@ -48,7 +48,7 @@ Em cũng mong chương trình có thêm hướng dẫn thực tế về cách ki
 
 Nhìn chung, góp ý lớn nhất của em là mong chương trình có thể tạo thêm nhiều điểm chạm giữa admin, mentor và học viên. Em hiểu điều này không dễ vì số lượng học viên đông và các anh chị admin cũng có công việc riêng, nhưng nếu làm được, trải nghiệm của học viên sẽ tốt hơn rất nhiều.
 
-## 7.5. Có giới thiệu chương trình cho người khác không?
+## Có giới thiệu chương trình cho người khác không?
 
 Em sẽ giới thiệu FCAJ AWS Bootcamp cho những bạn muốn bắt đầu học AWS, cloud computing hoặc muốn có thêm trải nghiệm làm project thực tế. Chương trình phù hợp với sinh viên hoặc người mới đang muốn tìm hiểu về cloud, định hướng nghề nghiệp và mở rộng network trong ngành công nghệ.
 

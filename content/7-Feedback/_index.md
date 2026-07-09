@@ -8,7 +8,7 @@ pre: " <b> 7. </b> "
 
 # Sharing and feedback
 
-## 7.1. FCAJ AWS Bootcamp experience
+## FCAJ AWS Bootcamp experience
 
 The FCAJ AWS Bootcamp was a valuable experience for me. It introduced me to AWS, cloud computing, practical technical projects, and a more complete way of evaluating real systems. Before joining, I had limited AWS experience and no clear direction for building a professional profile in the technology industry.
 
@@ -18,7 +18,7 @@ The weekly events broadened my perspective through practical discussions about c
 
 After the program, I have more knowledge, more connections, clearer direction, and stronger motivation to rebuild my GitHub, portfolio, and CV properly. My employment opportunities may not change immediately, but I now have a better foundation and more relationships to support future growth.
 
-## 7.2. Satisfaction level
+## Satisfaction level
 
 I would rate my satisfaction with the program at approximately **7/10**. I gained substantial knowledge and learning opportunities. The program gave me more practical exposure to AWS, project development, technology communities, and professional profile building.
 
@@ -26,7 +26,7 @@ However, I did not make full use of the networking and personal connection oppor
 
 I understand that a bootcamp is not intended to guide every student step by step, and no one is responsible for providing constant individual attention. Nevertheless, additional direction, periodic check-ins, or encouragement could significantly improve the experience for beginners who are not yet proactive or do not know what questions to ask.
 
-## 7.3. Most useful lessons
+## Most useful lessons
 
 The most useful lesson was understanding the difference between a demo project and a project that can be presented as a real system. I previously thought that a working implementation was sufficient. The bootcamp taught me that a strong project also requires architecture, justified technology choices, testing, logs, basic security, cost controls, and clear documentation.
 
@@ -36,7 +36,7 @@ The third lesson was self-learning. Although I am not yet consistently proactive
 
 The fourth lesson was the value of community. Attending events and meeting more people gave me a more realistic view of the industry and helped me move beyond the limits of university study or learning alone.
 
-## 7.4. Suggestions for improving the program
+## Suggestions for improving the program
 
 The program could include more regular check-ins or guidance for students, especially beginners who have limited experience or do not yet know how to direct their own learning. Not every participant begins with strong initiative, so light monitoring, reminders, or more personalized guidance could help students remain engaged.
 
@@ -48,7 +48,7 @@ I would also value more practical guidance on controlling AWS costs, cleaning up
 
 Overall, my main suggestion is to create more points of contact among administrators, mentors, and participants. I understand that this is difficult with many students and administrators who also have professional responsibilities, but it would substantially improve the learning experience.
 
-## 7.5. Would I recommend the program?
+## Would I recommend the program?
 
 I would recommend the FCAJ AWS Bootcamp to people who want to begin learning AWS or cloud computing or gain experience with a practical project. It is suitable for students and beginners who want to explore cloud, clarify their career direction, and expand their professional network.
 
