@@ -1,4 +1,4 @@
----
+﻿---
 title: "Tổng quan workshop"
 date: 2026-07-08
 weight: 1
@@ -41,7 +41,7 @@ LiveCap thuộc hai nhóm chồng nhau:
 - **Web Application** – phục vụ React frontend qua CloudFront + S3 và FastAPI
   backend qua ECS Fargate đằng sau ALB.
 
-## Các dịch vụ AWS sử dụng (≥ 3)
+## Các dịch vụ AWS sử dụng
 
 | Dịch vụ | Vai trò trong LiveCap |
 |---|---|

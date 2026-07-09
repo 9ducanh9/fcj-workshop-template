@@ -1,4 +1,4 @@
----
+﻿---
 title: "Workshop Overview"
 date: 2026-07-08
 weight: 1
@@ -41,7 +41,7 @@ LiveCap falls into two overlapping categories:
 - **Web Application** – delivers a React frontend through CloudFront + S3 and
   a FastAPI backend through ECS Fargate behind an ALB.
 
-## AWS Services Used (≥ 3)
+## AWS Services Used
 
 | Service | Role in LiveCap |
 |---|---|
