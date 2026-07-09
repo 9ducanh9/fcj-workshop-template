@@ -138,45 +138,45 @@ After completing this workshop, you should be able to:
 
 ### Architecture
 
-- ✅ Explain what problem LiveCap solves and who benefits from it
-- ✅ Describe the AWS architecture: CloudFront, S3, ALB, ECS Fargate, ECR,
+- Explain what problem LiveCap solves and who benefits from it
+- Describe the AWS architecture: CloudFront, S3, ALB, ECS Fargate, ECR,
   Transcribe, Translate, CloudWatch, WAF, Lambda
-- ✅ Explain the role of each service and how they are connected
-- ✅ Trace the full request path from browser microphone to caption display
+- Explain the role of each service and how they are connected
+- Trace the full request path from browser microphone to caption display
 
 ### Deployment
 
-- ✅ Build a Docker image for `linux/amd64` from a Python FastAPI backend
-- ✅ Push an immutable image to Amazon ECR using Git SHA tags
-- ✅ Create an ECS task definition and update a Fargate service
-- ✅ Build a React/Vite frontend and sync it to a private S3 bucket
-- ✅ Create a CloudFront invalidation to refresh edge caches
-- ✅ Configure CloudFront path behaviors for static assets, API, and WebSocket
+- Build a Docker image for `linux/amd64` from a Python FastAPI backend
+- Push an immutable image to Amazon ECR using Git SHA tags
+- Create an ECS task definition and update a Fargate service
+- Build a React/Vite frontend and sync it to a private S3 bucket
+- Create a CloudFront invalidation to refresh edge caches
+- Configure CloudFront path behaviors for static assets, API, and WebSocket
 
 ### Testing
 
-- ✅ Run the backend test suite (pytest) and frontend tests (Vitest)
-- ✅ Verify the health endpoint through CloudFront
-- ✅ Test a live WebSocket transcription session end-to-end
-- ✅ Export a transcript and verify the S3 object and presigned URL
+- Run the backend test suite (pytest) and frontend tests (Vitest)
+- Verify the health endpoint through CloudFront
+- Test a live WebSocket transcription session end-to-end
+- Export a transcript and verify the S3 object and presigned URL
 
 ### Observability
 
-- ✅ Read structured application logs in CloudWatch
-- ✅ Understand ALB and ECS metrics and what they indicate
-- ✅ Create a basic CloudWatch alarm for error conditions
+- Read structured application logs in CloudWatch
+- Understand ALB and ECS metrics and what they indicate
+- Create a basic CloudWatch alarm for error conditions
 
 ### Security
 
-- ✅ Understand the IAM least-privilege model (task execution vs. task role)
-- ✅ Verify that S3 buckets are private and only accessible through CloudFront OAC
-- ✅ Understand how WAF blocks managed threats without touching application code
-- ✅ Explain why raw audio is never stored and how transcript expiry works
+- Understand the IAM least-privilege model (task execution vs. task role)
+- Verify that S3 buckets are private and only accessible through CloudFront OAC
+- Understand how WAF blocks managed threats without touching application code
+- Explain why raw audio is never stored and how transcript expiry works
 
 ### Cost
 
-- ✅ Identify the fixed-cost resources (ALB, NAT Gateway, WAF) vs. usage-based
+- Identify the fixed-cost resources (ALB, NAT Gateway, WAF) vs. usage-based
   services (Transcribe, Translate)
-- ✅ Explain how session limits and retention rules bound ongoing costs
-- ✅ Understand the role of an AWS Budget alert and its limitations
-- ✅ Clean up all resources to avoid ongoing charges after the workshop
+- Explain how session limits and retention rules bound ongoing costs
+- Understand the role of an AWS Budget alert and its limitations
+- Clean up all resources to avoid ongoing charges after the workshop

@@ -137,45 +137,45 @@ Sau khi hoàn thành workshop này, bạn cần đạt được:
 
 ### Kiến trúc
 
-- ✅ Giải thích được LiveCap giải quyết vấn đề gì và ai hưởng lợi
-- ✅ Mô tả được kiến trúc AWS: CloudFront, S3, ALB, ECS Fargate, ECR,
+- Giải thích được LiveCap giải quyết vấn đề gì và ai hưởng lợi
+- Mô tả được kiến trúc AWS: CloudFront, S3, ALB, ECS Fargate, ECR,
   Transcribe, Translate, CloudWatch, WAF, Lambda
-- ✅ Giải thích vai trò của từng dịch vụ và cách chúng kết nối với nhau
-- ✅ Theo dõi được toàn bộ đường đi request từ microphone trình duyệt đến hiển thị phụ đề
+- Giải thích vai trò của từng dịch vụ và cách chúng kết nối với nhau
+- Theo dõi được toàn bộ đường đi request từ microphone trình duyệt đến hiển thị phụ đề
 
 ### Triển khai
 
-- ✅ Build Docker image `linux/amd64` từ backend Python FastAPI
-- ✅ Push image bất biến lên Amazon ECR bằng Git SHA tag
-- ✅ Tạo ECS task definition và cập nhật Fargate service
-- ✅ Build React/Vite frontend và sync lên S3 private
-- ✅ Tạo CloudFront invalidation để refresh edge cache
-- ✅ Cấu hình CloudFront path behavior cho static asset, API và WebSocket
+- Build Docker image `linux/amd64` từ backend Python FastAPI
+- Push image bất biến lên Amazon ECR bằng Git SHA tag
+- Tạo ECS task definition và cập nhật Fargate service
+- Build React/Vite frontend và sync lên S3 private
+- Tạo CloudFront invalidation để refresh edge cache
+- Cấu hình CloudFront path behavior cho static asset, API và WebSocket
 
 ### Kiểm thử
 
-- ✅ Chạy bộ test backend (pytest) và frontend (Vitest)
-- ✅ Xác minh health endpoint qua CloudFront
-- ✅ Test một phiên phiên âm WebSocket trực tiếp end-to-end
-- ✅ Export transcript và xác minh S3 object và presigned URL
+- Chạy bộ test backend (pytest) và frontend (Vitest)
+- Xác minh health endpoint qua CloudFront
+- Test một phiên phiên âm WebSocket trực tiếp end-to-end
+- Export transcript và xác minh S3 object và presigned URL
 
 ### Quan sát hệ thống
 
-- ✅ Đọc được structured application log trong CloudWatch
-- ✅ Hiểu metric ALB và ECS và ý nghĩa của chúng
-- ✅ Tạo được CloudWatch alarm cơ bản cho điều kiện lỗi
+- Đọc được structured application log trong CloudWatch
+- Hiểu metric ALB và ECS và ý nghĩa của chúng
+- Tạo được CloudWatch alarm cơ bản cho điều kiện lỗi
 
 ### Bảo mật
 
-- ✅ Hiểu mô hình IAM least-privilege (task execution role vs. task role)
-- ✅ Xác minh S3 bucket private chỉ truy cập được qua CloudFront OAC
-- ✅ Hiểu cách WAF chặn managed threat mà không cần chạm vào code ứng dụng
-- ✅ Giải thích tại sao raw audio không bao giờ được lưu và cách transcript expiry hoạt động
+- Hiểu mô hình IAM least-privilege (task execution role vs. task role)
+- Xác minh S3 bucket private chỉ truy cập được qua CloudFront OAC
+- Hiểu cách WAF chặn managed threat mà không cần chạm vào code ứng dụng
+- Giải thích tại sao raw audio không bao giờ được lưu và cách transcript expiry hoạt động
 
 ### Chi phí
 
-- ✅ Xác định được tài nguyên chi phí cố định (ALB, NAT Gateway, WAF) so với
+- Xác định được tài nguyên chi phí cố định (ALB, NAT Gateway, WAF) so với
   dịch vụ theo mức sử dụng (Transcribe, Translate)
-- ✅ Giải thích cách giới hạn session và lifecycle rule kiểm soát chi phí liên tục
-- ✅ Hiểu vai trò của AWS Budget alert và giới hạn của nó
-- ✅ Xóa sạch tất cả tài nguyên để tránh phát sinh chi phí sau workshop
+- Giải thích cách giới hạn session và lifecycle rule kiểm soát chi phí liên tục
+- Hiểu vai trò của AWS Budget alert và giới hạn của nó
+- Xóa sạch tất cả tài nguyên để tránh phát sinh chi phí sau workshop
