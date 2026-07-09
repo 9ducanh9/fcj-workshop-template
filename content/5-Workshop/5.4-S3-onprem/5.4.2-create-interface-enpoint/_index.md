@@ -74,22 +74,43 @@ Redis (shared state across tasks).
 
 1. Open `https://dpeohr327wt9l.cloudfront.net`
 2. Click **Start captioning** to go to `/app`
-3. Click **Start** – the frontend wakes the backend if needed, then polls health
+3. Click **Start session** – the frontend wakes the backend if needed, then polls health
 4. Allow microphone access when prompted by the browser
 5. Speak in English or Vietnamese
-6. Watch finalized bilingual caption rows appear in the dashboard:
+6. Watch finalized bilingual caption rows appear in the dashboard
 
-![LiveCap caption dashboard showing bilingual caption rows](/images/3-Project/livecap-dashboard.png)
+The dashboard in its **READY** state before starting a session:
 
-The production dashboard ready to start a session:
+![LiveCap dashboard in ready state showing Start session button and audio source selector](/images/5-Workshop/livecap-production-dashboard-ready.png)
 
-![Production dashboard showing session controls and status before start](/images/5-Workshop/livecap-production-dashboard-ready.png)
+After clicking **Start session**, the status changes to **WAKING** while the frontend wakes
+the ECS backend (scales 0 → 1) and syncs the transcription streams:
 
-The dashboard provides Start, Stop, Export TXT, and Clear controls; a 30-minute
-session timer; microphone selection; connection state; speaker labels and
-timestamps; side-by-side original/translated text; and reconnect/error states
-across desktop and mobile layouts. Only finalized segments are retained in the
-session transcript and made available for export.
+![LiveCap dashboard in WAKING state showing Connecting button and SYNCING_NODE_STREAMS status](/images/5-Workshop/livecap-dashboard-waking.png)
+
+Once connected, the bilingual caption layout appears with **VIETNAMESE** and **ENGLISH**
+columns side by side. Finalized segments appear as caption rows in real time:
+
+![LiveCap caption dashboard showing bilingual caption columns after session starts](/images/3-Project/livecap-dashboard.png)
+
+The dashboard provides **Start session**, **Stop session**, **Download transcript**, and
+**PURGE SESSION CACHE** controls; a 30-minute session timer with elapsed time; audio source
+selection; real-time connection state badge (READY / WAKING / LIVE / LOST); side-by-side
+Vietnamese and English transcription; and reconnect/error states across desktop and mobile
+layouts. Only finalized segments are retained and made available for export.
+
+## Connection Error States
+
+If the WebSocket connection is lost (e.g., backend timed out due to silence or network
+issue), the dashboard shows a **LOST** badge and error toasts:
+
+- **SYSTEM ERROR** – red toast with the specific error message (e.g., "Your request timed
+  out because no new audio was received for 15 seconds.")
+- **STREAM DISRUPTED** – yellow warning toast asking user to verify internet and restart
+
+![LiveCap dashboard showing LOST status with System Error and Stream Disrupted error toasts](/images/5-Workshop/livecap-dashboard-error-state.png)
+
+Click **DISMISS** on the system error, then **Start session** again to reconnect.
 
 ## What If Microphone Access Is Denied?
 

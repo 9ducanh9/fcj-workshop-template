@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Build & Deploy React Frontend to S3 + CloudFront"
 date: 2026-07-08
 weight: 1
@@ -114,11 +114,16 @@ Open the CloudFront URL in a browser:
 https://dpeohr327wt9l.cloudfront.net
 ```
 
-The landing page should load with animations and the "Start captioning" button:
+The landing page loads with the hero section, animated bilingual caption card preview,
+and a **"Start a live session"** CTA button:
 
-![LiveCap landing page served through CloudFront](/images/3-Project/livecap-landing.png)
+![LiveCap landing page showing hero text, bilingual caption card preview, and Start a live session CTA](/images/3-Project/livecap-landing.png)
 
-The `/` route uses a dark SaaS presentation and GSAP ScrollTrigger to explain
-the product story, caption sequence, and high-level architecture. Heavy visual
-effects are isolated to the landing page; `/app` remains focused on stable
-real-time caption operation.
+Scrolling down reveals the feature highlights – **Live captions**, **Bilingual output**,
+and **Session exports** – followed by a "Ready when the conversation is" design section:
+
+![LiveCap landing page feature highlights section](/images/5-Workshop/livecap-landing-features.png)
+
+The `/` route uses a clean SaaS presentation layout with animated caption card to explain
+the product story. The **"Open workspace"** button in the top-right and **"Start a live
+session"** button both navigate directly to `/app`.

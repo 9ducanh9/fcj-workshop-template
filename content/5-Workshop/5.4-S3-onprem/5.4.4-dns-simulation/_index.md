@@ -1,4 +1,4 @@
-﻿---
+---
 title: "End-to-End Verification"
 date: 2026-07-08
 weight: 4
@@ -38,11 +38,13 @@ A `200 OK` response confirms:
 ### 3. WebSocket Connection
 
 Open your browser's developer tools (F12) → Network tab → filter by WS.
-Then click **Start** in the LiveCap dashboard. You should see:
+Then click **Start session** in the LiveCap dashboard. You should see:
 
 - A WebSocket connection to `wss://dpeohr327wt9l.cloudfront.net/ws/transcribe`
 - Status: `101 Switching Protocols`
 - Regular `ping`/`pong` frames every 30 seconds
+
+The status badge in the header transitions: **READY** → **WAKING** → **LIVE**.
 
 ### 4. Live Transcription
 
@@ -51,7 +53,8 @@ see a finalized bilingual caption row appear. Use a test sentence such as:
 
 > "Live captions are working correctly for the workshop demonstration."
 
-You should see the English original and the Vietnamese translation side by side.
+You should see the Vietnamese and English columns populate side by side in the
+"Live captions" panel.
 
 ### 5. Export and Download
 

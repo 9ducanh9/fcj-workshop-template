@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Workshop Overview"
 date: 2026-07-08
 weight: 1
@@ -65,6 +65,10 @@ scale-to-zero, WAF, dashboard, budget) has since been deployed via a blue/green
 cutover.
 
 ![LiveCap as-deployed architecture diagram](/images/3-Project/livecap-target-architecture.png)
+
+The LiveCap landing page (served from CloudFront via private S3 with OAC):
+
+![LiveCap landing page showing hero section with bilingual caption preview card](/images/3-Project/livecap-landing.png)
 
 ## Main Runtime Flow
 
