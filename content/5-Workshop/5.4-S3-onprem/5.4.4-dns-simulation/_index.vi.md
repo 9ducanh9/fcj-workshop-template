@@ -61,22 +61,22 @@ Bạn sẽ thấy các sự kiện vòng đời phiên: `session_opened`, `audio
 
 ### Kết quả kiểm thử chuẩn production
 
-Ngày 2026-07-08, sau khi hoàn thành cutover sang kiến trúc target (VPC, private subnet, NAT, WAF, scale-to-zero), toàn bộ luồng production đã pass tất cả bài test sau:
+Sau khi hoàn thành cutover sang kiến trúc target (VPC, private subnet, NAT, WAF, scale-to-zero), toàn bộ luồng production đã pass tất cả bài test sau:
 
 | Bài test | Kết quả |
 |---|---|
-| Health endpoint | `{"status":"healthy","version":"1.0.0"}` ✓ |
-| Mở WebSocket | 101 Switching Protocols ✓ |
-| Phiên âm tiếng Việt PCM 16 kHz thực | Trả về finalized text ✓ |
-| Phiên âm tiếng Anh PCM 16 kHz thực | Trả về finalized text ✓ |
-| Dịch tiếng Anh → tiếng Việt | Trả về bản dịch chính xác ✓ |
-| Heartbeat ping/pong | Duy trì interval 30 giây ✓ |
-| Kết thúc phiên sạch (nút Stop) | Session đóng, registry cleared ✓ |
-| Export transcript S3 | TXT object được tạo trong bucket private ✓ |
-| Tải xuống qua presigned URL | File tải thành công ✓ |
-| Kiểm thử WAF blocking | XSS và Log4J probe trả về HTTP 403 ✓ |
-| ECS scale-to-zero (idle 300s) | Service scale về 0 sau 5 phút không dùng ✓ |
-| ECS self-healing (wake Lambda) | Scale từ 0 → 1 và healthy trong ≩60s ✓ |
+| Health endpoint | `{"status":"healthy","version":"1.0.0"}` |
+| Mở WebSocket | 101 Switching Protocols |
+| Phiên âm tiếng Việt PCM 16 kHz thực | Trả về finalized text |
+| Phiên âm tiếng Anh PCM 16 kHz thực | Trả về finalized text |
+| Dịch tiếng Anh → tiếng Việt | Trả về bản dịch chính xác |
+| Heartbeat ping/pong | Duy trì interval 30 giây |
+| Kết thúc phiên sạch (nút Stop) | Session đóng, registry cleared |
+| Export transcript S3 | TXT object được tạo trong bucket private |
+| Tải xuống qua presigned URL | File tải thành công |
+| Kiểm thử WAF blocking | XSS và Log4J probe trả về HTTP 403 |
+| ECS scale-to-zero (idle 300s) | Service scale về 0 sau 5 phút không dùng |
+| ECS self-healing (wake Lambda) | Scale từ 0 → 1 và healthy trong 60s |
 
 ![Xác minh end-to-end: phiên âm, dịch và export pass trên production](/images/5-Workshop/livecap-transcribe-translate-export-verification.png)
 

@@ -61,22 +61,22 @@ You should see session lifecycle events: `session_opened`, `audio_chunk_received
 
 ### Verified Production Results
 
-On 2026-07-08, after the cutover to the target architecture (VPC, private subnets, NAT, WAF, scale-to-zero), the full production flow passed all of the following:
+After the cutover to the target architecture (VPC, private subnets, NAT, WAF, scale-to-zero), the full production flow passed all of the following:
 
 | Test | Result |
 |---|---|
-| Health endpoint | `{"status":"healthy","version":"1.0.0"}` ✓ |
-| WebSocket open | 101 Switching Protocols ✓ |
-| Real 16 kHz PCM transcription (Vietnamese) | Finalized text returned ✓ |
-| Real 16 kHz PCM transcription (English) | Finalized text returned ✓ |
-| English → Vietnamese translation | Correct translation returned ✓ |
-| Ping/pong heartbeat | 30-second interval maintained ✓ |
-| Clean session end (Stop button) | Session closed, registry cleared ✓ |
-| S3 transcript export | TXT object created in private bucket ✓ |
-| Presigned URL download | File downloaded successfully ✓ |
-| WAF blocking test | XSS and Log4J probes returned HTTP 403 ✓ |
-| ECS scale-to-zero (idle 300 s) | Service scaled to 0 after 5 min idle ✓ |
-| ECS self-healing (wake Lambda) | Scaled 0 → 1 and healthy within ≤60 s ✓ |
+| Health endpoint | `{"status":"healthy","version":"1.0.0"}` |
+| WebSocket open | 101 Switching Protocols |
+| Real 16 kHz PCM transcription (Vietnamese) | Finalized text returned |
+| Real 16 kHz PCM transcription (English) | Finalized text returned |
+| English → Vietnamese translation | Correct translation returned |
+| Ping/pong heartbeat | 30-second interval maintained |
+| Clean session end (Stop button) | Session closed, registry cleared |
+| S3 transcript export | TXT object created in private bucket |
+| Presigned URL download | File downloaded successfully |
+| WAF blocking test | XSS and Log4J probes returned HTTP 403 |
+| ECS scale-to-zero (idle 300 s) | Service scaled to 0 after 5 min idle |
+| ECS self-healing (wake Lambda) | Scaled 0 → 1 and healthy within ≤60 s |
 
 
 
