@@ -114,16 +114,10 @@ Open the CloudFront URL in a browser:
 https://dpeohr327wt9l.cloudfront.net
 ```
 
-The landing page loads with the hero section, animated bilingual caption card preview,
-and a **"Start a live session"** CTA button:
+The landing page loads with the hero section ("Every voice, in the room."), an animated
+bilingual caption card preview, feature highlights and a security section:
 
-![LiveCap landing page showing hero text, bilingual caption card preview, and Start a live session CTA](/images/5-Workshop/livecap-landing.png)
+![LiveCap landing page – hero, bilingual caption preview, feature highlights and security section](/images/5-Workshop/livecap-landing.png)
 
-Scrolling down reveals the feature highlights – **Live captions**, **Bilingual output**,
-and **Session exports** – followed by a "Ready when the conversation is" design section:
-
-![LiveCap landing page feature highlights section](/images/5-Workshop/livecap-landing-features.png)
-
-The `/` route uses a clean SaaS presentation layout with animated caption card to explain
-the product story. The **"Open workspace"** button in the top-right and **"Start a live
-session"** button both navigate directly to `/app`.
+The **"Open workspace"** button in the top-right and **"Start a live session"** button
+both navigate directly to `/app`.
