@@ -6,71 +6,48 @@ chapter: false
 pre: " <b> 5.4.4. </b> "
 ---
 
-# End-to-End Verification
+# End-to-End Walkthrough
 
-This step confirms that the entire LiveCap stack – from browser to CloudFront,
-ALB, Fargate, Transcribe, Translate, and back – is working correctly together.
+This step guides you (and workshop attendees) through testing the entire LiveCap stack from an end-user perspective, followed by system checks to confirm the architecture is working correctly.
 
-## Verification Checklist
+## 1. Access the Application
 
-Run through this checklist in order. Each step builds on the previous one.
+1. Open your browser and navigate to your CloudFront URL: `https://dpeohr327wt9l.cloudfront.net`
+2. You will see the LiveCap Landing Page.
+3. Click the **Start a live session** (or Open workspace) button to enter the main dashboard (`/app`).
 
-### 1. Health Endpoint
+## 2. Start a Live Session
 
-```powershell
-Invoke-RestMethod https://dpeohr327wt9l.cloudfront.net/api/health
-```
+1. In the main dashboard, click the **Start session** button.
+2. When the browser requests microphone access, select **Allow**.
+3. The connection status badge (top header) will transition from **READY** → **WAKING** (waking the backend) → **LIVE** (connected).
 
-Expected: `{"status": "healthy", "version": "1.0.0"}`
+## 3. Real-Time Translation Experience
 
-If this fails, the ECS task is not healthy or CloudFront routing is broken.
-Check the ALB target group health status first.
+Test the system by speaking a few clear sentences into your microphone (you can speak in English or Vietnamese).
 
-### 2. Backend Reachable via CloudFront
+> Example: "Hello everyone, welcome to the workshop today. Live captions are working perfectly!"
 
-The health endpoint goes through the full CloudFront → ALB → Fargate path.
-A `200 OK` response confirms:
+Within 2–5 seconds, your 16kHz PCM audio stream has traversed CloudFront → ALB → Fargate → Amazon Transcribe → Amazon Translate, and the results are rendered on the screen.
+You will see two columns of text (Vietnamese and English) populating side-by-side in real time:
 
-- CloudFront distribution is deployed and accepting requests ✓
-- ALB listener is routing to the ECS target group ✓
-- ECS Fargate task is healthy and responding on port 8000 ✓
+![LiveCap Live Translation Session](/images/5-Workshop/livecap-dashboard.png)
 
-### 3. WebSocket Connection
+## 4. End Session and Download Transcript
 
-Open your browser's developer tools (F12) → Network tab → filter by WS.
-Then click **Start session** in the LiveCap dashboard. You should see:
+1. Click **Stop session** to end the session. The WebSocket connection will close cleanly.
+2. Click the **Download transcript** (or Export) button.
+3. The system will call the API to securely download the TXT file from Amazon S3 (via a presigned URL) to your computer. Open the TXT file to verify the contents.
 
-- A WebSocket connection to `wss://dpeohr327wt9l.cloudfront.net/ws/transcribe`
-- Status: `101 Switching Protocols`
-- Regular `ping`/`pong` frames every 30 seconds
+---
 
-The status badge in the header transitions: **READY** → **WAKING** → **LIVE**.
+## 5. Technical Verification (For Admins)
 
-### 4. Live Transcription
+After experiencing the UI, you can inspect the backend logs to understand the data flow.
 
-Speak a sentence clearly into your microphone. Within 2–5 seconds you should
-see a finalized bilingual caption row appear. Use a test sentence such as:
+### Check CloudWatch Logs
 
-> "Live captions are working correctly for the workshop demonstration."
-
-You should see the Vietnamese and English columns populate side by side in the
-"Live captions" panel.
-
-### 5. Export and Download
-
-1. Click **Stop** to end the session.
-2. Click **Export TXT**.
-3. Verify the download starts and the file contains the finalized rows.
-4. Verify the S3 object exists using the CLI:
-
-```powershell
-aws s3 ls s3://livecap-transcripts-dev-720459752315/transcripts/ `
-  --profile livecap-camgiacntn --region ap-southeast-1
-```
-
-### 6. CloudWatch Logs
-
-Check that the backend emitted structured logs during the session:
+Verify that the backend emitted structured logs during the session you just ran:
 
 ```powershell
 aws logs tail livecap `
@@ -80,14 +57,11 @@ aws logs tail livecap `
   --profile livecap-camgiacntn
 ```
 
-You should see session lifecycle events: open, audio chunks received, Transcribe
-results, Translate calls, session close.
+You should see session lifecycle events: `session_opened`, `audio_chunk_received`, `transcribe_finalized`, `translate_success`, `session_closed`.
 
-## Verified Production Results
+### Verified Production Results
 
-On 2026-07-08, after the blue/green cutover to the target architecture
-(custom VPC, private subnets, NAT Gateway, WAF, scale-to-zero, budget alert),
-the full production flow passed all of the following:
+On 2026-07-08, after the cutover to the target architecture (VPC, private subnets, NAT, WAF, scale-to-zero), the full production flow passed all of the following:
 
 | Test | Result |
 |---|---|

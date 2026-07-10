@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Kiểm thử End-to-End"
 date: 2026-07-08
 weight: 4
@@ -6,68 +6,48 @@ chapter: false
 pre: " <b> 5.4.4. </b> "
 ---
 
-# Kiểm thử End-to-End
+# Hướng dẫn trải nghiệm End-to-End
 
-Bước này xác nhận toàn bộ stack LiveCap – từ trình duyệt qua CloudFront, ALB,
-Fargate, Transcribe, Translate và ngược lại – hoạt động chính xác cùng nhau.
+Bước này hướng dẫn bạn (và những người tham gia workshop) cách trải nghiệm toàn bộ luồng hệ thống LiveCap từ góc độ người dùng cuối, kết hợp với việc kiểm tra hệ thống để xác nhận kiến trúc hoạt động.
 
-## Checklist kiểm thử
+## 1. Truy cập ứng dụng
 
-Thực hiện theo thứ tự sau. Mỗi bước dựa trên bước trước đó.
+1. Mở trình duyệt và truy cập vào URL CloudFront của bạn: `https://dpeohr327wt9l.cloudfront.net`
+2. Bạn sẽ thấy trang Landing Page của LiveCap.
+3. Bấm vào nút **Start a live session** (hoặc Open workspace) để vào giao diện chính (`/app`).
 
-### 1. Health Endpoint
+## 2. Bắt đầu phiên dịch thuật
 
-```powershell
-Invoke-RestMethod https://dpeohr327wt9l.cloudfront.net/api/health
-```
+1. Tại giao diện chính, bấm nút **Start session**.
+2. Khi trình duyệt yêu cầu quyền truy cập Micro, hãy chọn **Cho phép (Allow)**.
+3. Trạng thái kết nối (góc trên) sẽ chuyển từ **READY** → **WAKING** (đánh thức backend) → **LIVE** (đã kết nối).
 
-Kết quả mong đợi: `{"status": "healthy", "version": "1.0.0"}`
+## 3. Trải nghiệm dịch thuật theo thời gian thực
 
-Nếu thất bại, ECS task không healthy hoặc CloudFront routing bị lỗi. Kiểm tra
-trạng thái ALB target group trước tiên.
+Hãy thử nghiệm hệ thống bằng cách nói một vài câu rõ ràng vào microphone (bạn có thể nói tiếng Anh hoặc tiếng Việt).
 
-### 2. Backend có thể truy cập qua CloudFront
+> Ví dụ: "Chào mọi người, chào mừng đến với buổi workshop hôm nay. Live captions are working perfectly!"
 
-Health endpoint đi qua toàn bộ đường CloudFront → ALB → Fargate. Response
-`200 OK` xác nhận:
+Trong vòng 2–5 giây, luồng âm thanh PCM 16kHz của bạn đã đi qua CloudFront → ALB → Fargate → Amazon Transcribe → Amazon Translate và trả về kết quả lên màn hình.
+Bạn sẽ thấy hai cột văn bản (Tiếng Việt và Tiếng Anh) xuất hiện song song, đồng bộ theo thời gian thực:
 
-- CloudFront distribution đã deploy và đang nhận request ✓
-- ALB listener đang route đến ECS target group ✓
-- ECS Fargate task healthy và đang phản hồi trên port 8000 ✓
+![Giao diện LiveCap đang dịch thuật song ngữ theo thời gian thực](/images/5-Workshop/livecap-dashboard.png)
 
-### 3. Kết nối WebSocket
+## 4. Kết thúc và tải Transcript
 
-Mở Developer Tools (F12) → tab Network → lọc theo WS. Sau đó bấm **Start**
-trong dashboard LiveCap. Bạn sẽ thấy:
+1. Bấm **Stop session** để kết thúc phiên. Kết nối WebSocket sẽ được đóng sạch sẽ.
+2. Bấm nút **Download transcript** (hoặc Export).
+3. Hệ thống sẽ gọi API tải file TXT từ Amazon S3 (thông qua presigned URL) về máy tính của bạn. Mở file TXT để kiểm tra nội dung.
 
-- Kết nối WebSocket đến `wss://dpeohr327wt9l.cloudfront.net/ws/transcribe`
-- Status: `101 Switching Protocols`
-- Các frame `ping`/`pong` đều đặn mỗi 30 giây
+---
 
-### 4. Phiên phụ đề trực tiếp
+## 5. Xác minh kỹ thuật (Dành cho Admin)
 
-Nói một câu rõ ràng vào microphone. Trong vòng 2–5 giây bạn sẽ thấy một
-caption row song ngữ finalized xuất hiện. Dùng câu test ví dụ:
+Sau khi trải nghiệm giao diện, bạn có thể kiểm tra các log backend để hiểu rõ luồng đi của dữ liệu.
 
-> "Live captions are working correctly for the workshop demonstration."
+### Kiểm tra CloudWatch Logs
 
-Bạn sẽ thấy bản gốc tiếng Anh và bản dịch tiếng Việt song song.
-
-### 5. Export và tải xuống
-
-1. Bấm **Stop** để kết thúc phiên.
-2. Bấm **Export TXT**.
-3. Xác minh tải xuống bắt đầu và file chứa các finalized row.
-4. Xác minh S3 object tồn tại bằng CLI:
-
-```powershell
-aws s3 ls s3://livecap-transcripts-dev-720459752315/transcripts/ `
-  --profile livecap-camgiacntn --region ap-southeast-1
-```
-
-### 6. CloudWatch Logs
-
-Kiểm tra backend đã emit structured log trong phiên vừa rồi:
+Kiểm tra backend đã phát ra các log cấu trúc (structured log) trong phiên vừa rồi:
 
 ```powershell
 aws logs tail livecap `
@@ -77,14 +57,11 @@ aws logs tail livecap `
   --profile livecap-camgiacntn
 ```
 
-Bạn sẽ thấy các sự kiện vòng đời phiên: mở, nhận audio chunk, kết quả
-Transcribe, các lần gọi Translate, đóng phiên.
+Bạn sẽ thấy các sự kiện vòng đời phiên: `session_opened`, `audio_chunk_received`, `transcribe_finalized`, `translate_success`, `session_closed`.
 
-## Kết quả kiểm thử production đã xác minh
+### Kết quả kiểm thử chuẩn production
 
-Ngày 2026-07-08, sau khi hoàn thành blue/green cutover sang kiến trúc target
-(custom VPC, private subnet, NAT Gateway, WAF, scale-to-zero, budget alert),
-toàn bộ luồng production đã pass tất cả bài test sau:
+Ngày 2026-07-08, sau khi hoàn thành cutover sang kiến trúc target (VPC, private subnet, NAT, WAF, scale-to-zero), toàn bộ luồng production đã pass tất cả bài test sau:
 
 | Bài test | Kết quả |
 |---|---|
