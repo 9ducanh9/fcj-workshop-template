@@ -115,9 +115,6 @@ Click **DISMISS** on the system error, then **Start session** again to reconnect
 ## What If Microphone Access Is Denied?
 
 If the browser blocks microphone access, LiveCap stops before opening any
-stream and shows an actionable error instead of leaving a broken session open:
-
-![Frontend showing microphone permission required error state](/images/5-Workshop/livecap-microphone-permission-required.png)
-
-In this case, allow microphone access in the browser site settings and reload
-`/app`.
+stream and displays a **HARDWARE ACCESS ERROR** message in the main panel instead
+of leaving a broken session open. Allow microphone access in the browser site
+settings and reload `/app`.

@@ -115,9 +115,6 @@ Hãy bấm **DISMISS** trên hộp thoại lỗi hệ thống, rồi bấm **Sta
 ## Nếu microphone bị chặn?
 
 Nếu trình duyệt chặn truy cập microphone, LiveCap dừng trước khi mở bất kỳ
-stream nào và hiển thị thông báo lỗi rõ ràng thay vì để một session lỗi đang mở:
-
-![Frontend hiển thị lỗi yêu cầu quyền microphone](/images/5-Workshop/livecap-microphone-permission-required.png)
-
-Trong trường hợp này, hãy cho phép microphone trong cài đặt site của trình duyệt
-và tải lại `/app`.
+stream nào và hiển thị thông báo lỗi **HARDWARE ACCESS ERROR** ở khu vực chính
+thay vì để một session lỗi đang mở. Hãy cho phép microphone trong cài đặt site
+của trình duyệt và tải lại `/app`.
