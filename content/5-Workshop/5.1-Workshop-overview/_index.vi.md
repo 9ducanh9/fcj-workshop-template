@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Tổng quan workshop"
 date: 2026-07-08
 weight: 1
@@ -63,7 +63,11 @@ Sơ đồ dưới đây thể hiện chính xác các tài nguyên AWS đang liv
 điểm nộp workshop. Target Terraform (private subnet, NAT Gateway, scale-to-zero,
 WAF, dashboard, budget) đã được deploy qua blue/green cutover sau đó.
 
-![Kiến trúc LiveCap đang hoạt động đã xác minh](/images/3-Project/livecap-target-architecture.png)
+![Kiến trúc LiveCap đang hoạt động đã xác minh](/images/5-Workshop/livecap-target-architecture.png)
+
+Landing page LiveCap (phục vụ từ CloudFront qua S3 private với OAC):
+
+![LiveCap landing page hiển thị hero section với thẻ xem trước phụ đề song ngữ](/images/5-Workshop/livecap-landing.png)
 
 ## Luồng hoạt động chính
 

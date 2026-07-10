@@ -117,7 +117,7 @@ https://dpeohr327wt9l.cloudfront.net
 The landing page loads with the hero section, animated bilingual caption card preview,
 and a **"Start a live session"** CTA button:
 
-![LiveCap landing page showing hero text, bilingual caption card preview, and Start a live session CTA](/images/3-Project/livecap-landing.png)
+![LiveCap landing page showing hero text, bilingual caption card preview, and Start a live session CTA](/images/5-Workshop/livecap-landing.png)
 
 Scrolling down reveals the feature highlights – **Live captions**, **Bilingual output**,
 and **Session exports** – followed by a "Ready when the conversation is" design section:

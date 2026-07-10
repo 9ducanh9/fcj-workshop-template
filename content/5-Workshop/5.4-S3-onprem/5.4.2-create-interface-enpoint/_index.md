@@ -91,7 +91,7 @@ the ECS backend (scales 0 → 1) and syncs the transcription streams:
 Once connected, the bilingual caption layout appears with **VIETNAMESE** and **ENGLISH**
 columns side by side. Finalized segments appear as caption rows in real time:
 
-![LiveCap caption dashboard showing bilingual caption columns after session starts](/images/3-Project/livecap-dashboard.png)
+![LiveCap caption dashboard showing bilingual caption columns after session starts](/images/5-Workshop/livecap-dashboard.png)
 
 The dashboard provides **Start session**, **Stop session**, **Download transcript**, and
 **PURGE SESSION CACHE** controls; a 30-minute session timer with elapsed time; audio source

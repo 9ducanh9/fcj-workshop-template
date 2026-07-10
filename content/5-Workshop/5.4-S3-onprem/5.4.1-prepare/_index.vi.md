@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Build & Deploy React Frontend lên S3 + CloudFront"
 date: 2026-07-08
 weight: 1
@@ -114,11 +114,16 @@ Mở CloudFront URL trên trình duyệt:
 https://dpeohr327wt9l.cloudfront.net
 ```
 
-Landing page sẽ load với animation và nút "Start captioning":
+Landing page sẽ load với hero section, thẻ xem trước phụ đề song ngữ động và
+nút **"Start a live session"**:
 
-![LiveCap landing page phục vụ qua CloudFront](/images/3-Project/livecap-landing.png)
+![LiveCap landing page hiển thị hero text, thẻ xem trước phụ đề song ngữ và nút Start a live session CTA](/images/5-Workshop/livecap-landing.png)
 
-Route `/` dùng giao diện dark SaaS và GSAP ScrollTrigger để trình bày product
-story, caption sequence và kiến trúc tổng quan. Các animation nặng chỉ nằm ở
-landing page; route `/app` được giữ gọn để ưu tiên độ ổn định khi chạy phiên
-phụ đề thời gian thực.
+Cuộn xuống dưới sẽ hiển thị các tính năng nổi bật – **Live captions**, **Bilingual output**,
+và **Session exports** – theo sau là thiết kế phần "Ready when the conversation is":
+
+![LiveCap landing page hiển thị các tính năng nổi bật](/images/5-Workshop/livecap-landing-features.png)
+
+Route `/` dùng layout trình bày SaaS sạch sẽ với thẻ phụ đề động để giải thích
+product story. Nút **"Open workspace"** ở góc trên bên phải và nút **"Start a live
+session"** đều điều hướng trực tiếp đến `/app`.

@@ -64,11 +64,11 @@ submission date. The reviewed Terraform target (private subnets, NAT Gateway,
 scale-to-zero, WAF, dashboard, budget) has since been deployed via a blue/green
 cutover.
 
-![LiveCap as-deployed architecture diagram](/images/3-Project/livecap-target-architecture.png)
+![LiveCap as-deployed architecture diagram](/images/5-Workshop/livecap-target-architecture.png)
 
 The LiveCap landing page (served from CloudFront via private S3 with OAC):
 
-![LiveCap landing page showing hero section with bilingual caption preview card](/images/3-Project/livecap-landing.png)
+![LiveCap landing page showing hero section with bilingual caption preview card](/images/5-Workshop/livecap-landing.png)
 
 ## Main Runtime Flow
 

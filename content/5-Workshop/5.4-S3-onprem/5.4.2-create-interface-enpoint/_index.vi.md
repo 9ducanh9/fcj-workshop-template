@@ -74,21 +74,43 @@ sang DynamoDB hoặc Redis (state chung giữa các task).
 
 1. Mở `https://dpeohr327wt9l.cloudfront.net`
 2. Bấm **Start captioning** để đến `/app`
-3. Bấm **Start** – frontend wake backend nếu cần, rồi poll health
+3. Bấm **Start session** – frontend wake backend nếu cần, rồi poll health
 4. Cho phép microphone khi trình duyệt hỏi
 5. Nói tiếng Anh hoặc tiếng Việt
-6. Xem caption row song ngữ finalized xuất hiện trên dashboard:
+6. Xem các dòng caption song ngữ đã finalized xuất hiện trên dashboard
 
-![Dashboard phụ đề LiveCap hiển thị caption row song ngữ](/images/3-Project/livecap-dashboard.png)
+Dashboard ở trạng thái **READY** (sẵn sàng) trước khi bắt đầu phiên:
 
-Dashboard production sẵn sàng bắt đầu phiên:
+![Dashboard phụ đề LiveCap trạng thái READY hiển thị nút Start session](/images/5-Workshop/livecap-production-dashboard-ready.png)
 
-![Dashboard production – điều khiển phiên và trạng thái trước khi bắt đầu](/images/5-Workshop/livecap-production-dashboard-ready.png)
+Sau khi bấm **Start session**, trạng thái chuyển sang **WAKING** trong lúc frontend
+đánh thức ECS backend (scale từ 0 → 1) và đồng bộ stream phiên âm:
 
-Dashboard cung cấp Start, Stop, Export TXT và Clear; bộ đếm phiên 30 phút;
-chọn microphone; trạng thái kết nối; speaker label và timestamp; hai cột văn
-bản gốc/bản dịch; cùng trạng thái reconnect và error trên cả desktop lẫn mobile.
-Chỉ finalized segment được thêm vào transcript lâu dài và được phép export.
+![Dashboard phụ đề LiveCap trạng thái WAKING hiển thị nút Connecting](/images/5-Workshop/livecap-dashboard-waking.png)
+
+Khi đã kết nối, layout song ngữ hiện ra với hai cột **VIETNAMESE** và **ENGLISH** song song.
+Các segment đã hoàn tất sẽ lần lượt xuất hiện dưới dạng các caption row:
+
+![Dashboard phụ đề LiveCap hiển thị 2 cột caption song ngữ sau khi bắt đầu](/images/5-Workshop/livecap-dashboard.png)
+
+Dashboard cung cấp nút điều khiển **Start session**, **Stop session**, **Download transcript**,
+và **PURGE SESSION CACHE**; bộ đếm thời gian phiên 30 phút cùng thời gian đã trôi qua; chọn nguồn âm thanh;
+huy hiệu trạng thái kết nối thời gian thực (READY / WAKING / LIVE / LOST); hai cột văn bản
+gốc/bản dịch; cùng các trạng thái kết nối lại và báo lỗi trên desktop và mobile.
+Chỉ các segment đã hoàn tất (finalized) mới được giữ lại và xuất ra file tải về.
+
+## Trạng thái kết nối lỗi
+
+Nếu kết nối WebSocket bị đứt (ví dụ: backend timeout do không có âm thanh hoặc mạng yếu),
+dashboard sẽ hiển thị huy hiệu **LOST** cùng các toast báo lỗi:
+
+- **SYSTEM ERROR** – toast màu đỏ với thông báo lỗi cụ thể (ví dụ: "Your request timed
+  out because no new audio was received for 15 seconds.")
+- **STREAM DISRUPTED** – toast cảnh báo màu vàng yêu cầu kiểm tra internet và khởi động lại
+
+![Dashboard LiveCap hiển thị trạng thái LOST cùng lỗi System Error và Stream Disrupted](/images/5-Workshop/livecap-dashboard-error-state.png)
+
+Hãy bấm **DISMISS** trên hộp thoại lỗi hệ thống, rồi bấm **Start session** lần nữa để kết nối lại.
 
 ## Nếu microphone bị chặn?
 
@@ -97,5 +119,5 @@ stream nào và hiển thị thông báo lỗi rõ ràng thay vì để một se
 
 ![Frontend hiển thị lỗi yêu cầu quyền microphone](/images/5-Workshop/livecap-microphone-permission-required.png)
 
-Trong trường hợp này, cho phép microphone trong cài đặt site của trình duyệt
+Trong trường hợp này, hãy cho phép microphone trong cài đặt site của trình duyệt
 và tải lại `/app`.
