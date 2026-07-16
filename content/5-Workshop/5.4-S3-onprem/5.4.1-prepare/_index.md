@@ -117,7 +117,7 @@ https://dpeohr327wt9l.cloudfront.net
 The landing page loads with the hero section ("Every voice, in the room."), an animated
 bilingual caption card preview, feature highlights and a security section:
 
-![LiveCap landing page – hero, bilingual caption preview, feature highlights and security section](/images/5-Workshop/livecap-landing.png)
+![LiveCap landing page – hero, bilingual caption preview, feature highlights and security section](/images/5-Workshop/5.6-Cleanup/livecap-landing.png)
 
 The **"Open workspace"** button in the top-right and **"Start a live session"** button
 both navigate directly to `/app`.

@@ -67,7 +67,7 @@ WAF, dashboard, budget) đã được deploy qua blue/green cutover sau đó.
 
 Landing page LiveCap (phục vụ từ CloudFront qua S3 private với OAC):
 
-![LiveCap landing page hiển thị hero section với thẻ xem trước phụ đề song ngữ](/images/5-Workshop/livecap-landing.png)
+![LiveCap landing page hiển thị hero section với thẻ xem trước phụ đề song ngữ](/images/5-Workshop/5.6-Cleanup/livecap-landing.png)
 
 ## Luồng hoạt động chính
 

@@ -68,7 +68,7 @@ cutover.
 
 The LiveCap landing page (served from CloudFront via private S3 with OAC):
 
-![LiveCap landing page showing hero section with bilingual caption preview card](/images/5-Workshop/livecap-landing.png)
+![LiveCap landing page showing hero section with bilingual caption preview card](/images/5-Workshop/5.6-Cleanup/livecap-landing.png)
 
 ## Main Runtime Flow
 

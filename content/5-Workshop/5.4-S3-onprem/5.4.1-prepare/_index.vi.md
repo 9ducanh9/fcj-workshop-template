@@ -117,7 +117,7 @@ https://dpeohr327wt9l.cloudfront.net
 Landing page sẽ load với hero section ("Every voice, in the room."), thẻ xem trước
 phụ đề song ngữ động, các tính năng nổi bật và phần bảo mật:
 
-![LiveCap landing page – hero section, thẻ phụ đề song ngữ, tính năng và phần bảo mật](/images/5-Workshop/livecap-landing.png)
+![LiveCap landing page – hero section, thẻ phụ đề song ngữ, tính năng và phần bảo mật](/images/5-Workshop/5.6-Cleanup/livecap-landing.png)
 
 Nút **"Open workspace"** ở góc trên bên phải và nút **"Start a live session"**
 đều điều hướng trực tiếp đến `/app`.
