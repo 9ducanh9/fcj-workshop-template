@@ -25,7 +25,7 @@ destroy resources, or migrate Terraform state.
 
 ## Functional Testing
 
-### Backend – 204 Unit Tests
+### Backend â€“ 204 Unit Tests
 
 ```powershell
 cd backend
@@ -43,7 +43,7 @@ The test suite covers:
 
 All 204 tests pass on Python 3.11. Running time: approximately 8 seconds.
 
-### Frontend – 11 Vitest Tests
+### Frontend â€“ 11 Vitest Tests
 
 ```powershell
 cd frontend
@@ -54,7 +54,7 @@ Covers: component rendering, WebSocket hook state transitions, session timer,
 and microphone permission error states. Zero production vulnerabilities at
 release time.
 
-### Terraform – Syntax Validation Only
+### Terraform â€“ Syntax Validation Only
 
 CI never applies infrastructure. It validates format and syntax only:
 
@@ -86,11 +86,11 @@ aws logs tail /ecs/livecap-backend-dev --follow --region ap-southeast-1 --profil
 ```
 
 Key log events you will see during a session:
-- `session_start` – new session opened, with session ID and client IP hash
-- `websocket_connect` – WebSocket connection established
-- `websocket_disconnect` – client disconnected or timed out
-- `session_end` – session closed, with duration and reason
-- `integration_error` – error from Transcribe, Translate, or S3
+- `session_start` â€“ new session opened, with session ID and client IP hash
+- `websocket_connect` â€“ WebSocket connection established
+- `websocket_disconnect` â€“ client disconnected or timed out
+- `session_end` â€“ session closed, with duration and reason
+- `integration_error` â€“ error from Transcribe, Translate, or S3
 
 ![CloudWatch log groups showing the livecap log group](/images/5-Workshop/5.5-Policy/cloudwatch_log_groups.png)
 
@@ -152,10 +152,10 @@ aws cloudwatch put-metric-alarm `
 
 Both Web ACLs are in BLOCK mode. Production probes confirmed:
 
-- Cross-site scripting (XSS) attempts ? HTTP 403
-- Log4J exploit strings ? HTTP 403
+- Cross-site scripting (XSS) attempts â†’ HTTP 403
+- Log4J exploit strings â†’ HTTP 403
 
-![WAF runtime security verification – blocked XSS and Log4J probes](/images/5-Workshop/livecap-runtime-security-verification.png)
+![WAF runtime security verification â€“ blocked XSS and Log4J probes](/images/5-Workshop/livecap-runtime-security-verification.png)
 
 ## Cost Optimization
 
@@ -173,12 +173,12 @@ Both Web ACLs are in BLOCK mode. Production probes confirmed:
 
 ### Cost-Saving Practices Already Applied
 
-- **14-day log and transcript retention** – avoids indefinite storage growth.
-- **Session duration limit (30 min)** – bounds maximum Transcribe minutes per session.
-- **Session concurrency limits** – prevent abuse-driven Transcribe/Translate costs.
-- **Translate only finalized text** – partial/interim results are discarded before
+- **14-day log and transcript retention** â€“ avoids indefinite storage growth.
+- **Session duration limit (30 min)** â€“ bounds maximum Transcribe minutes per session.
+- **Session concurrency limits** â€“ prevent abuse-driven Transcribe/Translate costs.
+- **Translate only finalized text** â€“ partial/interim results are discarded before
   translation, saving characters.
-- **ECS scale-to-zero (target)** – Wake Lambda brings desired count from 0 ? 1
+- **ECS scale-to-zero (target)** â€“ Wake Lambda brings desired count from 0 â†’ 1
   on first request; idle scale-down returns it to 0 after inactivity.
 
 ### AWS Budget (Target Terraform)
