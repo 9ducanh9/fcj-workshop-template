@@ -74,7 +74,7 @@ Dùng CLI:
 
 ```powershell
 aws s3 ls "s3://livecap-transcripts-dev-720459752315/transcripts/" `
-  --region ap-southeast-1 --profile livecap-camgiacntn
+  --region ap-southeast-1 --profile <aws-profile>
 ```
 
 Bạn sẽ thấy một file `.txt` cho mỗi phiên đã export. URL hết hạn sau 24 giờ
@@ -87,7 +87,7 @@ Object transcript được tự động xóa sau 14 ngày. Kiểm tra rule:
 ```powershell
 aws s3api get-bucket-lifecycle-configuration `
   --bucket livecap-transcripts-dev-720459752315 `
-  --region ap-southeast-1 --profile livecap-camgiacntn
+  --region ap-southeast-1 --profile <aws-profile>
 ```
 
 Kết quả mong đợi:

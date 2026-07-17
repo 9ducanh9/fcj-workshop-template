@@ -1,4 +1,4 @@
----
+﻿---
 title: "Testing, Security & Cost Controls"
 date: 2026-07-08
 weight: 5
@@ -82,7 +82,7 @@ CloudWatch log group. Log retention is 14 days.
 
 ```powershell
 # Stream live logs
-aws logs tail /ecs/livecap-backend-dev --follow --region ap-southeast-1 --profile livecap-camgiacntn
+aws logs tail /ecs/livecap-backend-dev --follow --region ap-southeast-1 --profile <aws-profile>
 ```
 
 Key log events you will see during a session:
@@ -126,7 +126,7 @@ aws cloudwatch put-metric-alarm `
   --comparison-operator GreaterThanOrEqualToThreshold `
   --evaluation-periods 1 `
   --alarm-actions "arn:aws:sns:ap-southeast-1:720459752315:livecap-alerts" `
-  --region ap-southeast-1 --profile livecap-camgiacntn
+  --region ap-southeast-1 --profile <aws-profile>
 ```
 
 ## Security Controls
@@ -178,12 +178,12 @@ Both Web ACLs are in BLOCK mode. Production probes confirmed:
 - **Session concurrency limits** – prevent abuse-driven Transcribe/Translate costs.
 - **Translate only finalized text** – partial/interim results are discarded before
   translation, saving characters.
-- **ECS scale-to-zero (target)** – Wake Lambda brings desired count from 0 → 1
+- **ECS scale-to-zero** – Wake Lambda brings desired count from 0 → 1
   on first request; idle scale-down returns it to 0 after inactivity.
 
-### AWS Budget (Target Terraform)
+### Deployed AWS Budget
 
-An AWS Budget alert is defined in the Terraform target at **$50/month**. It sends
+An AWS Budget alert is managed by Terraform at **$50/month**. It sends
 a notification directly to an **email subscriber** when actual or forecast spend
 approaches the threshold (not via SNS).
 

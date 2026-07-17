@@ -1,4 +1,4 @@
----
+﻿---
 title: "Kiểm thử End-to-End"
 date: 2026-07-08
 weight: 4
@@ -54,7 +54,7 @@ aws logs tail livecap `
   --follow `
   --since 10m `
   --region ap-southeast-1 `
-  --profile livecap-camgiacntn
+  --profile <aws-profile>
 ```
 
 Bạn sẽ thấy các sự kiện vòng đời phiên: `session_opened`, `audio_chunk_received`, `transcribe_finalized`, `translate_success`, `session_closed`.

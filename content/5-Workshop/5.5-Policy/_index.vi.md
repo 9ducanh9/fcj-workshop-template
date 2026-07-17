@@ -1,4 +1,4 @@
----
+﻿---
 title: "Kiểm thử, Bảo mật & Kiểm soát chi phí"
 date: 2026-07-08
 weight: 5
@@ -82,7 +82,7 @@ của CloudWatch. Retention log là 14 ngày.
 
 ```powershell
 # Stream log trực tiếp
-aws logs tail /ecs/livecap-backend-dev --follow --region ap-southeast-1 --profile livecap-camgiacntn
+aws logs tail /ecs/livecap-backend-dev --follow --region ap-southeast-1 --profile <aws-profile>
 ```
 
 Các sự kiện log chính bạn sẽ thấy trong một phiên:
@@ -126,7 +126,7 @@ aws cloudwatch put-metric-alarm `
   --comparison-operator GreaterThanOrEqualToThreshold `
   --evaluation-periods 1 `
   --alarm-actions "arn:aws:sns:ap-southeast-1:720459752315:livecap-alerts" `
-  --region ap-southeast-1 --profile livecap-camgiacntn
+  --region ap-southeast-1 --profile <aws-profile>
 ```
 
 ## Bảo mật
@@ -177,11 +177,11 @@ Cả hai Web ACL đều ở chế độ BLOCK. Probe production đã xác nhận
 - **Giới hạn thời lượng session (30 phút)** – giới hạn tối đa phút Transcribe mỗi phiên.
 - **Giới hạn đồng thời session** – ngăn chi phí Transcribe/Translate do lạm dụng.
 - **Chỉ dịch text finalized** – kết quả partial/interim bị loại trước khi dịch, tiết kiệm ký tự.
-- **ECS scale-to-zero (target)** – Wake Lambda đưa desired count từ 0 → 1 khi có request đầu tiên; scale-down tự động trở về 0 sau thời gian không hoạt động.
+- **ECS scale-to-zero** – Wake Lambda đưa desired count từ 0 → 1 khi có request đầu tiên; scale-down tự động trở về 0 sau thời gian không hoạt động.
 
-### AWS Budget (Terraform target)
+### AWS Budget đang chạy
 
-Một AWS Budget alert được định nghĩa trong Terraform target ở mức **$50/tháng**.
+Một AWS Budget alert đang được quản lý bằng Terraform ở mức **$50/tháng**.
 Nó gửi thông báo trực tiếp đến **email subscriber** khi chi tiêu thực tế hoặc
 dự báo gần đến ngưỡng (không qua SNS).
 

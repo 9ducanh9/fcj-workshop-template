@@ -59,10 +59,10 @@ LiveCap falls into two overlapping categories:
 
 ## Verified As-Deployed Architecture
 
-The diagram below shows the exact AWS resources that are live as of the workshop
-submission date. The reviewed Terraform target (private subnets, NAT Gateway,
-scale-to-zero, WAF, dashboard, budget) has since been deployed via a blue/green
-cutover.
+The diagram below shows LiveCap's current deployed architecture: a custom VPC
+with private Fargate subnets, NAT Gateway, scale-to-zero, WAF, dashboard, and
+budget. After the blue/green cutover, the rollback stack was retired; only the
+target ALB serves API and WebSocket traffic.
 
 ![LiveCap as-deployed architecture diagram](/images/5-Workshop/livecap-target-architecture.png)
 

@@ -1,4 +1,4 @@
----
+﻿---
 title: "Prerequisites"
 date: 2026-07-08
 weight: 2
@@ -60,8 +60,13 @@ Terraform and Python.
 
 Configure your AWS profile for the `ap-southeast-1` region:
 
+> In this guide, `<aws-profile>` means the operator's local AWS CLI profile.
+> For the LiveCap demonstration, we use `livecap-camgiacntn` to run and present
+> the commands. Readers should replace the placeholder with their own profile;
+> never place access keys or secret keys in source code, Git, or screenshots.
+
 ```powershell
-aws configure --profile livecap-camgiacntn
+aws configure --profile <aws-profile>
 # AWS Access Key ID:     <your key>
 # AWS Secret Access Key: <your secret>
 # Default region:        ap-southeast-1
@@ -71,7 +76,7 @@ aws configure --profile livecap-camgiacntn
 Verify access:
 
 ```powershell
-aws sts get-caller-identity --profile livecap-camgiacntn
+aws sts get-caller-identity --profile <aws-profile>
 ```
 
 Expected output:

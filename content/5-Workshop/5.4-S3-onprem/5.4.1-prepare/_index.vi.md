@@ -1,4 +1,4 @@
----
+﻿---
 title: "Build & Deploy React Frontend lên S3 + CloudFront"
 date: 2026-07-08
 weight: 1
@@ -62,7 +62,7 @@ S3 frontend bucket được cấu hình:
 aws s3 sync dist "s3://livecap-frontend-dev-720459752315" `
   --delete `
   --region ap-southeast-1 `
-  --profile livecap-camgiacntn
+  --profile <aws-profile>
 ```
 
 > **Cảnh báo:** `--delete` xóa bất kỳ object S3 nào không có trong `dist/`.
@@ -77,14 +77,14 @@ file mới ngay lập tức:
 aws cloudfront create-invalidation `
   --distribution-id E39ADG0ES17RP1 `
   --paths "/*" `
-  --profile livecap-camgiacntn
+  --profile <aws-profile>
 ```
 
 Chờ invalidation hoàn tất (thường 30–60 giây):
 
 ```powershell
 # Kiểm tra trạng thái distribution
-aws cloudfront list-distributions --profile livecap-camgiacntn `
+aws cloudfront list-distributions --profile <aws-profile> `
   --query "DistributionList.Items[*].{Id:Id,Domain:DomainName,Status:Status}"
 ```
 

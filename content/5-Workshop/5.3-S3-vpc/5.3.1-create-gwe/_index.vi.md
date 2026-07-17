@@ -98,12 +98,12 @@ ECR dùng token ngắn hạn để xác thực Docker. Lấy token mới và pus
 ```powershell
 $region    = "ap-southeast-1"
 $accountId = aws sts get-caller-identity --query Account --output text `
-               --profile livecap-camgiacntn
+               --profile <aws-profile>
 $registry  = "$accountId.dkr.ecr.$region.amazonaws.com"
 $repository = "$registry/livecap-backend"
 
 # Đăng nhập
-aws ecr get-login-password --region $region --profile livecap-camgiacntn |
+aws ecr get-login-password --region $region --profile <aws-profile> |
   docker login --username AWS --password-stdin $registry
 
 # Tag và push

@@ -43,7 +43,7 @@ Empty them manually first:
 ```powershell
 # Empty the frontend bucket (no versioning)
 aws s3 rm s3://livecap-frontend-dev-720459752315 --recursive `
-  --region ap-southeast-1 --profile livecap-camgiacntn
+  --region ap-southeast-1 --profile <aws-profile>
 
 # Empty the transcript bucket (including delete markers and versions)
 aws s3api list-object-versions `
@@ -55,7 +55,7 @@ aws s3api list-object-versions `
       --bucket livecap-transcripts-dev-720459752315 `
       --key $_.Key `
       --version-id $_.VersionId `
-      --region ap-southeast-1 --profile livecap-camgiacntn
+      --region ap-southeast-1 --profile <aws-profile>
   }
 ```
 
@@ -77,29 +77,29 @@ After `terraform destroy` completes, spot-check manually:
 
 ```powershell
 # ECS cluster
-aws ecs list-clusters --region ap-southeast-1 --profile livecap-camgiacntn
+aws ecs list-clusters --region ap-southeast-1 --profile <aws-profile>
 
 # ECR repositories
-aws ecr describe-repositories --region ap-southeast-1 --profile livecap-camgiacntn `
+aws ecr describe-repositories --region ap-southeast-1 --profile <aws-profile> `
   --query "repositories[?contains(repositoryName, 'livecap')].repositoryName"
 
 # S3 buckets
-aws s3 ls --profile livecap-camgiacntn | Select-String "livecap"
+aws s3 ls --profile <aws-profile> | Select-String "livecap"
 
 # ALB
-aws elbv2 describe-load-balancers --region ap-southeast-1 --profile livecap-camgiacntn `
+aws elbv2 describe-load-balancers --region ap-southeast-1 --profile <aws-profile> `
   --query "LoadBalancers[?contains(LoadBalancerName, 'livecap')].LoadBalancerName"
 
 # Lambda
-aws lambda list-functions --region ap-southeast-1 --profile livecap-camgiacntn `
+aws lambda list-functions --region ap-southeast-1 --profile <aws-profile> `
   --query "Functions[?contains(FunctionName, 'livecap')].FunctionName"
 
 # CloudWatch log groups
-aws logs describe-log-groups --region ap-southeast-1 --profile livecap-camgiacntn `
+aws logs describe-log-groups --region ap-southeast-1 --profile <aws-profile> `
   --query "logGroups[?contains(logGroupName, 'livecap')].logGroupName"
 
 # Unassociated Elastic IPs left over from NAT Gateway
-aws ec2 describe-addresses --region ap-southeast-1 --profile livecap-camgiacntn `
+aws ec2 describe-addresses --region ap-southeast-1 --profile <aws-profile> `
   --query "Addresses[?AssociationId==null].PublicIp"
 ```
 
@@ -112,7 +112,7 @@ Elastic IPs → Actions → Release Elastic IP address.
 aws ecr delete-repository `
   --repository-name livecap-backend `
   --force `
-  --region ap-southeast-1 --profile livecap-camgiacntn
+  --region ap-southeast-1 --profile <aws-profile>
 ```
 
 ### Step 6 – Delete the AWS Budget (if not managed by Terraform)
@@ -121,7 +121,7 @@ aws ecr delete-repository `
 aws budgets delete-budget `
   --account-id 720459752315 `
   --budget-name livecap-monthly-budget `
-  --profile livecap-camgiacntn
+  --profile <aws-profile>
 ```
 
 ---

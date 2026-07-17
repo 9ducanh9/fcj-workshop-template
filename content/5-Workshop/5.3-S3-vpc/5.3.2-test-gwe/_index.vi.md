@@ -34,7 +34,7 @@ Các trường quan trọng trong task definition thực tế:
 ```powershell
 aws ecs describe-task-definition `
   --task-definition livecap-target-backend-dev `
-  --region ap-southeast-1 --profile livecap-camgiacntn `
+  --region ap-southeast-1 --profile <aws-profile> `
   --query "taskDefinition.{Family:family, Revision:revision, Image:containerDefinitions[0].image}"
 ```
 
@@ -49,7 +49,7 @@ dependency và tránh drift:
 aws ecs describe-services `
   --cluster livecap-cluster-dev `
   --services livecap-target-service-dev `
-  --region ap-southeast-1 --profile livecap-camgiacntn `
+  --region ap-southeast-1 --profile <aws-profile> `
   --query "services[0].{Status:status, Running:runningCount, Desired:desiredCount}"
 ```
 
@@ -66,14 +66,14 @@ aws ecs update-service `
   --task-definition $taskDef `
   --force-new-deployment `
   --region ap-southeast-1 `
-  --profile livecap-camgiacntn
+  --profile <aws-profile>
 
 # Chờ service ổn định
 aws ecs wait services-stable `
   --cluster $cluster `
   --services $service `
   --region ap-southeast-1 `
-  --profile livecap-camgiacntn
+  --profile <aws-profile>
 ```
 
 ## Bước 3 – Xác minh service đang chạy
@@ -84,7 +84,7 @@ Kiểm tra trạng thái service từ console hoặc CLI:
 aws ecs describe-services `
   --cluster livecap-cluster-dev `
   --services livecap-target-service-dev `
-  --region ap-southeast-1 --profile livecap-camgiacntn `
+  --region ap-southeast-1 --profile <aws-profile> `
   --query "services[0].{Status:status,Running:runningCount,Desired:desiredCount}"
 ```
 

@@ -1,4 +1,4 @@
----
+﻿---
 title: "End-to-End Verification"
 date: 2026-07-08
 weight: 4
@@ -54,7 +54,7 @@ aws logs tail livecap `
   --follow `
   --since 10m `
   --region ap-southeast-1 `
-  --profile livecap-camgiacntn
+  --profile <aws-profile>
 ```
 
 You should see session lifecycle events: `session_opened`, `audio_chunk_received`, `transcribe_finalized`, `translate_success`, `session_closed`.

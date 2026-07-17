@@ -72,7 +72,7 @@ Using the CLI:
 
 ```powershell
 aws s3 ls "s3://livecap-transcripts-dev-720459752315/transcripts/" `
-  --region ap-southeast-1 --profile livecap-camgiacntn
+  --region ap-southeast-1 --profile <aws-profile>
 ```
 
 You should see a `.txt` file for each exported session. The URL expires after
@@ -85,7 +85,7 @@ Transcript objects are automatically removed after 14 days. Check the rule:
 ```powershell
 aws s3api get-bucket-lifecycle-configuration `
   --bucket livecap-transcripts-dev-720459752315 `
-  --region ap-southeast-1 --profile livecap-camgiacntn
+  --region ap-southeast-1 --profile <aws-profile>
 ```
 
 Expected output:

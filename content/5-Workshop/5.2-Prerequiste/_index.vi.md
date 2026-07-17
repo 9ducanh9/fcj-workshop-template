@@ -1,4 +1,4 @@
----
+﻿---
 title: "Điều kiện tiên quyết"
 date: 2026-07-08
 weight: 2
@@ -60,8 +60,13 @@ với Terraform và Python.
 
 Cấu hình AWS profile cho region `ap-southeast-1`:
 
+> Trong tài liệu này, `<aws-profile>` là AWS CLI profile local của người thực hiện.
+> Khi demo LiveCap, chúng tôi dùng profile `livecap-camgiacntn` để chạy và trình bày
+> các lệnh. Người đọc cần thay placeholder bằng profile của mình; không đưa access key
+> hoặc secret key vào source code, Git hay ảnh chụp màn hình.
+
 ```powershell
-aws configure --profile livecap-camgiacntn
+aws configure --profile <aws-profile>
 # AWS Access Key ID:     <key của bạn>
 # AWS Secret Access Key: <secret của bạn>
 # Default region:        ap-southeast-1
@@ -71,7 +76,7 @@ aws configure --profile livecap-camgiacntn
 Xác minh kết nối:
 
 ```powershell
-aws sts get-caller-identity --profile livecap-camgiacntn
+aws sts get-caller-identity --profile <aws-profile>
 ```
 
 Kết quả mong đợi:

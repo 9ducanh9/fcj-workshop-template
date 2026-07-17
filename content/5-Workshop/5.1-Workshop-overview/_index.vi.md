@@ -59,9 +59,10 @@ LiveCap thuộc hai nhóm chồng nhau:
 
 ## Kiến trúc đang chạy đã xác minh
 
-Sơ đồ dưới đây thể hiện chính xác các tài nguyên AWS đang live tính đến thời
-điểm nộp workshop. Target Terraform (private subnet, NAT Gateway, scale-to-zero,
-WAF, dashboard, budget) đã được deploy qua blue/green cutover sau đó.
+Sơ đồ dưới đây thể hiện kiến trúc đang chạy của LiveCap: custom VPC với private
+subnet cho Fargate, NAT Gateway, scale-to-zero, WAF, dashboard và budget. Sau
+blue/green cutover, rollback stack cũ đã được retire; chỉ ALB target hiện phục
+vụ traffic API và WebSocket.
 
 ![Kiến trúc LiveCap đang hoạt động đã xác minh](/images/5-Workshop/livecap-target-architecture.png)
 
